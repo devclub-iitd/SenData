@@ -1,0 +1,15 @@
+{
+    "extends": "airbnb",
+    "parserOptions": {
+        "ecmaVersion": 6
+    },
+    "env": {
+        "node": true,
+        "browser": true,
+        "es6": true,
+        "jquery": true
+    },
+    "rules": {
+      "no-param-reassign": ["error", { "props": false }]
+    }
+}

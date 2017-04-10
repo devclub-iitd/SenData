@@ -1,0 +1,56 @@
+version: '3.4'
+services:
+  filesend:
+    build: .
+    ports: 
+      - 7000:7000
+    image: "${REGISTRY_NAME}devclubiitd/filesend:0.1"
+    depends_on: 
+      - turnserver
+    environment:
+      - VIRTUAL_HOST
+      - STUN_IP=${HOST_IP}
+      - TRACKER_IP=${HOST_IP}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7000"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - "internal"
+      - "reverseproxy"
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+  turnserver:
+    ports:
+      - 3478:3478
+      - 3478:3478/udp
+    image: "${REGISTRY_NAME}zolochevska/turn-server"
+    command: username password realm
+    restart: unless-stopped
+    networks:
+      - "internal"
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+  tracker:
+    ports:
+      - 8000:8000
+    image: "${REGISTRY_NAME}henkel/bittorrent-tracker:latest"
+    networks:
+      - "internal"
+    restart: "unless-stopped"
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+networks:
+  reverseproxy:
+    external:
+      name: "reverseproxy"
+  internal:
