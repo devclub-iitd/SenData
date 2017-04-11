@@ -1,3 +1,17 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-# Create your models here.
+
+class UserInfo(models.Model):
+	user = models.OneToOneField(User)
+	ipaddress = models.GenericIPAddressField(protocol='IPv4')
+
+	def __str__(self):
+		return str(self.user.username)
+
+
+@receiver(post_save, sender=User)
+def update_userinfo(sender, instance, created, **kwargs):
+    if created:
+        UserInfo.objects.create(user=instance)
+    instance.userinfo.save()
