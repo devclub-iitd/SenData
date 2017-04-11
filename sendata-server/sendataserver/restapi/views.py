@@ -6,6 +6,5 @@ from restapi.serializers import UserInfoSerializer
 
 
 class UserInfoViewSet(viewsets.ModelViewSet):
-	queryset = User.objects.all()
+	queryset = UserInfo.objects.all()
 	serializer_class = UserInfoSerializer
-	
