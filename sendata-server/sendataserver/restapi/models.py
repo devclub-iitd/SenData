@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class UserInfo(models.Model):
 	user = models.OneToOneField(User)
-	ipaddress = models.GenericIPAddressField(protocol='IPv4')
+	ipv4 = models.GenericIPAddressField(protocol='IPv4')
 
 	def __str__(self):
 		return str(self.user.username)
