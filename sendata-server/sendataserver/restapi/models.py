@@ -7,7 +7,7 @@ from django.dispatch import receiver
 
 class UserInfo(models.Model):
 	user = models.OneToOneField(User)
-	ipv4 = models.GenericIPAddressField(protocol='IPv4')
+	ipv4 = models.GenericIPAddressField(protocol='IPv4', null=True, blank=True)
 
 	def __str__(self):
 		return str(self.user.username)
