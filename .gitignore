@@ -87,3 +87,6 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+Basic Chat Application/node_modules
+Photo Sender/node_modules
