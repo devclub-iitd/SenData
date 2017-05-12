@@ -85,6 +85,7 @@
           socket.emit('join', $('#m').val());
           $('#m').val('');
           socket.emit('new online', 1);
+          flag++;
           return false;
         } else {
           socket.emit('chat message', $('#m').val());
