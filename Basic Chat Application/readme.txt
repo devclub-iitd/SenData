@@ -4,3 +4,9 @@
 
 
 Note:-  You can open multiple tabs to act as multiple users from same computer.
+
+For Ubuntu Users:-
+Try deleting all the node-modules as they can be machine specific
+and reinstall with npm install
+If that dosent work update your node version to latest and repeat
+
