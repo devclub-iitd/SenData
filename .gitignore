@@ -91,3 +91,6 @@ ENV/
 Basic Chat Application/node_modules
 Photo Sender/node_modules
 node_modules/
+
+#Pycharm Settings
+.idea/*
