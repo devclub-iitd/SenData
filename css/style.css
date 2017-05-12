@@ -45,3 +45,26 @@ footer .footer-nav ul li{
     padding: 5px;
     clear: both;
 }
+.file-choose{
+    text-align: center;
+    align-content: center;
+}
+
+.room-name{
+    text-align: center;
+
+}
+
+#file_selection{
+    font-size: medium;
+}
+
+.progress_bar{
+    margin-left: 10px;
+    padding-left: 10px;
+    margin-right: 800px;
+}
+
+.copyrights{
+    margin-left: 5px;
+}
