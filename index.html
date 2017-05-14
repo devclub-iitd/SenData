@@ -20,12 +20,12 @@
                 <button class="btn btn-primary room-creator">Create a new room</button>
                 <form class="navbar-form navbar-left search-bar">
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Search for online users">
+                        <input type="text" id="search" class="form-control" placeholder="Search for online users" name="user" value="">
                     </div>
                     <button type="submit" class="btn btn-default" id="room-search-button">Search</button>
                 </form>
             </div>
-            <section>
+            <section style="overflow: auto">
 				<h2>Online Users</h2>
 				<div class="users-list">
 					<div class="user">
@@ -37,7 +37,7 @@
 			</section>
 
 
-            <footer>
+            <section style="overflow: auto;">
 
                 <p id="site-desc">Dev Club is a community of tech-minded people in IIT Delhi who experience what real world
                     collaborative software development is and allows everyone to pursue big, useful and exciting
@@ -46,8 +46,8 @@
                 <div class="footer-nav">
                     <ul style = "text-align: right">
                         <lh>Follow us at :</lh><br>
-                        <li><a href = "https://www.facebook.com/tech.iitd/"> <img src = "images/facebook_logo.png" height = 30px width = 30px></a></li>
-                        <li><a href = "https://github.com/devclub-iitd"> <img src = "images/github_logo.png" height = 30px width = 30px></a></li>
+                        <a href = "https://www.facebook.com/tech.iitd/" target="_blank"> <img src = "images/facebook_logo.png" height = 30px width = 30px></a>
+                        <a href = "https://github.com/devclub-iitd" target="_blank"> <img src = "images/github_logo.png" height = 30px width = 30px></a>
                     </ul>
                 </div>
                 <div class = "copyrights">
@@ -56,9 +56,7 @@
                         Created by Dev Club, IIT DELHI
                     </p>
                 </div>
-            </footer>
-
-
+            </section>
 
 		</div>
 		<script src="js/jquery-3.2.1.min.js"></script>
