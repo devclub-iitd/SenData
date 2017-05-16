@@ -51,6 +51,28 @@ a{
     padding: 5px;
 }
 
+.main-content{
+    display: none;
+}
+
+/* Style for login page */
+.login-page{
+    margin: auto;
+    text-align: center;
+    width:50%;
+}
+.login-page .login-form label{
+    font-size:200%;
+}
+.login-page .login-form .usernameInput{
+    font-size:150%;
+    padding:25px;
+}
+
+.online-user{
+    margin-bottom: 5px;
+}
+
 #site-desc{
     text-align: center;
     margin: 0 5%;

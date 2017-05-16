@@ -1,5 +1,45 @@
 $(function() {
-  var username = prompt('Enter name:');
+	
+	// implementing username form in a different way like socket.io
+	var $mainContent = $('.main-content');
+    var username = '';
+    var $usernameInput = $('.usernameInput'); // Input for username
+    var $loginPage = $('.login-page');
+    var $window = $(window);
+
+    // Prevents input from having injected markup
+    function cleanInput (input) {
+        return $('<div/>').text(input).text();
+    }
+
+    function setUsername () {
+        username = cleanInput($usernameInput.val().trim());
+        // If the username is valid
+        if (username) {
+            console.log('In setusername function when username is not empty');
+            $loginPage.hide();
+            $mainContent.show();
+
+            $loginPage.off('click');
+        }
+    }
+    $window.keydown(function (event) {
+        // When the client hits ENTER on their keyboard
+
+        if (event.which === 13) {
+            event.preventDefault();
+            if (!username) {
+                setUsername();
+            }
+            else {
+                $loginPage.hide();
+                $mainContent.show();
+                $loginPage.off('click');
+            }
+        }
+    });
+  
+  
   var socket = io();
   var page_number = 0;
 
