@@ -52,7 +52,6 @@ footer .footer-nav ul li{
 
 .room-name{
     text-align: center;
-
 }
 
 #file_selection{
@@ -62,9 +61,12 @@ footer .footer-nav ul li{
 .progress_bar{
     margin-left: 10px;
     padding-left: 10px;
-    margin-right: 800px;
+    margin-right: 40%;
 }
 
-.copyrights{
-    margin-left: 5px;
+.facebook_link{
+    margin-right: 1%;
 }
+
+
+
