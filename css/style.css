@@ -1,104 +1,115 @@
-* {
-  margin: 0px;
+*{
+    margin: 0px;
 }
 
-body {
-  width: 100%;
-  min-height: 100%;
+body{
+    width: 100%;
+    min-height:100%;
+}
+section{
+    clear:both;
+    margin-top:30px;
+    text-align: center;
+}
+a{
+    text-decoration: none;
 }
 
-section {
-  clear: both;
-  margin-top: 30px;
-  text-align: center;
+.page-header{
+    margin-top: 0px;
+}
+.page-header h1 small{
+    font-size: 15px;
 }
 
-a {
-  text-decoration: none;
+.section-top{
+    text-align: center;
+    width:60%;
 }
-
-.page-header {
-  margin-top: 0%;
-}
-
-.page-header h1 small {
-  font-size: 15px;
-}
-
-.section-top {
-  text-align: center;
-  width: 60%;
-}
-
-.room-creator {
-  margin: 8px;
-}
-
-.search-bar {
-  position: relative;
-  right: 0%;
+.room-creator{
+    margin: 8px;
 }
 
 #loginForm .modal-content {
-  margin-top: 14%;
-  width: 125%;
+    margin-top: 14%;
+    width:125%;
+}
+#loginForm .modal-body{
+    padding: 20px;
+}
+#loginForm .modal-footer{
+    text-align: center;
 }
 
-#loginForm .modal-body {
-  padding: 20px;
+.search-bar{
+    position: relative;
+    right: 0%;
 }
 
-#loginForm .modal-footer {
-  text-align: center;
+#site-id{
+    float: left;
+    padding: 5px;
 }
 
-footer {
-  position: absolute;
-  bottom: 0px;
-  width: 100%;
+#site-desc{
+    text-align: center;
+    margin: 0 5%;
+    padding: 5px;
+    clear: both;
 }
 
-#site-id {
-  float: left;
-  padding: 5px;
+.file-choose{
+    text-align: center;
+    align-content: center;
 }
 
-.footer-nav {
-  margin: 0 10%;
+.room-name{
+    text-align: center;
 }
 
-footer .footer-nav ul li {
-  display: inline-block;
-  float: right;
-  padding: 5px;
+#file_selection{
+    font-size: medium;
 }
 
-#site-desc {
-  text-align: center;
-  margin: 0 5%;
-  padding: 5px;
-  clear: both;
+.progress_bar{
+    margin-left: 10px;
+    padding-left: 10px;
+    margin-right: 40%;
 }
 
-.file-choose {
-  text-align: center;
-  align-content: center;
+.facebook_link{
+    margin-right: 1%;
 }
 
-.room-name {
-  text-align: center;
+.button_cancel{
+    margin-bottom: 5px;
 }
 
-#file_selection {
-  font-size: medium;
+.loader {
+    border: 5px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 5px solid #3498db;
+    width: 30px;
+    height: 30px;
+    align-content: center;
+    margin: auto;
+    margin-bottom: 15px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
-.progress_bar {
-  margin-left: 10px;
-  padding-left: 10px;
-  margin-right: 40%;
+#waiting_message{
+    vertical-align: middle;
+    margin-top: 12%;
 }
 
-.facebook_link {
-  margin-right: 1%;
-}
+
+
