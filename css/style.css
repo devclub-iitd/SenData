@@ -1,3 +1,6 @@
+*{
+    margin:0px;
+}
 body{
     width: 100%;
     min-height:100%;
@@ -10,6 +13,13 @@ section{
 a{
     text-decoration: none;
 }
+.page-header{
+    margin-top: 0%;
+}
+.page-header h1 small{
+    font-size: 15px;
+}
+
 .section-top{
     text-align: center;
     width:60%;
@@ -21,12 +31,21 @@ a{
     position: relative;
     right: 0%;
 }
+#loginForm .modal-content {
+    margin-top: 14%;
+    width:125%;
+}
+#loginForm .modal-body{
+    padding: 20px;
+}
+#loginForm .modal-footer{
+    text-align: center;
+}
 footer{
     position: absolute;
     bottom: 0px;
     width:100%;
 }
-
 #site-id{
     float: left;
     padding: 5px;
