@@ -16,6 +16,9 @@
   					<h1>Sendata <small>Simple tool for sending file in an Intranet environment</small></h1>
 				</div>
             </header>
+
+            <!-- div below calls the create room modal-->
+
             <div class="container-fluid section-top">
                 <button class="btn btn-primary room-creator" data-toggle="modal" data-target="#loginForm">Create a new room</button>
                 <div class="modal fade" id="loginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -52,6 +55,7 @@
                     <button type="submit" class="btn btn-default" id="room-search-button">Search</button>
                 </form>
             </div>
+
             <section style="overflow: auto">
 				<h2>Online Users</h2>
 				<div class="users-list">
@@ -66,7 +70,7 @@
                             User 3
                         </button><br>
 
-                        <!-- Modal -->
+                        <!-- Modal on clicking a userName  -->
                         <div class="modal fade" id="waiting_message" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -80,6 +84,22 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!--creating a hidden modal which will popUp when we have a connection request from another user-->
+
+                        <div class="modal fade" id="connection_request_modal" tabindex="-1" role="dialog" > <!--This modal witll be the data target of that request by anoteher user-->
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                            <!--Insert the initiator's username dynamically here--> wants to connect with you
+                                    </div>
+                                    <button type="button" class="btn btn-primary" id="connection_accepted">ACCEPT</button>
+                                    <button type="button" class="btn btn-danger" id="connection_rejected">REJECT</button>
+                                </div>
+                            </div>
+                        </div>
+
+
                     </div>
 				</div>
 			</section>

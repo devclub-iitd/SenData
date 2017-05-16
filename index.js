@@ -14,9 +14,10 @@ io.on('connection', function(socket) {
       socket.username = username;
       socket.emit("login", true);
       io.emit("update list", connected_clients)
-    } else {
-      socket.emit("login", false);
     }
+    // else {//not needed now as not implemented a handler on client side
+    //   socket.emit("login", false);
+    // }
   })
   socket.on("offer", function(username) { //currently not passed offer
     // remove socket.username form connected_clients
@@ -25,8 +26,13 @@ io.on('connection', function(socket) {
     var user = connected_clients[username];
     if (user != null) {
       socket.partner = username;
-      socket.broadcast.to(user).emit("offer", socket.username);
+      socket.broadcast.to(user).emit("offer", socket.username);//I THINK WE SHOULD NOT USE THE KEYWORK OFFER IE THE SAME THING AS THAT OF CLIENT MAKING AN OFFER IT SHOULD BE "OFFERgoingToPartner"
+
+    //TO SEND SOMETHING TO BOTH THE USERS IE ONE GETS THE ACCEPT REJECT MODAL
+    //THE OTHER GETS THE WAITING FOR CONFRIRMATION MODAL
     }
+    //TO WRITE AN ELSE FUNCTIONLITY IE IF THE USERNAME IS NOT IN  THE LATEST LIST ANYMORE...
+      //THEN TO SEND A SORRY MESSAGE
   })
   socket.on("answer", function(username, answer) {
     console.log("Sending answer to: ", username);

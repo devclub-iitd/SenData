@@ -25,7 +25,7 @@ page_number
     // if the user is on page_number =0 ;
   })
 
-  // calll this function when any username is clicked and
+  // call this function when any username is clicked and
   // also in the meantime show the screen that
   // waiting for permission of user
   // page_number=1
@@ -33,6 +33,7 @@ page_number
 
   // save name of requested user as ExhangerUsername
   socket.emit("offer", /*pass username of client clicked*/ );
+
   socket.on("answer", function(answer) {
     // if answer is yes.....goto page_number=2
     // rest code follows.................
@@ -46,7 +47,9 @@ page_number
   socket.on("offer", function(username) {
     // show that username wants to connect to you
     // accept or deny
-    // append as feed on the side
+    // append as feed on the side//IE ANOTHER MODAL
+    //CHANGE THAT MODAL'S CSS DISPLAY ATTRIBUTE FROM HIDDEN TO BLOCK OR SOMETHING
+
 
     // if accepted any one set ExchangeUsername to username
     // redirect to page 2
