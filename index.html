@@ -15,11 +15,37 @@
 	<div class="body-wrapper">
 		<header class="container-fluid">
 			<div class="page-header">
-				<h1>Sendata <small><br>Simple tool for sending file in an Intranet environment</small></h1>
+				<h1>Sendata <small>Simple tool for sending file in an Intranet environment</small></h1>
 			</div>
 		</header>
 		<div class="container-fluid section-top">
-			<button class="btn btn-primary room-creator">Create a new room</button>
+			<button class="btn btn-primary room-creator" data-toggle="modal" data-target="#loginForm">Create a new room</button>
+			<div class="modal fade" id="loginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-body">
+							<form class="form-horizontal">
+								<div class="form-group">
+									<label for="name" class="col-sm-2 control-label">Name : </label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="name" placeholder="Name">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="roomNameInput" class="col-sm-2 control-label">Room Name : </label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="roomNameInput" placeholder="Room Name">
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-primary">Submit</button>
+						</div>
+					</div>
+				</div>
+			</div>
 			<form class="navbar-form navbar-left search-bar">
 				<div class="form-group">
 					<input type="text" id="search" class="form-control" placeholder="Search for online users" name="user" value="">
@@ -37,7 +63,6 @@
 				</div>
 			</div>
 		</section>
-
 
 		<section style="overflow: auto; margin-bottom: auto;">
 			<p id="site-desc">Dev Club is a community of tech-minded people in IIT Delhi who experience what real world collaborative software development is and allows everyone to pursue big, useful and exciting projects which are not possible alone. Also, we have a community
@@ -57,7 +82,7 @@
 	</div>
 	<script src="js/jquery-3.2.1.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
-	<script src="js/main.js"></script>>
+	<script src="js/main.js"></script>
 
 </body>
 

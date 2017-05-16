@@ -1,72 +1,104 @@
-body{
-    width: 100%;
-    min-height:100%;
-}
-section{
-    clear:both;
-    margin-top:30px;
-    text-align: center;
-}
-a{
-    text-decoration: none;
-}
-.section-top{
-    text-align: center;
-    width:60%;
-}
-.room-creator{
-    margin: 8px;
-}
-.search-bar{
-    position: relative;
-    right: 0%;
-}
-footer{
-    position: absolute;
-    bottom: 0px;
-    width:100%;
+* {
+  margin: 0px;
 }
 
-#site-id{
-    float: left;
-    padding: 5px;
-}
-.footer-nav{
-    margin:0 10%;
-}
-footer .footer-nav ul li{
-    display: inline-block;
-    float: right;
-    padding: 5px;
-}
-#site-desc{
-    text-align: center;
-    margin: 0 5%;
-    padding: 5px;
-    clear: both;
-}
-.file-choose{
-    text-align: center;
-    align-content: center;
+body {
+  width: 100%;
+  min-height: 100%;
 }
 
-.room-name{
-    text-align: center;
+section {
+  clear: both;
+  margin-top: 30px;
+  text-align: center;
 }
 
-#file_selection{
-    font-size: medium;
+a {
+  text-decoration: none;
 }
 
-.progress_bar{
-    margin-left: 10px;
-    padding-left: 10px;
-    margin-right: 40%;
+.page-header {
+  margin-top: 0%;
 }
 
-.facebook_link{
-    margin-right: 1%;
+.page-header h1 small {
+  font-size: 15px;
 }
 
+.section-top {
+  text-align: center;
+  width: 60%;
+}
 
+.room-creator {
+  margin: 8px;
+}
 
+.search-bar {
+  position: relative;
+  right: 0%;
+}
+
+#loginForm .modal-content {
+  margin-top: 14%;
+  width: 125%;
+}
+
+#loginForm .modal-body {
+  padding: 20px;
+}
+
+#loginForm .modal-footer {
+  text-align: center;
+}
+
+footer {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+}
+
+#site-id {
+  float: left;
+  padding: 5px;
+}
+
+.footer-nav {
+  margin: 0 10%;
+}
+
+footer .footer-nav ul li {
+  display: inline-block;
+  float: right;
+  padding: 5px;
+}
+
+#site-desc {
+  text-align: center;
+  margin: 0 5%;
+  padding: 5px;
+  clear: both;
+}
+
+.file-choose {
+  text-align: center;
+  align-content: center;
+}
+
+.room-name {
+  text-align: center;
+}
+
+#file_selection {
+  font-size: medium;
+}
+
+.progress_bar {
+  margin-left: 10px;
+  padding-left: 10px;
+  margin-right: 40%;
+}
+
+.facebook_link {
+  margin-right: 1%;
+}

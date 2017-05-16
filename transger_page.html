@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Sendata</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div class="body-wrapper">
+    <header class="container-fluid">
+        <div class="page-header">
+            <h1>Sendata <small>Simple tool for sending file in an Intranet environment</small></h1>
+        </div>
+    </header>
+    <div class = "room-name">
+        <h2> Room Name </h2>
+    </div>
+    <br>
+    <div class = "file-choose">
+        <form action="">
+            <input type="file" name="fileupload" value="fileupload" id="fileupload" style = "text-align: center; margin: auto;"><br>
+            <label for="fileupload"> <p id = "file_selection">Select files to send</p></label><br>
+            <input type="submit" value="Send">
+        </form>
+        <hr>
+    </div>
+
+    <div class = "progress_bar">
+        <h3>
+            Progress -
+        </h3>
+        <p> File 1:</p>
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+                60%
+            </div>
+        </div>
+        <p> File 2:</p>
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 20%;">
+                20%
+            </div>
+        </div>
+    </div>
+
+        <section style="overflow: auto; margin-bottom: auto;">
+        <p id="site-desc">Dev Club is a community of tech-minded people in IIT Delhi who experience what real world
+            collaborative software development is and allows everyone to pursue big, useful and exciting
+            projects which are not possible alone. Also, we have a community in which we discuss new ideas regarding development
+            and learn a lot while having fun.</p><br>
+        <div class="footer-nav">
+                <a class="facebook_link" href = "https://www.facebook.com/tech.iitd/"> <img src = "images/facebook_logo.png" height = 30px width = 30px></a>
+                <a class="github_link" href = "https://github.com/devclub-iitd"> <img src = "images/github_logo.png" height = 30px width = 30px></a>
+        </div>
+            <br>
+        <div class = "copyrights">
+            <p>
+                &copy All Rights Reserved 2017 <br>
+                Created by Dev Club, IIT DELHI
+            </p>
+        </div>
+        </section>
+
+
+
+
+</div>
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+</body>
+</html>
