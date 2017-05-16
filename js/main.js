@@ -1,7 +1,55 @@
 $(function() {
   var username = prompt('Enter name:');
   var socket = io();
-  socket.emit('add user', username);
+  var page_number = 0;
+
+  /*
+page_number
+
+    case:0      page showing online user_names
+    case:1      page/popup showing waiting for permission
+                    (other buttons should not be accesible during this time)
+    case:2      page of send
+
+
+  */
+  socket.emit('login', username);
   var flag = 0;
-  // var room = prompt("enter room name");
+
+
+
+
+  socket.on("update list", function(connected_clients) {
+    // connected_clients is a dictionary
+    // use the keys to update list of user_names
+    // if the user is on page_number =0 ;
+  })
+
+  // calll this function when any username is clicked and
+  // also in the meantime show the screen that
+  // waiting for permission of user
+  // page_number=1
+
+
+  // save name of requested user as ExhangerUsername
+  socket.emit("offer", /*pass username of client clicked*/ );
+  socket.on("answer", function(answer) {
+    // if answer is yes.....goto page_number=2
+    // rest code follows.................
+
+
+    // else set ExchangeUsername to None
+
+  })
+
+
+  socket.on("offer", function(username) {
+    // show that username wants to connect to you
+    // accept or deny
+    // append as feed on the side
+
+    // if accepted any one set ExchangeUsername to username
+    // redirect to page 2
+  })
+
 });

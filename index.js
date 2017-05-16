@@ -13,24 +13,29 @@ io.on('connection', function(socket) {
       connected_clients[username] = socket.id;
       socket.username = username;
       socket.emit("login", true);
+      io.emit("update list", connected_clients)
     } else {
       socket.emit("login", false);
     }
   })
-  socket.on("offer", function(username, offer) {
+  socket.on("offer", function(username) { //currently not passed offer
+    // remove socket.username form connected_clients
+    // then emit list again
     console.log("Sending offer to: ", username);
     var user = connected_clients[username];
     if (user != null) {
       socket.partner = username;
-      socket.broadcast.to(user).emit("offer", socket.username, offer);
+      socket.broadcast.to(user).emit("offer", socket.username);
     }
   })
   socket.on("answer", function(username, answer) {
     console.log("Sending answer to: ", username);
+    // if answer is no add the username to connected_clients
+    // then emit list again
     var user = connected_clients[username];
     if (user != null) {
       socket.partner = username;
-      socket.broadcast.to(user).emit("answer", socket.username, answer);
+      socket.broadcast.to(user).emit("answer", answer);
     }
   })
 
