@@ -1,10 +1,10 @@
 $(function() {
 	
 	// implementing username form in a different way like socket.io
-	var $mainContent = $('.main-content');
-    var username = '';
+	var $mainContent = $('.main-content');      // which contains userlist and search functionality
+    var username = '';      // variable to store username entered.
     var $usernameInput = $('.usernameInput'); // Input for username
-    var $loginPage = $('.login-page');
+    var $loginPage = $('.login-page');      // the login form area
     var $window = $(window);
 
     // Prevents input from having injected markup
@@ -13,10 +13,10 @@ $(function() {
     }
 
     function setUsername () {
-        username = cleanInput($usernameInput.val().trim());
+        username = cleanInput($usernameInput.val().trim());         // trim is to remove extra blank spaces
         // If the username is valid
         if (username) {
-            console.log('In setusername function when username is not empty');
+            console.log(username);
             $loginPage.hide();
             $mainContent.show();
 
@@ -32,7 +32,7 @@ $(function() {
                 setUsername();
             }
             else {
-                $loginPage.hide();
+                $loginPage.fadeOut();
                 $mainContent.show();
                 $loginPage.off('click');
             }
