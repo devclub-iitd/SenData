@@ -1,3 +1,4 @@
+/* General Styling */
 *{
     margin: 0px;
 }
@@ -9,12 +10,16 @@ body{
 section{
     clear:both;
     margin-top:30px;
+    overflow: auto;
     text-align: center;
+    margin-bottom: auto;
 }
 a{
     text-decoration: none;
 }
 
+
+/* Header */
 .page-header{
     margin-top: 0px;
 }
@@ -22,37 +27,22 @@ a{
     font-size: 15px;
 }
 
+/* Search Bar */
 .section-top{
     text-align: center;
     width:60%;
 }
-.room-creator{
-    margin: 8px;
-}
-
-#loginForm .modal-content {
-    margin-top: 14%;
-    width:125%;
-}
-#loginForm .modal-body{
-    padding: 20px;
-}
-#loginForm .modal-footer{
-    text-align: center;
-}
-
 .search-bar{
     position: relative;
     right: 0%;
 }
 
-#site-id{
-    float: left;
-    padding: 5px;
-}
 
 .main-content{
-    display: none;
+    display: none;   /* Hide until user enters username*/
+}
+.online-user{
+    margin-bottom: 5px;
 }
 
 /* Style for login page */
@@ -69,8 +59,12 @@ a{
     padding:25px;
 }
 
-.online-user{
-    margin-bottom: 5px;
+/* Site Footer */
+.footer{
+    margin-bottom: auto;
+}
+#facebook_link{
+    margin-right: 1%;
 }
 
 #site-desc{
@@ -80,33 +74,10 @@ a{
     clear: both;
 }
 
-.file-choose{
-    text-align: center;
-    align-content: center;
-}
-
-.room-name{
-    text-align: center;
-}
-
-#file_selection{
-    font-size: medium;
-}
-
-.progress_bar{
-    margin-left: 10px;
-    padding-left: 10px;
-    margin-right: 40%;
-}
-
-.facebook_link{
-    margin-right: 1%;
-}
-
+/* Waiting for Confirmation modal */
 .button_cancel{
     margin-bottom: 5px;
 }
-
 .loader {
     border: 5px solid #f3f3f3;
     border-radius: 50%;
@@ -132,6 +103,27 @@ a{
     vertical-align: middle;
     margin-top: 12%;
 }
+
+/* Transfer Page */
+
+.user-name{
+    text-align: center;
+}
+
+.file-choose{
+    text-align: center;
+    align-content: center;
+}
+#file_selection{
+    font-size: medium;
+}
+
+.progress_bar{
+    margin-left: 10px;
+    padding-left: 10px;
+    margin-right: 40%;
+}
+
 
 
 
