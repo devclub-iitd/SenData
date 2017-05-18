@@ -7,6 +7,7 @@
     <title>Sendata</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="">
     <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -21,18 +22,9 @@
     <!-- End Header Content -->
 
     <!-- Main Content -->
-    <div class="main-content ">
+    <div class="main-content row">
 
-        <!-- Search Bar -->
-        <div class="container-fluid section-top">
-            <form class="navbar-form navbar-left search-bar">
-                <div class="form-group">
-                    <input type="text" id="search" class="form-control" placeholder="Search for online users" name="user" value="">
-                </div>
-                <button type="submit" class="btn btn-default" id="user-search-button">Search</button>
-            </form>
-        </div>
-        <section>
+        <section class="col-md-8" id="user-section">
             <h2>Online Users</h2>
 
             <!-- List of online users -->
@@ -69,7 +61,7 @@
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-body">
-                                    <!--Insert the initiator's username dynamically here--> wants to connect with you
+                                    wants to connect with you
                                 </div>
                                 <button type="button" class="btn btn-success" id="connection_accepted">ACCEPT</button>
                                 <button type="button" class="btn btn-danger" id="connection_rejected">REJECT</button>
@@ -80,6 +72,17 @@
                 </div>
             </div>
         </section>
+
+        <!-- Search Bar -->
+        <div class="container-fluid section-top col-md-3">
+            <form class="navbar-form navbar-right search-bar">
+                <div class="form-group">
+                    <input type="text" id="search-input" class="form-control" placeholder="Search for online users" name="user">
+                </div>
+                <button type="submit" class="btn btn-default" id="user-search-button"><div><i class="fa fa-search search-icon" aria-hidden="true"></i></div></button>
+            </form>
+            <div id="search-results"></div>
+        </div>
     </div>
     <!--End Main Content-->
 
@@ -119,9 +122,10 @@
         </div>
     </section>
     <!--End footer-->
-
 </div>
 <!--End Body-wrapper-->
+
+<script src="https://use.fontawesome.com/b9f7a0cfba.js"></script>
 <script src="js/jquery-3.2.1.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/main.js"></script>
