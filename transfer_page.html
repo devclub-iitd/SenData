@@ -30,10 +30,11 @@
 
     <!-- File Selection -->
     <div class = "file-choose">
-        <form action="">
-            <input type="file" name="fileupload" value="fileupload" id="fileupload" style = "text-align: center; margin-left: 44%;"><br>
-            <label for="fileupload"> <p id = "file_selection">Select files to send</p></label><br>
-            <input type="submit" value="Send">
+        <form action="" >
+            <input type="file" name="file-1[]" id="file-1" class="inputfile"
+                   data-multiple-caption="{count} files selected" multiple style="display: none;" />
+            <label for="file-1"><i class="fa fa-upload" aria-hidden="true"></i><span>&nbsp;Browse files &hellip;</span></label><br>
+            <input type="submit" value="Send" id="file-send-button" class="btn btn-default">
         </form>
         <hr>
     </div>
@@ -87,6 +88,8 @@
 
 
 </div>
+
+<script src="https://use.fontawesome.com/b9f7a0cfba.js"></script>
 <script src="js/jquery-3.2.1.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 </body>
