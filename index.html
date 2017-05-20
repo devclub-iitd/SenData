@@ -6,9 +6,9 @@
 
     <title>Sendata</title>
 
-    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="">
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/style.css"/>
 
 </head>
 <body>
@@ -17,7 +17,9 @@
     <!-- Header Content -->
     <header class="container-fluid">
         <div class="page-header">
-            <h1>Sendata <small>Simple tool for sending file in an Intranet environment</small></h1>
+            <h1>Sendata
+                <small>Simple tool for sending file in an Intranet environment</small>
+            </h1>
         </div>
     </header>
     <!-- End Header Content -->
@@ -31,18 +33,25 @@
             <!-- List of online users -->
             <div class="users-list">
                 <div class="user">
-                    <button type="button" class="btn btn-default online-user" data-toggle="modal" data-target="#waiting_message">
+                    <button type="button" class="btn btn-default online-user" data-toggle="modal"
+                            data-target="#waiting_message">
                         User 1
-                    </button><br>
-                    <button type="button" class="btn btn-default online-user" data-toggle="modal" data-target="#waiting_message">
+                    </button>
+                    <br>
+                    <button type="button" class="btn btn-default online-user" data-toggle="modal"
+                            data-target="#waiting_message">
                         User 2
-                    </button><br>
-                    <button type="button" class="btn btn-default online-user" data-toggle="modal" data-target="#waiting_message">
+                    </button>
+                    <br>
+                    <button type="button" class="btn btn-default online-user" data-toggle="modal"
+                            data-target="#waiting_message">
                         User 3
-                    </button><br>
+                    </button>
+                    <br>
 
                     <!-- Modal for when the user wants to connect with one of the online users -->
-                    <div class="modal fade" id="waiting_message" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal fade" id="waiting_message" tabindex="-1" role="dialog"
+                         aria-labelledby="myModalLabel">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-body">
@@ -58,7 +67,8 @@
 
                     <!--creating a hidden modal which will popUp when we have a connection request from another user-->
 
-                    <div class="modal fade" id="connection_request_modal" tabindex="-1" role="dialog" > <!--This modal will be the data target of that request by another user-->
+                    <div class="modal fade" id="connection_request_modal" tabindex="-1" role="dialog">
+                        <!--This modal will be the data target of that request by another user-->
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-body">
@@ -78,9 +88,12 @@
         <div class="container-fluid section-top col-md-3">
             <form class="navbar-form navbar-right search-bar">
                 <div class="form-group">
-                    <input type="text" id="search-input" class="form-control" placeholder="Search for online users" name="user">
+                    <input type="text" id="search-input" class="form-control" placeholder="Search for online users"
+                           name="user">
                 </div>
-                <button type="submit" class="btn btn-default" id="user-search-button"><div><i class="fa fa-search search-icon" aria-hidden="true"></i></div></button>
+                <button type="submit" class="btn btn-default" id="user-search-button">
+                    <i class="fa fa-search search-icon" aria-hidden="true"></i>
+                </button>
             </form>
             <div id="search-results"></div>
         </div>
@@ -92,30 +105,34 @@
         <form class="login-form">
             <div class="form-group">
                 <label for="username">User Name</label>
-                <input type="text" autocomplete="off" class="form-control usernameInput" id="username" placeholder="Enter your name here">
+                <input type="text" autocomplete="off" class="form-control usernameInput" id="username"
+                       placeholder="Enter your name here">
             </div>
         </form>
     </div>
     <!--End Login-page-->
 
     <!-- Footer -->
-    <section  class="footer">
+    <section class="footer">
 
         <!-- Club Description (Not sure if necessary) -->
         <p id="site-desc">Dev Club is a community of tech-minded people in IIT Delhi who experience what real world
             collaborative software development is and allows everyone to pursue big, useful and exciting
-            projects which are not possible alone. Also, we have a community in which we discuss new ideas regarding development
+            projects which are not possible alone. Also, we have a community in which we discuss new ideas regarding
+            development
             and learn a lot while having fun.</p><br>
 
         <!-- Important Links -->
         <div class="footer-nav">
-            <a class="link" id="facebook_link" href = "https://www.facebook.com/tech.iitd/"> <img src = "images/facebook_logo.png" height = 30px width = 30px></a>
-            <a class="link" id="github_link" href = "https://github.com/devclub-iitd"> <img src = "images/github_logo.png" height = 30px width = 30px></a>
+            <a class="link" id="facebook_link" href="https://www.facebook.com/tech.iitd/"> <img
+                    src="images/facebook_logo.png" height=30px width=30px></a>
+            <a class="link" id="github_link" href="https://github.com/devclub-iitd"> <img src="images/github_logo.png"
+                                                                                          height=30px width=30px></a>
         </div>
         <br>
 
         <!-- Copyright Info -->
-        <div class = "copyrights">
+        <div class="copyrights">
             <p>
                 &copy All Rights Reserved 2017 <br>
                 Created by Dev Club, IIT DELHI

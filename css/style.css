@@ -1,82 +1,92 @@
 /* General Styling */
-*{
+* {
     margin: 0;
-    padding:0;
+    padding: 0;
 }
 
-body{
+body {
     max-width: 100%;
-    min-height:100%;
+    min-height: 100%;
     width: 100%;
 }
-section{
-    margin-top:30px;
+
+section {
+    margin-top: 30px;
     overflow: auto;
     text-align: center;
     margin-bottom: auto;
 }
-a{
+
+a {
     text-decoration: none;
 }
 
-.main-content{
-    display: none;   /* Hide until user enters username*/
+.main-content {
+    display: none; /* Hide until user enters username*/
 }
+
 /* Header */
-.page-header{
+.page-header {
     margin-top: 0px;
 }
-.page-header h1 small{
+
+.page-header h1 small {
     font-size: 15px;
 }
 
 /* Search Bar */
-.section-top{
+.section-top {
     padding: 0;
     margin-top: 15px;
     text-align: center;
 }
-.search-bar{
+
+.search-bar {
     padding-right: 0;
     position: relative;
     right: 0%;
 }
-.search-bar .search-icon{
+
+.search-bar .search-icon {
     font-size: 150%;
 }
 
 /* User Section */
-#user-section{
+#user-section {
     margin-top: 0;
-    padding:0;
+    padding: 0;
 }
-.online-user{
+
+.online-user {
     margin-bottom: 5px;
 }
 
 /* Style for login page */
-.login-page{
+.login-page {
     margin: auto;
     text-align: center;
-    width:50%;
+    width: 50%;
 }
-.login-page .login-form label{
-    font-size:200%;
+
+.login-page .login-form label {
+    font-size: 200%;
 }
-.login-page .login-form .usernameInput{
-    font-size:150%;
-    padding:25px;
+
+.login-page .login-form .usernameInput {
+    font-size: 150%;
+    padding: 25px;
 }
 
 /* Site Footer */
-.footer{
+.footer {
     margin-bottom: auto;
 }
-#facebook_link{
+
+#facebook_link {
     margin-right: 1%;
 }
 
-#site-desc{
+#site-desc {
     text-align: center;
     margin: 0 5%;
     padding: 5px;
@@ -84,9 +94,10 @@ a{
 }
 
 /* Waiting for Confirmation modal */
-.button_cancel{
+.button_cancel {
     margin-bottom: 5px;
 }
+
 .loader {
     border: 5px solid #f3f3f3;
     border-radius: 50%;
@@ -99,10 +110,16 @@ a{
     -webkit-animation: spin 2s linear infinite;
     animation: spin 2s linear infinite;
 }
+
 @-webkit-keyframes spin {
-    0% { -webkit-transform: rotate(0deg); }
-    100% { -webkit-transform: rotate(360deg); }
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
 }
+
 @keyframes spin {
     from {
         transform: rotate(0deg);
@@ -112,21 +129,22 @@ a{
     }
 }
 
-#waiting_message{
+#waiting_message {
     vertical-align: middle;
     margin-top: 12%;
 }
 
 /* Transfer Page */
 
-.user-name{
+.user-name {
     text-align: center;
 }
 
-.file-choose{
+.file-choose {
     text-align: center;
     align-content: center;
 }
+
 /* File Upload Button */
 .js .inputfile {
     width: 0.1px;
@@ -135,15 +153,17 @@ a{
     overflow: hidden;
     position: absolute;
     z-index: -1;
-    }
+}
+
 button, input {
     line-height: normal;
-    }
+}
+
 button, input, select, textarea {
     font-family: inherit;
     font-size: 100%;
     margin: 0;
-    }
+}
 
 .inputfile + label {
     border: 1px solid #222;
@@ -157,16 +177,18 @@ button, input, select, textarea {
     display: inline-block;
     overflow: hidden;
     padding: 0.625rem 1.25rem;
-    }
-.file-choose #fileupload{
+}
+
+.file-choose #fileupload {
     text-align: center;
     margin-left: 44%;
 }
-#file_selection{
+
+#file_selection {
     font-size: medium;
 }
 
-.progress_bar{
+.progress_bar {
     margin-left: 10px;
     padding-left: 10px;
     margin-right: 40%;

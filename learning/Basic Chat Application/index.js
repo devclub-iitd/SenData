@@ -1,7 +1,7 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var connected_clients = new Array();
+var connected_clients = [];
 var numUsers = 0;
 var rooms = ['room1', 'room2', 'room3'];
 var soc_room = {};
