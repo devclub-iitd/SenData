@@ -7,7 +7,7 @@
     <title>Sendata</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/style.css"/>
 
 </head>
@@ -27,69 +27,12 @@
     <!-- Main Content -->
     <div class="main-content row">
 
-        <section class="col-md-8" id="user-section">
-            <h2>Online Users</h2>
-
-            <!-- List of online users -->
-            <div class="users-list">
-                <div class="user">
-                    <button type="button" class="btn btn-default online-user" data-toggle="modal"
-                            data-target="#waiting_message">
-                        User 1
-                    </button>
-                    <br>
-                    <button type="button" class="btn btn-default online-user" data-toggle="modal"
-                            data-target="#waiting_message">
-                        User 2
-                    </button>
-                    <br>
-                    <button type="button" class="btn btn-default online-user" data-toggle="modal"
-                            data-target="#waiting_message">
-                        User 3
-                    </button>
-                    <br>
-
-                    <!-- Modal for when the user wants to connect with one of the online users -->
-                    <div class="modal fade" id="waiting_message" tabindex="-1" role="dialog"
-                         aria-labelledby="myModalLabel">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-body">
-                                    WAITING FOR CONFIRMATION ...
-                                </div>
-                                <div class="loader"></div>
-                                <div class="button_cancel">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!--creating a hidden modal which will popUp when we have a connection request from another user-->
-                    <div class="modal fade" id="connection_request" tabindex="-1" role="dialog"
-                         aria-labelledby="myModalLabel">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content modal-conn-request">
-                                <div class="modal-body message">
-                                    <h2> {{USER}} is requesting to join ... </h2>
-                                </div>
-                                <div class="btn-reply">
-                                    <button type="button" class="btn btn-default btn-success" data-dismiss="modal">Accept</button>
-                                    <button type="button" class="btn btn-default btn-danger" data-dismiss="modal">Reject</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- Search Bar -->
-        <div class="container-fluid section-top col-md-3">
+        <div class="container-fluid section-top col-sm-9 col-xs-11 col-md-3">
             <form class="navbar-form navbar-right search-bar">
                 <div class="form-group">
                     <input type="text" id="search-input" class="form-control" placeholder="Search for online users"
-                           name="user">
+                           name="user" autocomplete="off">
                 </div>
                 <button type="submit" class="btn btn-default" id="user-search-button">
                     <i class="fa fa-search search-icon" aria-hidden="true"></i>
@@ -97,6 +40,64 @@
             </form>
             <div id="search-results"></div>
         </div>
+
+        <section class="col-xs-11 col-sm-11 col-md-8" id="user-section">
+            <h2>Online Users</h2>
+
+            <!-- List of online users -->
+            <div class="users-list">
+                <div class="user">
+                    <button type="button" class="btn btn-default btn-block online-user" data-toggle="modal"
+                            data-target="#waiting_message">
+                        User 1
+                    </button>
+                </div>
+                <div class="user">
+                    <button type="button" class="btn btn-default btn-block online-user" data-toggle="modal"
+                            data-target="#waiting_message">
+                        User 2
+                    </button>
+                </div>
+                <div class="user">
+                    <button type="button" class="btn btn-default btn-block online-user" data-toggle="modal"
+                            data-target="#waiting_message">
+                        User 3
+                    </button>
+                </div>
+
+                <!-- Modal for when the user wants to connect with one of the online users -->
+                <div class="modal fade" id="waiting_message" tabindex="-1" role="dialog"
+                     aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                WAITING FOR CONFIRMATION ...
+                            </div>
+                            <div class="loader"></div>
+                            <div class="button_cancel">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--creating a hidden modal which will popUp when we have a connection request from another user-->
+                <div class="modal fade" id="connection_request" tabindex="-1" role="dialog"
+                     aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content modal-conn-request">
+                            <div class="modal-body message">
+                                <h2> {{USER}} is requesting to join ... </h2>
+                            </div>
+                            <div class="btn-reply">
+                                <button type="button" class="btn btn-default btn-success" data-dismiss="modal">Accept</button>
+                                <button type="button" class="btn btn-default btn-danger" data-dismiss="modal">Reject</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
     <!--End Main Content-->
 
@@ -143,7 +144,6 @@
 </div>
 <!--End Body-wrapper-->
 
-<script src="https://use.fontawesome.com/b9f7a0cfba.js"></script>
 <script src="js/jquery-3.2.1.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/main.js"></script>

@@ -12,7 +12,6 @@ body {
 
 section {
     margin-top: 30px;
-    overflow: auto;
     text-align: center;
     margin-bottom: auto;
 }
@@ -20,7 +19,9 @@ section {
 a {
     text-decoration: none;
 }
-
+.row{
+    margin-right:10px;
+}
 .main-content {
     display: none; /* Hide until user enters username*/
 }
@@ -40,13 +41,17 @@ a {
     margin-top: 15px;
     text-align: center;
 }
-
-.search-bar {
-    padding-right: 0;
-    position: relative;
-    right: 0%;
+.search-bar .form-group{
+    display: inline-block;
 }
-
+.search-bar {
+    padding: 0;
+    margin: auto;
+}
+.search-bar .form-control{
+    max-width:90%;
+    width:100%;
+}
 .search-bar .search-icon {
     font-size: 150%;
 }
@@ -55,10 +60,17 @@ a {
 #user-section {
     margin-top: 0;
     padding: 0;
+    margin-left:30px;
 }
-
-.online-user {
-    margin-bottom: 5px;
+.users-list {
+    background: #fff;
+    border: 1px solid #ccc;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    border-radius:5px;
+    max-height: 450px;
+    min-height: 300px;
+    overflow-y: auto;
 }
 
 /* Style for login page */

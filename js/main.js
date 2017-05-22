@@ -16,7 +16,7 @@ $(function () {
         username = cleanInput($usernameInput.val().trim());         // trim is to remove extra blank spaces
         // If the username is valid
         if (username) {
-            console.log(username);
+            // console.log(username);
             $loginPage.hide();
             $mainContent.show();
 
