@@ -66,17 +66,17 @@
                     </div>
 
                     <!--creating a hidden modal which will popUp when we have a connection request from another user-->
-
-                    <div class="modal fade" id="connection_request_modal" tabindex="-1" role="dialog">
-                        <!--This modal will be the data target of that request by another user-->
+                    <div class="modal fade" id="connection_request" tabindex="-1" role="dialog"
+                         aria-labelledby="myModalLabel">
                         <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-body">
-                                    wants to connect with you
+                            <div class="modal-content modal-conn-request">
+                                <div class="modal-body message">
+                                    <h2> {{USER}} is requesting to join ... </h2>
                                 </div>
-                                <button type="button" class="btn btn-success" id="connection_accepted">ACCEPT</button>
-                                <button type="button" class="btn btn-danger" id="connection_rejected">REJECT</button>
-                                <!--To perform some action on the click of each button JS or css-->
+                                <div class="btn-reply">
+                                    <button type="button" class="btn btn-default btn-success" data-dismiss="modal">Accept</button>
+                                    <button type="button" class="btn btn-default btn-danger" data-dismiss="modal">Reject</button>
+                                </div>
                             </div>
                         </div>
                     </div>
