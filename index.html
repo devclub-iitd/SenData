@@ -31,8 +31,9 @@
         <div class="container-fluid section-top col-sm-9 col-xs-11 col-md-3">
             <form class="navbar-form navbar-right search-bar">
                 <div class="form-group">
-                    <input type="text" id="search-input" class="form-control" placeholder="Search for online users"
-                           name="user" autocomplete="off">
+                    <input type="text" id="search-input"  autocomplete="off" class="form-control" placeholder="Search for online users"
+                           name="user" onkeyup="dynamicSearch()" >
+                    <!--i wonder what would happen if we turn autocomplete on the above tag? Nothing happens we have to place some AJAX there I think-->
                 </div>
                 <button type="submit" class="btn btn-default" id="user-search-button">
                     <i class="fa fa-search search-icon" aria-hidden="true"></i>
@@ -45,23 +46,47 @@
             <h2>Online Users</h2>
 
             <!-- List of online users -->
-            <div class="users-list">
+            <div class="users-list" id="listOfUsers">
                 <div class="user">
                     <button type="button" class="btn btn-default btn-block online-user" data-toggle="modal"
                             data-target="#waiting_message">
-                        User 1
+                        Anaconda
                     </button>
                 </div>
                 <div class="user">
                     <button type="button" class="btn btn-default btn-block online-user" data-toggle="modal"
                             data-target="#waiting_message">
-                        User 2
+                        Beast
                     </button>
                 </div>
                 <div class="user">
                     <button type="button" class="btn btn-default btn-block online-user" data-toggle="modal"
                             data-target="#waiting_message">
-                        User 3
+                        AntMan
+                    </button>
+                </div>
+                <div class="user">
+                    <button type="button" class="btn btn-default btn-block online-user" data-toggle="modal"
+                            data-target="#waiting_message">
+                        Pokemon
+                    </button>
+                </div>
+                <div class="user">
+                    <button type="button" class="btn btn-default btn-block online-user" data-toggle="modal"
+                            data-target="#waiting_message">
+                        Wolverine
+                    </button>
+                </div>
+                <div class="user">
+                    <button type="button" class="btn btn-default btn-block online-user" data-toggle="modal"
+                            data-target="#waiting_message">
+                        Ironman
+                    </button>
+                </div>
+                <div class="user">
+                    <button type="button" class="btn btn-default btn-block online-user" data-toggle="modal"
+                            data-target="#waiting_message">
+                        batgirl
                     </button>
                 </div>
 
@@ -147,6 +172,36 @@
 <script src="js/jquery-3.2.1.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/main.js"></script>
+<script>
+    //WHEN WE COPY PASTE THE SAME FUNCTION IN THE MAIN FILE IT DOSN'T WORK
+    //    alert("Runngin");
+    function dynamicSearch() {
+        // Declare variables
+//        alert("inFUn");
+        var input, filter   , ul, li, a, i;
+        input = document.getElementById("search-input");
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("listOfUsers");
+        li = ul.getElementsByTagName('button');
+
+        // Loop through all list items, and hide those who don't match the search query
+        for (i = 0; i < li.length; i++) {
+            a = li[i].innerHTML;
+//            alert(a);
+            if (a.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+            } else {
+                li[i].style.display = "none";
+            }
+        }
+    }
+
+
+
+    // THE ABOVE FUNCTION SHOULD RUN ASYNCHRONYUSLY I THNK BY DEFAULT ALL THE FUNCTION CALLS ARE ASYNC STILL PLEASE CHECK
+
+
+</script>
 
 </body>
 </html>
