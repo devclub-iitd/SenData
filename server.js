@@ -38,7 +38,9 @@ io.on('connection', function (socket) {
         //TO WRITE AN ELSE FUNCTIONLITY IE IF THE USERNAME IS NOT IN  THE LATEST LIST ANYMORE...
         //THEN TO SEND A SORRY MESSAGE
     });
-    socket.on("answer", function (username, answer) {
+    socket.on("answer", function (msg) {
+		username=msg.username;
+		answer=msg.answer;
         console.log("Sending answer to: ", username);
         // if answer is no add the username to connected_clients
         // then emit list again
@@ -49,15 +51,23 @@ io.on('connection', function (socket) {
         }
     });
 
-    socket.on("candidate", function (username, candidate) {
+    socket.on("candidate", function (msg) {
+		username=msg.username;
+		candidate=msg.candidate;
         console.log("Sending candidate to: ", username);
         var user = connected_clients[username];
         if (user != null) {
             socket.partner = username;
-            socket.broadcast.to(user).emit("candidate", socket.username, candidate);
+            socket.broadcast.to(user).emit("candidate", candidate);
         }
     });
-
+	
+	socket.on("session-desc",function (msg) {
+		username=msg.target;
+		var user=connected_clients
+		socket.broadcast.to(user).emit("session-desc",msg);
+	}
+	
     socket.on("disconnect", function () {
         if (socket.partner) {
             if (socket.partner in connected_clients) {
@@ -66,6 +76,7 @@ io.on('connection', function (socket) {
         }
         delete connected_clients[socket.username];
     })
+    
 
 http.listen(3001, '0.0.0.0', function () {
     console.log('listening on *:3001');
