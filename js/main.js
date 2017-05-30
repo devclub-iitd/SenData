@@ -6,7 +6,9 @@ $(function () {
     var $usernameInput = $('.usernameInput'); // Input for username
     var $loginPage = $('.login-page');      // the login form area
     var $window = $(window);
-
+	//var app = require('express')();
+	//var io = require('socket.io')(http);
+	
     // Prevents input from having injected markup
     function cleanInput(input) {
         return $('<div/>').text(input).text();
@@ -59,7 +61,7 @@ $(function () {
     socket.emit('login', username);
     var flag = 0;
 
-
+	
     socket.on("update list", function (connected_clients) {
         // connected_clients is a dictionary
         // use the keys to update list of user_names
@@ -75,7 +77,6 @@ $(function () {
 	};
 	var pc;		//variable to store the RTCPeerConnection object
 	var ExchangerUsername; //variable for name of requested username
-`	
 
 	// call start() to initiate peer connection process(should be called once 'Y' answer has been received (or sent))
 	function start() {
@@ -93,7 +94,7 @@ $(function () {
 		return myPeerConnection.setLocalDescription(offer);
 	  })
 	  .then(function() {
-		socket.emit("session-desc",{               //have to add a handler for this on server-side
+		socket.emit("session-desc",{              
 		  target: ExchangerUsername,
 		  type:"file-stream",						//not sure what should go here		
 		  sdp: myPeerConnection.localDescription
@@ -152,7 +153,7 @@ $(function () {
 					return myPeerConn.setLocalDescription(answer);
 				})
 				.then(function(){
-					socket.emit("session-desc",{               //have to add a handler for this on server-side
+					socket.emit("session-desc",{             
 						target: ExchangerUsername,
 						type:"file-stream",
 						sdp: myPeerConnection.localDescription
@@ -162,8 +163,9 @@ $(function () {
 				// An error occurred, so handle the failure to connect
 				});
 			}
-		}
-	}
+		})
+	});
+
 	socket.on("candidate",function(candidate){
 	myPeerConn.addIceCandidate(candidate)			//add remote icecandidate
 	.then(function() {
@@ -173,5 +175,5 @@ $(function () {
 		console.log('Error in adding IceCandidate');
 	});
 		
-	}
-}
+	});
+});
