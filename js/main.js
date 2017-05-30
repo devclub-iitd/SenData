@@ -43,6 +43,8 @@ $(function () {
 
     var socket = io();
     var page_number = 0;
+    
+    
 
     /*
      page_number
@@ -64,22 +66,68 @@ $(function () {
         // if the user is on page_number =0 ;
     });
 
-    // call this function when any username is clicked and
+	
+	
+	    var configuration = {		//Needed for RTCPeerConnection
+  'iceServers': [{
+    'url': 'stun:stun.example.org'
+		}]
+	};
+	var pc;		//variable to store the RTCPeerConnection object
+	var ExchangerUsername; //variable for name of requested username
+`	
+
+	// call start() to initiate peer connection process(should be called once 'Y' answer has been received (or sent))
+	function start() {
+	  myPeerConn = new RTCPeerConnection(configuration);
+
+	  // send any ice candidates to the other peer
+	  myPeerConn.onicecandidate = function (evt) {
+		if (evt.candidate)
+		  socket.emit("candidate", {username:ExchangerUsername,candidate:evt.candidate});
+	  };
+	}
+	
+	function sendLocalDesc() {  //send local description to ExchangerUsername
+	  myPeerConn.createOffer().then(function(offer) {
+		return myPeerConnection.setLocalDescription(offer);
+	  })
+	  .then(function() {
+		socket.emit("session-desc",{               //have to add a handler for this on server-side
+		  target: ExchangerUsername,
+		  type:"file-stream",						//not sure what should go here		
+		  sdp: myPeerConnection.localDescription
+		});
+	  })
+	  .catch(function(reason) {
+		// An error occurred, so handle the failure to connect
+	  });
+	  
+	  
+	}
+	
+	// call SendOffer when any username is clicked and
     // also in the meantime show the screen that
     // waiting for permission of user
     // page_number=1
-
-
+	
     // save name of requested user as ExhangerUsername
-    socket.emit("offer", /*pass username of client clicked*/);
+    
+    function SendOffer(user){
+    socket.emit("offer", user);
+    ExchangerUsername=user
+	}
 
     socket.on("answer", function (answer) {
         // if answer is yes.....goto page_number=2
         // rest code follows.................
-
-
-        // else set ExchangeUsername to None
-
+        if (answer=="y"){
+			start(); //start the peerconnection process
+			sendLocalDesc();//create peer connection offer and send local description on other side
+		}
+		else{
+			ExchangerUsername=None;		// else set ExchangeUsername to None
+		}
     });
 
 
@@ -88,11 +136,42 @@ $(function () {
         // accept or deny
         // append as feed on the side//IE ANOTHER MODAL
         //CHANGE THAT MODAL'S CSS DISPLAY ATTRIBUTE FROM HIDDEN TO BLOCK OR SOMETHING
-
-
-        // if accepted any one set ExchangeUsername to username
-        // redirect to page 2
+		
+		if (answer=="Y"){
+			start();
+			ExchangerUsername=username;
+			socket.emit("answer",{answer:answer,username:username})
+			// redirect to page 2
+		}
     })
 
-
-});
+	socket.on("session-desc",function(message){
+		myPeerConn.setRemoteDescription(message.sdp).then(function(){
+			if (myPeerConn.remoteDescription.type=='offer'){
+				myPeerConn.createAnswer().then(function(answer) {
+					return myPeerConn.setLocalDescription(answer);
+				})
+				.then(function(){
+					socket.emit("session-desc",{               //have to add a handler for this on server-side
+						target: ExchangerUsername,
+						type:"file-stream",
+						sdp: myPeerConnection.localDescription
+					});
+				})
+				.catch(function(reason) {
+				// An error occurred, so handle the failure to connect
+				});
+			}
+		}
+	}
+	socket.on("candidate",function(candidate){
+	myPeerConn.addIceCandidate(candidate)			//add remote icecandidate
+	.then(function() {
+	   console.log('AddIceCandidate success.');
+	})
+	.catch(function(){
+		console.log('Error in adding IceCandidate');
+	});
+		
+	}
+}
