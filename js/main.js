@@ -6,10 +6,11 @@ $(function () {
     var $usernameInput = $('.usernameInput'); // Input for username
     var $loginPage = $('.login-page');      // the login form area
     var $window = $(window);
-    var $homePage = $('.home-page');
-    var $transferPage = $('.transfer-page');
-    var $connectionRequest = $('#connection_request');
-    // var $acceptConnection = $connectionRequest.('.btn-success')
+    var $homePage = $('.home-page');        // home page
+    var $transferPage = $('.transfer-page');       // file transfer page
+    var $connectionRequest = $('#connection_request');          // modal to accept or deny a connection
+    var $acceptConnection = $connectionRequest.find('.btn-success');          // accept button in that modal
+    var $rejectConnection = $connectionRequest.find('.btn-danger');           // reject button in that modal
 	//var app = require('express')();
 	//var io = require('socket.io')(http);
 	
@@ -45,8 +46,15 @@ $(function () {
             }
         }
     });
-
-
+    // if user accepts the connection show the transfer page
+    $acceptConnection.click(function () {
+       $homePage.fadeOut();
+       $transferPage.show();
+    });
+    // else show the homePage
+    $rejectConnection.click(function () {
+        $connectionRequest.fadeOut();
+    });
     var socket = io();
     var page_number = 0;
     
