@@ -66,7 +66,7 @@ io.on('connection', function (socket) {
 		username=msg.target;
 		var user=connected_clients
 		socket.broadcast.to(user).emit("session-desc",msg);
-	}
+	});
 	
     socket.on("disconnect", function () {
         if (socket.partner) {
@@ -75,12 +75,11 @@ io.on('connection', function (socket) {
             }
         }
         delete connected_clients[socket.username];
-    })
-    
-
+    });
+});
 http.listen(3001, '0.0.0.0', function () {
     console.log('listening on *:3001');
 });
 
 
-});
+

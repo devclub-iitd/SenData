@@ -6,6 +6,10 @@ $(function () {
     var $usernameInput = $('.usernameInput'); // Input for username
     var $loginPage = $('.login-page');      // the login form area
     var $window = $(window);
+    var $homePage = $('.home-page');
+    var $transferPage = $('.transfer-page');
+    var $connectionRequest = $('#connection_request');
+    // var $acceptConnection = $connectionRequest.('.btn-success')
 	//var app = require('express')();
 	//var io = require('socket.io')(http);
 	

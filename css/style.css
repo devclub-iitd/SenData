@@ -165,6 +165,9 @@ a {
     margin-top: 12%;
 }
 /* Transfer Page */
+.transfer-page{
+    display: none;
+}
 
 .user-name {
     text-align: center;
