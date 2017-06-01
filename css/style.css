@@ -89,6 +89,9 @@ a {
     padding: 25px;
 }
 
+.alert-username{
+    display: none;
+}
 /* Site Footer */
 .footer {
     margin-bottom: auto;

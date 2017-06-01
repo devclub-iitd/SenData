@@ -1,4 +1,4 @@
- # This is client.py file
+# This is client.py file
 
 import socket               # Import socket module
 import threading
@@ -15,12 +15,12 @@ def SendMessage(s):
 		a=raw_input('you>')
 		if a=='exit': flag=0
 		s.send(a)
-	return 
+	return
 
 def ReceiveMessage(s):
 	while 1 and flag:
 		print 'shashwat>'+s.recv(1024)
-	return	
+	return
 send_thread=threading.Thread(target=SendMessage,args=(s,))
 receive_thread=threading.Thread(target=ReceiveMessage,args=(s,))
 send_thread.start()

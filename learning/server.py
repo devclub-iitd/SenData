@@ -14,7 +14,7 @@ def send():
 	while True:
 		x=raw_input()
 		c.send(x)
-	
+
 def listen():
 	while True:
 		print c.recv(1024)
@@ -23,8 +23,8 @@ listener=threading.Thread(target=listen)
 sender=threading.Thread(target=send)
 
 while True:
-   c, addr = s.accept()     # Establish connection with client.
-   print 'Got connection from', addr
-   listener.start()
-   sender.start()
-   #c.close()                # Close the connection
+	c, addr = s.accept()     # Establish connection with client.
+	print 'Got connection from', addr
+	listener.start()
+	sender.start()
+	#c.close()                # Close the connection
