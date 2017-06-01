@@ -18,7 +18,7 @@ app.use('/js', express.static('js'));
 io.on('connection', function(socket) {
 
     socket.on("login", function(username) {
-        if (!(username in connected_clients)) {
+        if (!(username in connected_clients) && username !== "") {
             connected_clients[username] = socket.id;
             socket.username = username;
             console.log(username + " connected");
