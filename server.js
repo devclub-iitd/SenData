@@ -3,7 +3,6 @@ var app = express(); // Create express by calling the prototype in var express
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var connected_clients = [];
-var online_users = [];
 //var soc_room = {};
 app.get('/', function(req, res) {
     res.sendFile(__dirname + '/index.html');
@@ -19,16 +18,12 @@ app.use('/js', express.static('js'));
 io.on('connection', function(socket) {
 
     socket.on("login", function(username) {
-        var idx = connected_clients.indexOf(username);
-        var index = online_users.indexOf(username);
-
-        if (idx === -1 && index === -1) {
-            online_users[online_users.length] = username;
+        if (!(username in connected_clients)) {
             connected_clients[username] = socket.id;
             socket.username = username;
             console.log(username + " connected");
             socket.emit("login", true);
-            io.emit("update list", connected_clients)
+            io.emit("update list", connected_clients);
 
         }
         else {

@@ -42,7 +42,7 @@ $(function() {
         if (username) {
             // console.log(username);
             $loginPage.hide();
-            $mainContent.show();
+            $mainContent.fadeIn();
             $loginPage.off('click');
         }
     }
@@ -63,8 +63,8 @@ $(function() {
                     $alertUsername.show();
                     setUsername();
                 } else {
-                    $loginPage.fadeOut();
-                    $mainContent.show();
+                    $loginPage.hide();
+                    $mainContent.fadeIn();
                     $loginPage.off('click');
                 }
             });
