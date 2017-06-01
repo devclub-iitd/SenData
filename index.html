@@ -48,68 +48,42 @@
 
                 <!-- List of online users -->
                 <div class="users-list" id="listOfUsers">
-                    <div class="user">
-                        <button type="button" class="btn btn-default btn-block online-user" data-toggle="modal" data-target="#waiting_message">
-                            Anaconda
-                        </button>
-                    </div>
-                    <div class="user">
-                        <button type="button" class="btn btn-default btn-block online-user" data-toggle="modal" data-target="#waiting_message">
-                            Beast
-                        </button>
-                    </div>
-                    <div class="user">
-                        <button type="button" class="btn btn-default btn-block online-user" data-toggle="modal" data-target="#waiting_message">
-                            AntMan
-                        </button>
-                    </div>
-                    <div class="user">
-                        <button type="button" class="btn btn-default btn-block online-user" data-toggle="modal" data-target="#waiting_message">
-                            Pokemon
-                        </button>
-                    </div>
-                    <div class="user">
-                        <button type="button" class="btn btn-default btn-block online-user" data-toggle="modal" data-target="#waiting_message">
-                            Wolverine
-                        </button>
-                    </div>
-                    <div class="user">
-                        <button type="button" class="btn btn-default btn-block online-user" data-toggle="modal" data-target="#waiting_message">
-                            Ironman
-                        </button>
-                    </div>
-                    <div class="user">
-                        <button type="button" class="btn btn-default btn-block online-user" data-toggle="modal" data-target="#waiting_message">
-                            batgirl
-                        </button>
-                    </div>
-
-                    <!-- Modal for when the user wants to connect with one of the online users -->
-                    <div class="modal fade" id="waiting_message" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-body">
-                                    WAITING FOR CONFIRMATION ...
-                                </div>
-                                <div class="loader"></div>
-                                <div class="button_cancel">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                </div>
+                    <!--<div class="user">-->
+                        <!--<button type="button" class="btn btn-default btn-block online-user" data-toggle="modal" data-target="#waiting_message">-->
+                            <!--Anaconda-->
+                        <!--</button>-->
+                    <!--</div>-->
+                    <!--<div class="user">-->
+                        <!--<button type="button" class="btn btn-default btn-block online-user" data-toggle="modal" data-target="#waiting_message">-->
+                            <!--batgirl-->
+                        <!--</button>-->
+                    <!--</div>-->
+                </div>
+                <!-- Modal for when the user wants to connect with one of the online users -->
+                <div class="modal fade" id="waiting_message" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                WAITING FOR CONFIRMATION ...
+                            </div>
+                            <div class="loader"></div>
+                            <div class="button_cancel">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!--creating a hidden modal which will popUp when we have a connection request from another user-->
-                    <div class="modal fade" id="connection_request" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content modal-conn-request">
-                                <div class="modal-body message">
-                                    <h2> {{USER}} is requesting to join ... </h2>
-                                </div>
-                                <div class="btn-reply">
-                                    <button type="button" class="btn btn-default btn-success" data-dismiss="modal">Accept</button>
-                                    <button type="button" class="btn btn-default btn-danger" data-dismiss="modal">Reject</button>
-                                </div>
+                <!--creating a hidden modal which will popUp when we have a connection request from another user-->
+                <div class="modal fade" id="connection_request" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content modal-conn-request">
+                            <div class="modal-body message">
+                                <h2> {{USER}} is requesting to join ... </h2>
+                            </div>
+                            <div class="btn-reply">
+                                <button type="button" class="btn btn-default btn-success" data-dismiss="modal">Accept</button>
+                                <button type="button" class="btn btn-default btn-danger" data-dismiss="modal">Reject</button>
                             </div>
                         </div>
                     </div>

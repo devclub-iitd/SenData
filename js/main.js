@@ -13,7 +13,7 @@ $(function() {
     var $rejectConnection = $connectionRequest.find('.btn-danger'); // reject button in that modal
     var socket = io();
     var $alertUsername = $('.alert-username');
-    var onlineUsers = [];
+    var $listOfUsers = $('#listOfUsers');
     var page_number = 0;
 
     // alert("Running");
@@ -62,10 +62,20 @@ $(function() {
                     $usernameInput.val("");
                     $alertUsername.show();
                     setUsername();
-                } else {
+                }
+                else {
                     $loginPage.hide();
                     $mainContent.fadeIn();
                     $loginPage.off('click');
+                    socket.on('updateUsersList', function(online_users) {
+                        console.log("updating users")
+                        var html = '';
+                        for(var i = 0; i < online_users.length; i++) {
+                            html += '<div class="user"><button type="button" class="btn btn-default btn-block online-user" data-toggle="modal" data-target="#waiting_message">' + online_users[i] + '</button> </div>';
+                        }
+                        console.log(html);
+                        $listOfUsers.html(html);
+                    });
                 }
             });
         }

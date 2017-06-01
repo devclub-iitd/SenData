@@ -23,6 +23,7 @@ io.on('connection', function(socket) {
             socket.username = username;
             console.log(username + " connected");
             socket.emit("login", true);
+            io.sockets.emit("updateUsersList", Object.keys(connected_clients));
             io.emit("update list", connected_clients);
 
         }
