@@ -34,6 +34,14 @@ io.on('connection', function(socket) {
 
     });
 
+    socket.on('disconnect',function(data){
+        delete connected_clients[socket.username];
+        io.sockets.emit("updateUsersList", Object.keys(connected_clients));
+        console.log(socket.username + " disconnected");
+        // connections.splice(connections.indexOf(socket),1);
+        // console.log('Disconnected: %s sockets connected', connections.length);
+    });
+
     //   socket.on("offer", function (username) { //currently not passed offer
     //       // remove socket.username form connected_clients
     //       // then emit list again
