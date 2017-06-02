@@ -24,7 +24,7 @@ io.on('connection', function(socket) {
             console.log(username + " connected");
             socket.emit("login", true);
             io.sockets.emit("updateUsersList", Object.keys(connected_clients));
-            io.emit("update list", connected_clients);
+            // io.emit("update list", connected_clients);
 
         }
         else {
@@ -35,6 +35,11 @@ io.on('connection', function(socket) {
     });
 
     socket.on('disconnect',function(data){
+      if (socket.partner) {
+                if (socket.partner in connected_clients) {
+                    socket.broadcast.to(connected_clients[socket.partner]).emit("PartnerDisconnected");
+                }
+            }
         delete connected_clients[socket.username];
         io.sockets.emit("updateUsersList", Object.keys(connected_clients));
         console.log(socket.username + " disconnected");
@@ -86,15 +91,6 @@ io.on('connection', function(socket) {
     // 	var user=connected_clients
     // 	socket.broadcast.to(user).emit("session-desc",msg);
     // });
-    //
-    //   socket.on("disconnect", function () {
-    //       if (socket.partner) {
-    //           if (socket.partner in connected_clients) {
-    //               socket.broadcast.to(connected_clients[socket.partner]).emit("Partner disconnected");
-    //           }
-    //       }
-    //       delete connected_clients[socket.username];
-    //   });
 });
 
 http.listen(3001, '0.0.0.0', function() {
