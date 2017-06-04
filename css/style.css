@@ -107,10 +107,6 @@ a {
     padding: 5px;
     clear: both;
 }
-/* Accept Reject Modal */
-#connection_request{
-    display: none;
-}
 /* Waiting for Confirmation modal */
 .button_cancel {
     margin-bottom: 5px;
@@ -166,10 +162,44 @@ a {
     margin-top: 12%;
 }
 
-#connection_request{
-    vertical-align: middle;
-    margin-top: 12%;
+/* User Request Sidebar*/
+#user-requests{
+    font-size: larger;
+    margin: auto;
+    overflow-y: auto;
+    position: relative;
+    text-align: center;
 }
+#user-requests .request-list{
+    border: 1px solid #ccc;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    border-radius:5px;
+    list-style-type: none;
+    min-height:300px;
+    max-height: 400px;
+}
+#user-requests .request-list li{
+    border-bottom:1px solid #ccc;
+    display: block;
+    padding: 5px;
+}
+#user-requests .request-list li .btn{
+    -webkit-border-radius:30px;
+    -moz-border-radius:30px;
+    border-radius:30px;
+    margin: 3px 5px;
+    font-size: 50%;
+    padding: 3px 4px;
+}
+#user-requests .request-list li .btn-danger{
+    padding:3px 5px;
+}
+#user-requests .request-btn{
+    position: absolute;
+    right: 5%;
+}
+
 /* Transfer Page */
 .transfer-page{
     display: none;

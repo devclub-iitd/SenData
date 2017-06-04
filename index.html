@@ -43,7 +43,7 @@
                 <div id="search-results"></div>
             </div>
 
-            <section class="col-xs-11 col-sm-11 col-md-8" id="user-section">
+            <section class="col-xs-11 col-sm-11 col-md-5" id="user-section">
                 <h2>Online Users</h2>
 
                 <!-- List of online users -->
@@ -75,20 +75,50 @@
                 </div>
 
                 <!--creating a hidden modal which will popUp when we have a connection request from another user-->
-                <div class="modal fade" id="connection_request" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content modal-conn-request">
-                            <div class="modal-body message">
-                                <h2> {{USER}} is requesting to join ... </h2>
-                            </div>
-                            <div class="btn-reply">
-                                <button type="button" class="btn btn-default btn-success" data-dismiss="modal">Accept</button>
-                                <button type="button" class="btn btn-default btn-danger" data-dismiss="modal">Reject</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!--<div class="modal fade" id="connection_request" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">-->
+                    <!--<div class="modal-dialog" role="document">-->
+                        <!--<div class="modal-content modal-conn-request">-->
+                            <!--<div class="modal-body message">-->
+                                <!--<h2> {{USER}} is requesting to join ... </h2>-->
+                            <!--</div>-->
+                            <!--<div class="btn-reply">-->
+                                <!--<button type="button" class="btn btn-default btn-success" data-dismiss="modal">Accept</button>-->
+                                <!--<button type="button" class="btn btn-default btn-danger" data-dismiss="modal">Reject</button>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
             </section>
+            <span class="col-xs-12 col-sm-12 col-md-3" id="user-requests">
+                <h2>User Requests</h2>
+                <ul class="request-list">
+                    <li>
+                        user1
+                        <span class="request-btn">
+                            <a class="btn btn-success" href="#"><i class="fa fa-check" aria-hidden="true"></i></a>
+                            <a class="btn btn-danger" href="#"><i class="fa fa-times" aria-hidden="true"></i></a>
+                        </span>
+                    </li>
+                    <li>user2
+                        <span class="request-btn">
+                            <a class="btn btn-success" href="#"><i class="fa fa-check" aria-hidden="true"></i></a>
+                            <a class="btn btn-danger" href="#"><i class="fa fa-times" aria-hidden="true"></i></a>
+                        </span>
+                    </li>
+                    <li>user3
+                        <span class="request-btn">
+                            <a class="btn btn-success" href="#"><i class="fa fa-check" aria-hidden="true"></i></a>
+                            <a class="btn btn-danger" href="#"><i class="fa fa-times" aria-hidden="true"></i></a>
+                        </span>
+                    </li>
+                    <li>user4
+                        <span class="request-btn">
+                            <a class="btn btn-success" href="#"><i class="fa fa-check" aria-hidden="true"></i></a>
+                            <a class="btn btn-danger" href="#"><i class="fa fa-times" aria-hidden="true"></i></a>
+                        </span>
+                    </li>
+                </ul>
+            </div>
         </div>
         <div class="transfer-page">
             <!-- Username Display -->
