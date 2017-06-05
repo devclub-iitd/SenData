@@ -8,9 +8,7 @@ $(function() {
         $window = $(window),
         $homePage = $('.home-page'), // home page
         $transferPage = $('.transfer-page'), // file transfer page
-        $connectionRequest = $('#connection_request'), // modal to accept or deny a connection
-        $acceptConnection = $connectionRequest.find('.btn-success'), // accept button in that modal
-        $rejectConnection = $connectionRequest.find('.btn-danger'), // reject button in that modal
+        $userRequest = $('#user-requests'), // sidebar to accept or deny a connection
         socket = io(),
         $alertUsername = $('.alert-username'),
         $listOfUsers = $('#listOfUsers');
@@ -90,7 +88,7 @@ $(function() {
     $(document).on('click', '.online-user', function() {
         // code for what happens when user clicks on a list item
         var target_username = $(this).text();
-        console.log(target_username);
+        // console.log(target_username);
         socket.emit('offer', target_username);
 
     });
@@ -149,6 +147,35 @@ $(function() {
         ExchangerUsername = user
     }
 
+    function requestHandler(answer, btn) {
+        // console.log(btn.parent().parent()[0].textContent);
+        // console.log('You have selected : ' + answer);
+        var requestingUsername = btn.parent().parent()[0].textContent;
+        if(answer === 'y'){
+        //    if request accepted
+            $homePage.hide();
+            $transferPage.fadeIn();
+        }
+        else{
+        //    if request rejected
+            btn.parent().parent().remove();
+        }
+
+    // emit an event to the requesting user
+
+
+    }
+
+    $(document).on('click', '#user-requests .btn-success', function() {
+        // code for what happens when user clicks on a list item
+        requestHandler('y', $(this));
+    });
+    $(document).on('click', '#user-requests .btn-danger', function() {
+        // code for what happens when user clicks on a list item
+        requestHandler('n', $(this));
+    });
+
+
     socket.on("answer", function(answer) {
         // if answer is yes.....goto page_number=2
         // rest code follows.................
@@ -165,32 +192,41 @@ $(function() {
         var answer;
 
         // console.log('Offer Sent by ' + username);
-        $connectionRequest.modal();
 
         // show that username wants to connect to you
-        $('#connection_request .message h2').text(username + " is requesting to join ... ");
+        var requestList = $('.request-list');
+
+        // create a new list element and prepend it to the existing list
+        var newRequest = '<li>' + username;
+        newRequest += '<span class="request-btn">';
+        newRequest += '<a class="btn btn-success" href="#"><i class="fa fa-check" aria-hidden="true"></i></a>';
+        newRequest += '<a class="btn btn-danger" href="#"><i class="fa fa-times" aria-hidden="true"></i></a>';
+        newRequest += '</span></li>';
+
+        $(newRequest).prependTo(requestList);
+
 
         // if user accepts the connection show the transfer page
-        $acceptConnection.click(function() {
-            answer = 'Y';
-            $homePage.hide();
-            $transferPage.fadeIn(200);
-            start();
-            ExchangerUsername = username;
-            socket.emit("answer", {
-                answer: answer,
-                username: username
-            });
-        });
-        // else, if user rejects show the homePage
-        $rejectConnection.click(function() {
-            answer = 'N';
-            $connectionRequest.fadeOut();
-            socket.emit("answer", {
-                answer: answer,
-                username: username
-            });
-        });
+        // $acceptConnection.click(function() {
+        //     answer = 'Y';
+        //     $homePage.hide();
+        //     $transferPage.fadeIn(200);
+        //     start();
+        //     ExchangerUsername = username;
+        //     socket.emit("answer", {
+        //         answer: answer,
+        //         username: username
+        //     });
+        // });
+        // // else, if user rejects show the homePage
+        // $rejectConnection.click(function() {
+        //     answer = 'N';
+        //     $connectionRequest.fadeOut();
+        //     socket.emit("answer", {
+        //         answer: answer,
+        //         username: username
+        //     });
+        // });
 
         // accept or deny
         // append as feed on the side//IE ANOTHER MODAL
@@ -199,7 +235,7 @@ $(function() {
 
     socket.on("session-desc", function(message) {
         myPeerConn.setRemoteDescription(message.sdp).then(function() {
-            if (myPeerConn.remoteDescription.type == 'offer') {
+            if (myPeerConn.remoteDescription.type === 'offer') {
                 myPeerConn.createAnswer().then(function(answer) {
                     return myPeerConn.setLocalDescription(answer);
                 })
