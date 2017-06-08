@@ -29,9 +29,20 @@
     <!-- Main Content -->
     <div class="main-content row">
         <div class="home-page">
+
+            <!--i think someother guy can style this div below better so that search comes to the right of this-->
+            
+            <div class="row" style="width: 100%;align-content: center ">
+                <div  style="width: 90% ; margin: 0% auto">
+                    <h3 id="welcomeLine"></h3>
+                </div>
+            </div>
+            <!--<br>-->
             <!-- Search Bar -->
+            <div class="row"></div>
             <div class="container-fluid section-top col-sm-9 col-xs-11 col-md-3">
-                <form class="navbar-form navbar-right search-bar">
+
+                <form class="navbar-form navbar-right search-bar" >
                     <div class="form-group">
                         <input type="text" id="search-input" autocomplete="off" class="form-control" placeholder="Search for online users" name="user" onkeyup="dynamicSearch()">
                         <!--i wonder what would happen if we turn autocomplete on the above tag? Nothing happens we have to place some AJAX there I think-->
@@ -40,6 +51,7 @@
                         <i class="fa fa-search search-icon" aria-hidden="true"></i>
                     </button>
                 </form>
+
                 <div id="search-results"></div>
             </div>
 
@@ -68,7 +80,7 @@
                             </div>
                             <div class="loader"></div>
                             <div class="button_cancel">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal" id="cancelButtonWaitingModal">Cancel</button>
                             </div>
                         </div>
                     </div>

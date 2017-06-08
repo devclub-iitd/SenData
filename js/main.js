@@ -50,6 +50,8 @@ $(function() {
         if (event.which === 13) {
             event.preventDefault();
             username = cleanInput($usernameInput.val().trim()); // trim is to remove extra blank spaces
+            // console.log(username);
+            $('#welcomeLine').html('Welcome ' + username + ' !');
 
             socket.emit('login', username); //This sends a request to login with certain username
 
@@ -82,6 +84,14 @@ $(function() {
         }
         $listOfUsers.html(html);
     });
+
+
+    $('#cancelButtonWaitingModal').click(function(){
+        //On clicking this we have to reset something as state proceeds
+        //forward and doesn't go again from the beginning also to put something
+        //server side.
+    });
+
 
     $(document).on('click', '.online-user', function() {
         // code for what happens when user clicks on a list item
