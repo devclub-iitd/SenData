@@ -88,50 +88,85 @@ $(function() {
         var target_username = $(this).text();
         // console.log(target_username);
         socket.emit('offer', target_username);
+        ExchangerUsername = target_username;
 
     });
 
 
     var configuration = { //Needed for RTCPeerConnection
         'iceServers': [{
-            'url': 'stun:stun.example.org'
+            'urls': 'stun:stun.l.google.com:19302'
         }]
     };
-
-    var pc; //variable to store the RTCPeerConnection object
+    var connection = { 
+	'optional': 
+		[{'DtlsSrtpKeyAgreement': true}, {'SctpDataChannels': true }] 
+	};
+	alert("hi");
+    var myPeerConn; //variable to store the RTCPeerConnection object
     var ExchangerUsername; //variable for name of requested username
-
+	var dataChannel;
+	var offerComplete=false;
     // call start() to initiate peer connection process(should be called once 'Y' answer has been received (or sent))
 
-    function start() {
-        myPeerConn = new RTCPeerConnection(configuration);
+    function start(){ 
+        myPeerConn = new RTCPeerConnection(configuration,connection);
+		
 
         // send any ice candidates to the other peer
         myPeerConn.onicecandidate = function(evt) {
-            if (evt.candidate)
+            if (evt.candidate){
                 socket.emit("candidate", {
                     username: ExchangerUsername,
                     candidate: evt.candidate
                 });
+			}
         };
     }
 
     function sendLocalDesc() { //send local description to ExchangerUsername
-        myPeerConn.createOffer().then(function(offer) {
-            return myPeerConnection.setLocalDescription(offer);
+		console.log("TRYING TO CREATE OFFER");
+        var sdpConstraints = {'mandatory':
+		{'OfferToReceiveAudio': false, 'OfferToReceiveVideo': false}
+		};
+
+
+        myPeerConn.createOffer(sdpConstraints).then(function(offer) {
+			console.log("Trying to get local description from stun servers");
+            return myPeerConn.setLocalDescription(offer);
         })
             .then(function() {
                 socket.emit("session-desc", {
                     target: ExchangerUsername,
                     type: "file-stream", //not sure what should go here
-                    sdp: myPeerConnection.localDescription
+                    sdp: myPeerConn.localDescription
                 });
+                console.log("Sending local descriptions to other guy");
             })
             .catch(function(reason) {
                 // An error occurred, so handle the failure to connect
+                console.log("error occurred");
+                console.log(reason);
             });
-    }
+    
+    //Create data channel and set event handling(the one who sends offer does this) 
+		dataChannel = myPeerConn.createDataChannel("datachannel");
+		
+		
+		dataChannel.onmessage = function(e){console.log("DC message:" +e.data);};
+		dataChannel.onopen = function(){console.log("------ DATACHANNEL OPENED ------");};
+		dataChannel.onclose = function(){console.log("------- DC closed! -------")};
+		dataChannel.onerror = function(){console.log("DC ERROR!!!")};
 
+    }
+	
+	function receiveChannelCallback(event) {
+    dataChannel = event.channel;
+    dataChannel.onmessage = function(e){console.log("DC message:" +e.data);};
+	dataChannel.onopen = function(){console.log("------ DATACHANNEL OPENED ------(by other side)");};
+	dataChannel.onclose = function(){console.log("------- DC closed! -------")};
+	dataChannel.onerror = function(){console.log("DC ERROR!!!")};
+	}
     // call SendOffer when any username is clicked and
     // also in the meantime show the screen that
     // waiting for permission of user
@@ -139,10 +174,10 @@ $(function() {
 
     // save name of requested user as ExhangerUsername
 
-    function SendOffer(user) {
+    /*function SendOffer(user) {
         socket.emit("offer", user);
         ExchangerUsername = user
-    }
+    }*/
 
     function requestHandler(answer, btn) {
         // console.log(btn.parent().parent()[0].textContent);
@@ -154,6 +189,8 @@ $(function() {
         });
         if (answer === 'y') {
             //    if request accepted
+            ExchangerUsername=requestingUsername;
+            start();
             $homePage.hide();
             $transferPage.fadeIn();
 
@@ -174,7 +211,17 @@ $(function() {
         // code for what happens when user clicks on a list item
         requestHandler('n', $(this));
     });
-
+	
+	$('#file-send-button').click(function(){
+		console.log(username+"I am closer");
+		dataChannel.send("hey yo");
+		dataChannel.send("Bye yo");
+		//dataChannel.close();
+	});
+	
+	
+	
+	
     socket.on("offer", function(username) {
 
         // console.log('Offer Sent by ' + username);
@@ -233,8 +280,9 @@ $(function() {
             //stop the progress loader
             $homePage.hide();
             $transferPage.fadeIn();
-            // start(); //start the peerconnection process
-            // sendLocalDesc(); //create peer connection offer and send local description on other side
+             start(); //start the peerconnection process
+             sendLocalDesc(); //create peer connection offer and send local description on other side(also create a data channel)
+             
         } else {
 
             //remove modal after informing partner has said no
@@ -243,7 +291,10 @@ $(function() {
     });
 
     socket.on("session-desc", function(message) {
+		console.log("session-desc received");
         myPeerConn.setRemoteDescription(message.sdp).then(function() {
+			//offerComplete=true;
+			console.log("received something");
             if (myPeerConn.remoteDescription.type === 'offer') {
                 myPeerConn.createAnswer().then(function(answer) {
                     return myPeerConn.setLocalDescription(answer);
@@ -252,29 +303,40 @@ $(function() {
                         socket.emit("session-desc", {
                             target: ExchangerUsername,
                             type: "file-stream",
-                            sdp: myPeerConnection.localDescription
+                            sdp: myPeerConn.localDescription
                         });
+                        console.log("Received remote description, now sending my local description");
+						//Set datachannel response on the other end(the client who receives the offer)
+						myPeerConn.ondatachannel=receiveChannelCallback;
+						
                     })
                     .catch(function(reason) {
                         // An error occurred, so handle the failure to connect
                     });
             }
+            else{
+				console.log("Process complete");
+			}
         })
     });
 
     socket.on("candidate", function(candidate) {
+		if(1){                   //leave this, might have to put a condition later
+		console.log("Received IceCandidate");
         myPeerConn.addIceCandidate(candidate) //add remote icecandidate
             .then(function() {
                 console.log('AddIceCandidate success.');
             })
-            .catch(function() {
+            .catch(function(reason) {
                 console.log('Error in adding IceCandidate');
+                console.log(reason);
             });
+		}
     });
 
     socket.on("PartnerDisconnected", function() {
         //stop transfer or show dialog that partner has been disconnected retry from main page
-
+		offerComplete=false;
     });
 
 

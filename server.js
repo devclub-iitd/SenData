@@ -52,11 +52,11 @@ io.on('connection', function(socket) {
     var user = connected_clients[username];
     waiting_clients[socket.username] = socket.id;
     // console.log(username);
-    delete connected_clients[socket.username];
+   // delete connected_clients[socket.username];
 // console.log(connected_clients);
     io.sockets.emit('updateUsersList', Object.keys(connected_clients));
 
-    if (user !== null) {
+    if (waiting_clients[username]==null) {           //if user is not in waiting list
       // socket.partner = username;
       socket.broadcast.to(user).emit("offer", socket.username); //I THINK WE SHOULD NOT USE THE KEYWORD OFFER IE THE SAME THING AS THAT OF CLIENT MAKING AN OFFER IT SHOULD BE "OFFERgoingToPartner"
 
@@ -76,7 +76,7 @@ io.on('connection', function(socket) {
       socket.broadcast.to(waiting_clients[username]).emit('answer', {
         answer: answer
       });
-      connected_clients[username] = waiting_clients[username];
+      //connected_clients[username] = waiting_clients[username];
       delete waiting_clients[username];
       io.sockets.emit('updateUsersList', Object.keys(connected_clients));
       // if answer is no add the username to connected_clients
@@ -92,7 +92,7 @@ io.on('connection', function(socket) {
     }
     socket.partner = username;
     socket.partnerid = waiting_clients[username];
-    delete waiting_clients[username];
+    //delete waiting_clients[username];
   });
 
 
@@ -104,22 +104,24 @@ io.on('connection', function(socket) {
   // }
   // });
   //
-  // socket.on("candidate", function (msg) {
-  //     username=msg.username;
-  //     candidate=msg.candidate;
-  //     console.log("Sending candidate to: ", username);
-  //     var user = connected_clients[username];
-  //     if (user != null) {
-  //         socket.partner = username;
-  //         socket.broadcast.to(user).emit("candidate", candidate);
-  //     }
-  // });
-  //
-  // socket.on("session-desc",function (msg) {
-  //     username=msg.target;
-  //     var user=connected_clients
-  //     socket.broadcast.to(user).emit("session-desc",msg);
-  // });
+   socket.on("candidate", function (msg) {
+       username=msg.username;
+       candidate=msg.candidate;
+       var user = connected_clients[username];
+       console.log(username,socket.partnerid);
+       if (user != null) {
+           socket.partner = username;
+           console.log("Sending candidate to: ", username);
+           socket.broadcast.to(user).emit("candidate", candidate);
+       }
+   });
+  
+   socket.on("session-desc",function (msg) {
+       username=msg.target;
+       console.log("Sending session-desc to: ", username);
+       var user=connected_clients[username];
+       socket.broadcast.to(user).emit("session-desc",msg);
+   });
 });
 
 http.listen(3001, '0.0.0.0', function() {
