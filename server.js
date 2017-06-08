@@ -4,6 +4,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var connected_clients = [];
 var waiting_clients = [];
+var logged_clients=[];
 //var soc_room = {};
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/index.html');
@@ -21,6 +22,7 @@ io.on('connection', function(socket) {
   socket.on("login", function(username) {
     if (!(username in connected_clients) && username !== "") {
       connected_clients[username] = socket.id;
+      logged_clients[username]=socket.id;
       socket.username = username;
       console.log(username + " connected");
       socket.emit('login', true);
@@ -41,6 +43,7 @@ io.on('connection', function(socket) {
       }
     }
     delete connected_clients[socket.username];
+    delete logged_clients[socket.username];
     io.sockets.emit("updateUsersList", Object.keys(connected_clients));
     console.log(socket.username + " disconnected");
   });
@@ -52,7 +55,7 @@ io.on('connection', function(socket) {
     var user = connected_clients[username];
     waiting_clients[socket.username] = socket.id;
     // console.log(username);
-   // delete connected_clients[socket.username];
+    delete connected_clients[socket.username];
 // console.log(connected_clients);
     io.sockets.emit('updateUsersList', Object.keys(connected_clients));
 
@@ -107,7 +110,7 @@ io.on('connection', function(socket) {
    socket.on("candidate", function (msg) {
        username=msg.username;
        candidate=msg.candidate;
-       var user = connected_clients[username];
+       var user = logged_clients[username];
        console.log(username,socket.partnerid);
        if (user != null) {
            socket.partner = username;
@@ -119,7 +122,7 @@ io.on('connection', function(socket) {
    socket.on("session-desc",function (msg) {
        username=msg.target;
        console.log("Sending session-desc to: ", username);
-       var user=connected_clients[username];
+       var user=logged_clients[username];
        socket.broadcast.to(user).emit("session-desc",msg);
    });
 });
