@@ -11,7 +11,8 @@ $(function() {
         $userRequest = $('#user-requests'), // sidebar to accept or deny a connection
         socket = io(),
         $alertUsername = $('.alert-username'),
-        $listOfUsers = $('#listOfUsers');
+        $listOfUsers = $('#listOfUsers'),
+        $cancelButton = $('#waiting_message .cancel-button button');
 
     // alert("Running");
 
@@ -86,13 +87,6 @@ $(function() {
     });
 
 
-    $('#cancelButtonWaitingModal').click(function(){
-        //On clicking this we have to reset something as state proceeds
-        //forward and doesn't go again from the beginning also to put something
-        //server side.
-    });
-
-
     $(document).on('click', '.online-user', function() {
         // code for what happens when user clicks on a list item
         var target_username = $(this).text();
@@ -100,6 +94,10 @@ $(function() {
         socket.emit('offer', target_username);
         ExchangerUsername = target_username;
 
+        $cancelButton.on('click', function(){
+            console.log("cancel button clicked");
+            socket.emit('cancel', target_username);
+        });
     });
 
 
@@ -124,9 +122,9 @@ $(function() {
    }
         ]
     };
-    var connection = { 
-	'optional': 
-		[{'DtlsSrtpKeyAgreement': true}, {'SctpDataChannels': true }] 
+    var connection = {
+	'optional':
+		[{'DtlsSrtpKeyAgreement': true}, {'SctpDataChannels': true }]
 	};
 	alert("hi");
     var myPeerConn; //variable to store the RTCPeerConnection object
@@ -135,9 +133,9 @@ $(function() {
 	var offerComplete=false;
     // call start() to initiate peer connection process(should be called once 'Y' answer has been received (or sent))
 
-    function start(){ 
+    function start(){
         myPeerConn = new RTCPeerConnection(configuration,connection);
-		
+
 
         // send any ice candidates to the other peer
         myPeerConn.onicecandidate = function(evt) {
@@ -174,18 +172,18 @@ $(function() {
                 console.log("error occurred");
                 console.log(reason);
             });
-    
-    //Create data channel and set event handling(the one who sends offer does this) 
+
+    //Create data channel and set event handling(the one who sends offer does this)
 		dataChannel = myPeerConn.createDataChannel("datachannel");
-		
-		
+
+
 		dataChannel.onmessage = function(e){console.log("DC message:" +e.data);};
 		dataChannel.onopen = function(){console.log("------ DATACHANNEL OPENED ------");};
 		dataChannel.onclose = function(){console.log("------- DC closed! -------")};
 		dataChannel.onerror = function(){console.log("DC ERROR!!!")};
 
     }
-	
+
 	function receiveChannelCallback(event) {
     dataChannel = event.channel;
     dataChannel.onmessage = function(e){console.log("DC message:" +e.data);};
@@ -229,6 +227,15 @@ $(function() {
 
     }
 
+    socket.on("cancel", function(username, waitingList){
+        var html = '';
+        var $requestList = $('.request-list');
+        for (var i = 0; i < waitingList.length; i++) {
+            html += '<li>' + waitingList[i] + '<span class="request-btn"> <a class="btn btn-success" href="#"><i class="fa fa-check" aria-hidden="true"></i></a> <a class="btn btn-danger" href="#"><i class="fa fa-times" aria-hidden="true"></i></a> </span></li>';
+        }
+        $requestList.html(html);
+    });
+
     $(document).on('click', '#user-requests .btn-success', function() {
         // code for what happens when user clicks on a list item
         requestHandler('y', $(this));
@@ -237,17 +244,17 @@ $(function() {
         // code for what happens when user clicks on a list item
         requestHandler('n', $(this));
     });
-	
+
 	$('#file-send-button').click(function(){
 		console.log(username+"I am closer");
 		dataChannel.send("hey yo");
 		dataChannel.send("Bye yo");
 		//dataChannel.close();
 	});
-	
-	
-	
-	
+
+
+
+
     socket.on("offer", function(username) {
 
         // console.log('Offer Sent by ' + username);
@@ -308,7 +315,7 @@ $(function() {
             $transferPage.fadeIn();
              start(); //start the peerconnection process
              sendLocalDesc(); //create peer connection offer and send local description on other side(also create a data channel)
-             
+
         } else {
 
             //remove modal after informing partner has said no
@@ -334,7 +341,7 @@ $(function() {
                         console.log("Received remote description, now sending my local description");
 						//Set datachannel response on the other end(the client who receives the offer)
 						myPeerConn.ondatachannel=receiveChannelCallback;
-						
+
                     })
                     .catch(function(reason) {
                         // An error occurred, so handle the failure to connect
