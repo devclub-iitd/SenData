@@ -51,7 +51,7 @@ io.on('connection', function(socket) {
     socket.on("offer", function(username) {
         // remove socket.username form connected_clients
         // then emit list again
-        console.log("Sending offer to: " + username + " from " + socket.username);
+        console.log("Sending offer to " + username + " from " + socket.username);
         var user = connected_clients[username];
         waiting_clients[socket.username] = socket.id;
         // console.log(username);
@@ -80,6 +80,7 @@ io.on('connection', function(socket) {
                 answer: answer
             });
             //connected_clients[username] = waiting_clients[username];
+            connected_clients[username] = waiting_clients[username];
             delete waiting_clients[username];
             io.sockets.emit('updateUsersList', Object.keys(connected_clients));
             // if answer is no add the username to connected_clients

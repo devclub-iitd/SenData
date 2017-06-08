@@ -12,7 +12,7 @@ $(function() {
         socket = io(),
         $alertUsername = $('.alert-username'),
         $listOfUsers = $('#listOfUsers'),
-        $cancelButton = $('#waiting_message').find('.cancel-button button');
+        $cancelButton = $('#waiting_message .cancel-button button');
 
     // alert("Running");
 
@@ -73,6 +73,7 @@ $(function() {
     socket.on('updateUsersList', function(online_users) {
         var html = '';
         if (online_users.length === 1) {
+            html += '<p style="color: #ddd;">No users are online</p>';
             //show that no users are online
             // should not be clickable.
         }
@@ -95,7 +96,6 @@ $(function() {
         ExchangerUsername = target_username;
 
         $cancelButton.on('click', function(){
-            console.log("cancel button clicked");
             socket.emit('cancel', target_username);
         });
     });

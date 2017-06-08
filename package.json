@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Simple tool for sending file in an Intranet environment",
   "dependencies": {
-    "express": "^4.15.2",
+    "express": "^4.15.3",
     "socket.io": "^1.7.3"
   },
   "devDependencies": {
