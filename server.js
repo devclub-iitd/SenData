@@ -101,7 +101,6 @@ io.on('connection', function(socket) {
     socket.on('cancel', function(target_username){
         delete waiting_clients[socket.username];
         console.log(waiting_clients);
-        console.log(connected_clients);
         connected_clients[socket.username] = socket.id;
         logged_clients[socket.username]=socket.id;
         io.sockets.emit('updateUsersList', Object.keys(connected_clients));
