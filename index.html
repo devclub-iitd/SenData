@@ -28,90 +28,74 @@
 
     <!-- Main Content -->
     <div class="main-content row">
-        <div class="home-page">
+        <div class="home-page container">
 
-            <!--i think someother guy can style this div below better so that search comes to the right of this-->
+            <!--i think some other guy can style this div below better so that search comes to the right of this-->
 
-            <div class="row" style="width: 100%;align-content: center ">
-                <div  style="width: 90% ; margin: 0% auto">
+            <div class="row">
+                <div class="welcome col-sm-12 col-xs-12 col-md-9">
                     <h3 id="welcomeLine">Welcome!</h3>
+                </div>
+                <div class="section-top col-sm-9 col-xs-11 col-md-3">
+
+                    <form class="navbar-form search-bar" >
+                        <div class="form-group">
+                            <input type="text" id="search-input" autocomplete="off" class="form-control" placeholder="Search for online users" name="user" onkeyup="dynamicSearch()">
+                            <!--i wonder what would happen if we turn autocomplete on the above tag? Nothing happens we have to place some AJAX there I think-->
+                        </div>
+                        <button type="submit" class="btn btn-default" id="user-search-button">
+                            <i class="fa fa-search search-icon" aria-hidden="true"></i>
+                        </button>
+                    </form>
+
+                    <div id="search-results"></div>
                 </div>
             </div>
             <!--<br>-->
             <!-- Search Bar -->
-            <div class="row"></div>
-            <div class="container-fluid section-top col-sm-9 col-xs-11 col-md-3">
-
-                <form class="navbar-form navbar-right search-bar" >
-                    <div class="form-group">
-                        <input type="text" id="search-input" autocomplete="off" class="form-control" placeholder="Search for online users" name="user" onkeyup="dynamicSearch()">
-                        <!--i wonder what would happen if we turn autocomplete on the above tag? Nothing happens we have to place some AJAX there I think-->
+            <div class="row">
+                <div class="col-xs-11 col-sm-11 col-md-8" id="user-section">
+                    <h2>Online Users</h2>
+                    <!-- List of online users -->
+                    <div class="users-list" id="listOfUsers">
+                        <!--<div class="user">-->
+                        <!--<button type="button" class="btn btn-default btn-block online-user" data-toggle="modal" data-target="#waiting_message">-->
+                        <!--Anaconda-->
+                        <!--</button>-->
+                        <!--</div>-->
+                        <!--<div class="user">-->
+                        <!--<button type="button" class="btn btn-default btn-block online-user" data-toggle="modal" data-target="#waiting_message">-->
+                        <!--batgirl-->
+                        <!--</button>-->
+                        <!--</div>-->
                     </div>
-                    <button type="submit" class="btn btn-default" id="user-search-button">
-                        <i class="fa fa-search search-icon" aria-hidden="true"></i>
-                    </button>
-                </form>
-
-                <div id="search-results"></div>
-            </div>
-
-            <section class="col-xs-11 col-sm-11 col-md-5" id="user-section">
-                <h2>Online Users</h2>
-
-                <!-- List of online users -->
-                <div class="users-list" id="listOfUsers">
-                    <!--<div class="user">-->
-                        <!--<button type="button" class="btn btn-default btn-block online-user" data-toggle="modal" data-target="#waiting_message">-->
-                            <!--Anaconda-->
-                        <!--</button>-->
-                    <!--</div>-->
-                    <!--<div class="user">-->
-                        <!--<button type="button" class="btn btn-default btn-block online-user" data-toggle="modal" data-target="#waiting_message">-->
-                            <!--batgirl-->
-                        <!--</button>-->
-                    <!--</div>-->
-                </div>
-                <!-- Modal for when the user wants to connect with one of the online users -->
-                <div class="modal fade" id="waiting_message" data-backdrop = "static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-body">
-                                WAITING FOR CONFIRMATION ...
-                            </div>
-                            <div class="loader"></div>
-                            <div class="cancel-button">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <!-- Modal for when the user wants to connect with one of the online users -->
+                    <div class="modal fade" id="waiting_message" data-backdrop = "static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    WAITING FOR CONFIRMATION ...
+                                </div>
+                                <div class="loader"></div>
+                                <div class="cancel-button">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!--creating a hidden modal which will popUp when we have a connection request from another user-->
-                <!--<div class="modal fade" id="connection_request" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">-->
-                    <!--<div class="modal-dialog" role="document">-->
-                        <!--<div class="modal-content modal-conn-request">-->
-                            <!--<div class="modal-body message">-->
-                                <!--<h2> {{USER}} is requesting to join ... </h2>-->
-                            <!--</div>-->
-                            <!--<div class="btn-reply">-->
-                                <!--<button type="button" class="btn btn-default btn-success" data-dismiss="modal">Accept</button>-->
-                                <!--<button type="button" class="btn btn-default btn-danger" data-dismiss="modal">Reject</button>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-            </section>
-            <span class="col-xs-12 col-sm-12 col-md-3" id="user-requests">
-                <h2>User Requests</h2>
-                <ul class="request-list">
-                    <!--<li>-->
+                <div class="col-xs-11 col-sm-12 col-md-4" id="user-requests">
+                    <h2>User Requests</h2>
+                    <ul class="request-list">
+                        <!--<li>-->
                         <!--user1-->
                         <!--<span class="request-btn">-->
-                            <!--<a class="btn btn-success" href="#"><i class="fa fa-check" aria-hidden="true"></i></a>-->
-                            <!--<a class="btn btn-danger" href="#"><i class="fa fa-times" aria-hidden="true"></i></a>-->
+                        <!--<a class="btn btn-success" href="#"><i class="fa fa-check" aria-hidden="true"></i></a>-->
+                        <!--<a class="btn btn-danger" href="#"><i class="fa fa-times" aria-hidden="true"></i></a>-->
                         <!--</span>-->
-                    <!--</li>-->
-                </ul>
+                        <!--</li>-->
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="transfer-page">
@@ -124,9 +108,9 @@
             <!-- File Selection -->
             <div class="file-choose">
                 <!--<form action="" method="POST" enctype="multipart/form-data">-->
-                    <input type="file" name="file-1[]" id="file-1" class="inputfile" data-multiple-caption="{count} files selected" multiple style="display: none;" />
-                    <label for="file-1"><i class="fa fa-upload" aria-hidden="true"></i><span>&nbsp;Browse files &hellip;</span></label><br>
-                    <input type="submit" value="Send" id="file-send-button" class="btn btn-default">
+                <input type="file" name="file-1[]" id="file-1" class="inputfile" data-multiple-caption="{count} files selected" multiple style="display: none;" />
+                <label for="file-1"><i class="fa fa-upload" aria-hidden="true"></i><span>&nbsp;Browse files &hellip;</span></label><br>
+                <input type="submit" value="Send" id="file-send-button" class="btn btn-default">
                 <!--</form>-->
                 <hr>
             </div>
@@ -157,9 +141,9 @@
     <div class="login-page">
         <form class="login-form">
             <div class="form-group">
-                <label for="username">User Name</label>
-                <input type="text"  class="usernameInput" id="username" placeholder="Enter your name here">
-                <!--i removed class form-control from above ... it looks less sexy but also displays on mozilla-->
+                <!--<label for="username">User Name</label>-->
+                <input type="text"  class="usernameInput" id="username" placeholder="Enter your username" autocomplete="off">
+                <!--i removed class form-control from above ... it looks less sexy but also displays on Firefox-->
             </div>
 
         </form>
@@ -205,7 +189,7 @@
 <script src="js/main.js"></script>
 <script>
     //WHEN WE COPY PASTE THE SAME FUNCTION IN THE MAIN FILE IT DOESN'T WORK
-//        alert("Running");
+    //        alert("Running");
     function dynamicSearch() {
         // Declare variables
         //        alert("inFUn");

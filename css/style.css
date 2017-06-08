@@ -20,7 +20,7 @@ a {
     text-decoration: none;
 }
 .row{
-    margin-right:10px;
+    margin-right:0;
 }
 .main-content {
     display: none; /* Hide until user enters username*/
@@ -28,12 +28,21 @@ a {
 
 /* Header */
 .page-header {
-    margin-top: 0px;
+    margin-top: 0;
 }
 
 .page-header h1 small {
     font-size: 15px;
 }
+/* Welcome greeting */
+.welcome {
+    margin: 0;
+    text-align: center;
+}
+#welcomeLine{
+    margin-left: auto;
+}
+
 
 /* Search Bar */
 .section-top {
@@ -60,7 +69,7 @@ a {
 #user-section {
     margin-top: 0;
     padding: 0;
-    margin-left:30px;
+    text-align: center;
 }
 .users-list {
     background: #fff;
@@ -85,8 +94,18 @@ a {
 }
 
 .login-page .login-form .usernameInput {
+    border: 1px solid #ccc;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
     font-size: 150%;
-    padding: 25px;
+    padding: 15px;
+    width: 60%;
+}
+
+.login-page .login-form .usernameInput:focus {
+    border: 1px solid #999;
+    outline-width: 0;
 }
 
 .alert-username{
@@ -108,8 +127,8 @@ a {
     clear: both;
 }
 /* Waiting for Confirmation modal */
-.button_cancel {
-    margin-bottom: 5px;
+#waiting_message .cancel-button {
+    margin-bottom: 15px;
 }
 
 #connection_request .modal-dialog .btn-reply .btn{
@@ -133,8 +152,7 @@ a {
     width: 30px;
     height: 30px;
     align-content: center;
-    margin: auto;
-    margin-bottom: 15px;
+    margin: auto auto 15px auto;
     -webkit-animation: spin 2s linear infinite;
     animation: spin 2s linear infinite;
 }
@@ -167,6 +185,7 @@ a {
     font-size: larger;
     margin: auto;
     overflow-y: auto;
+    padding-left: 20px;
     position: relative;
     text-align: center;
 }

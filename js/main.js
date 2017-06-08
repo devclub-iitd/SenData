@@ -12,20 +12,20 @@ $(function() {
         socket = io(),
         $alertUsername = $('.alert-username'),
         $listOfUsers = $('#listOfUsers'),
-        $cancelButton = $('#waiting_message .cancel-button button');
+        $cancelButton = $('#waiting_message').find('.cancel-button button');
 
     // alert("Running");
 
-  /*
-   page_number
+    /*
+     page_number
 
-   case:0      page showing online user_names
-   case:1      page/popup showing waiting for permission
-   (other buttons should not be accesible during this time)
-   case:2      page of send
+     case:0      page showing online user_names
+     case:1      page/popup showing waiting for permission
+     (other buttons should not be accesible during this time)
+     case:2      page of send
 
 
-   */
+     */
     //var app = require('express')();
     //var io = require('socket.io')(http);
 
@@ -103,34 +103,33 @@ $(function() {
 
     var configuration = { //Needed for RTCPeerConnection
         'iceServers': [/*{
-            'urls': 'stun:stun.l.google.com:19302'
-        },
-        {
-      'urls': 'turn:192.158.29.39:3478?transport=udp',
-      'credential': 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-      'username': '28224511:1379330808'
-    },
-    {
-      'urls': 'turn:192.158.29.39:3478?transport=tcp',
-      'credential': 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-      'username': '28224511:1379330808'
-    }*/
-        {
-    urls: 'stun:10.249.208.95:3478',
-    credentials: 'test',
-    username: 'test'
-   }
+         'urls': 'stun:stun.l.google.com:19302'
+         },
+         {
+         'urls': 'turn:192.158.29.39:3478?transport=udp',
+         'credential': 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+         'username': '28224511:1379330808'
+         },
+         {
+         'urls': 'turn:192.158.29.39:3478?transport=tcp',
+         'credential': 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+         'username': '28224511:1379330808'
+         }*/
+            {
+                urls: 'stun:10.249.208.95:3478',
+                credentials: 'test',
+                username: 'test'
+            }
         ]
     };
     var connection = {
-	'optional':
-		[{'DtlsSrtpKeyAgreement': true}, {'SctpDataChannels': true }]
-	};
-	alert("hi");
+        'optional':
+            [{'DtlsSrtpKeyAgreement': true}, {'SctpDataChannels': true }]
+    };
     var myPeerConn; //variable to store the RTCPeerConnection object
     var ExchangerUsername; //variable for name of requested username
-	var dataChannel;
-	var offerComplete=false;
+    var dataChannel;
+    var offerComplete=false;
     // call start() to initiate peer connection process(should be called once 'Y' answer has been received (or sent))
 
     function start(){
@@ -144,19 +143,19 @@ $(function() {
                     username: ExchangerUsername,
                     candidate: evt.candidate
                 });
-			}
+            }
         };
     }
 
     function sendLocalDesc() { //send local description to ExchangerUsername
-		console.log("TRYING TO CREATE OFFER");
+        console.log("TRYING TO CREATE OFFER");
         var sdpConstraints = {'mandatory':
-		{'OfferToReceiveAudio': false, 'OfferToReceiveVideo': false}
-		};
+            {'OfferToReceiveAudio': false, 'OfferToReceiveVideo': false}
+        };
 
 
         myPeerConn.createOffer(sdpConstraints).then(function(offer) {
-			console.log("Trying to get local description from stun servers");
+            console.log("Trying to get local description from stun servers");
             return myPeerConn.setLocalDescription(offer);
         })
             .then(function() {
@@ -173,24 +172,24 @@ $(function() {
                 console.log(reason);
             });
 
-    //Create data channel and set event handling(the one who sends offer does this)
-		dataChannel = myPeerConn.createDataChannel("datachannel");
+        //Create data channel and set event handling(the one who sends offer does this)
+        dataChannel = myPeerConn.createDataChannel("datachannel");
 
 
-		dataChannel.onmessage = function(e){console.log("DC message:" +e.data);};
-		dataChannel.onopen = function(){console.log("------ DATACHANNEL OPENED ------");};
-		dataChannel.onclose = function(){console.log("------- DC closed! -------")};
-		dataChannel.onerror = function(){console.log("DC ERROR!!!")};
+        dataChannel.onmessage = function(e){console.log("DC message:" +e.data);};
+        dataChannel.onopen = function(){console.log("------ DATACHANNEL OPENED ------");};
+        dataChannel.onclose = function(){console.log("------- DC closed! -------")};
+        dataChannel.onerror = function(){console.log("DC ERROR!!!")};
 
     }
 
-	function receiveChannelCallback(event) {
-    dataChannel = event.channel;
-    dataChannel.onmessage = function(e){console.log("DC message:" +e.data);};
-	dataChannel.onopen = function(){console.log("------ DATACHANNEL OPENED ------(by other side)");};
-	dataChannel.onclose = function(){console.log("------- DC closed! -------")};
-	dataChannel.onerror = function(){console.log("DC ERROR!!!")};
-	}
+    function receiveChannelCallback(event) {
+        dataChannel = event.channel;
+        dataChannel.onmessage = function(e){console.log("DC message:" +e.data);};
+        dataChannel.onopen = function(){console.log("------ DATACHANNEL OPENED ------(by other side)");};
+        dataChannel.onclose = function(){console.log("------- DC closed! -------")};
+        dataChannel.onerror = function(){console.log("DC ERROR!!!")};
+    }
     // call SendOffer when any username is clicked and
     // also in the meantime show the screen that
     // waiting for permission of user
@@ -199,9 +198,9 @@ $(function() {
     // save name of requested user as ExhangerUsername
 
     /*function SendOffer(user) {
-        socket.emit("offer", user);
-        ExchangerUsername = user
-    }*/
+     socket.emit("offer", user);
+     ExchangerUsername = user
+     }*/
 
     function requestHandler(answer, btn) {
         // console.log(btn.parent().parent()[0].textContent);
@@ -245,12 +244,12 @@ $(function() {
         requestHandler('n', $(this));
     });
 
-	$('#file-send-button').click(function(){
-		console.log(username+"I am closer");
-		dataChannel.send("hey yo");
-		dataChannel.send("Bye yo");
-		//dataChannel.close();
-	});
+    $('#file-send-button').click(function(){
+        console.log(username+"I am closer");
+        dataChannel.send("hey yo");
+        dataChannel.send("Bye yo");
+        //dataChannel.close();
+    });
 
 
 
@@ -313,8 +312,8 @@ $(function() {
             //stop the progress loader
             $homePage.hide();
             $transferPage.fadeIn();
-             start(); //start the peerconnection process
-             sendLocalDesc(); //create peer connection offer and send local description on other side(also create a data channel)
+            start(); //start the peerconnection process
+            sendLocalDesc(); //create peer connection offer and send local description on other side(also create a data channel)
 
         } else {
 
@@ -324,10 +323,10 @@ $(function() {
     });
 
     socket.on("session-desc", function(message) {
-		console.log("session-desc received");
+        console.log("session-desc received");
         myPeerConn.setRemoteDescription(message.sdp).then(function() {
-			//offerComplete=true;
-			console.log("received something");
+            //offerComplete=true;
+            console.log("received something");
             if (myPeerConn.remoteDescription.type === 'offer') {
                 myPeerConn.createAnswer().then(function(answer) {
                     return myPeerConn.setLocalDescription(answer);
@@ -339,8 +338,8 @@ $(function() {
                             sdp: myPeerConn.localDescription
                         });
                         console.log("Received remote description, now sending my local description");
-						//Set datachannel response on the other end(the client who receives the offer)
-						myPeerConn.ondatachannel=receiveChannelCallback;
+                        //Set datachannel response on the other end(the client who receives the offer)
+                        myPeerConn.ondatachannel=receiveChannelCallback;
 
                     })
                     .catch(function(reason) {
@@ -348,28 +347,28 @@ $(function() {
                     });
             }
             else{
-				console.log("Process complete");
-			}
+                console.log("Process complete");
+            }
         })
     });
 
     socket.on("candidate", function(candidate) {
-		if(1){                   //leave this, might have to put a condition later
-		console.log("Received IceCandidate");
-        myPeerConn.addIceCandidate(candidate) //add remote icecandidate
-            .then(function() {
-                console.log('AddIceCandidate success.');
-            })
-            .catch(function(reason) {
-                console.log('Error in adding IceCandidate');
-                console.log(reason);
-            });
-		}
+        if(1){                   //leave this, might have to put a condition later
+            console.log("Received IceCandidate");
+            myPeerConn.addIceCandidate(candidate) //add remote icecandidate
+                .then(function() {
+                    console.log('AddIceCandidate success.');
+                })
+                .catch(function(reason) {
+                    console.log('Error in adding IceCandidate');
+                    console.log(reason);
+                });
+        }
     });
 
     socket.on("PartnerDisconnected", function() {
         //stop transfer or show dialog that partner has been disconnected retry from main page
-		offerComplete=false;
+        offerComplete=false;
     });
 
 
