@@ -191,6 +191,13 @@ io.on('connection', function(socket) {
 	  
   });
   
+  socket.on("received-chunks",function(msg){
+	  var user=logged_clients[msg.username];
+	  if(user!=null) {
+		  socket.broadcast.to(user).emit("received-chunks",msg.progress);
+		//  console.log("progress: "+msg.progress);
+	  }
+  });	
 });
 
 http.listen(3001, '0.0.0.0', function() {

@@ -140,6 +140,7 @@ $(function() {
   var receivedProgress={value:0};
   var sendProgress={value:0};
   var newprogress=0;
+  var prevprogress=0;
   // call start() to initiate peer connection process(should be called once 'Y' answer has been received (or sent))
 
   function start() {
@@ -253,13 +254,17 @@ $(function() {
   }
 
   function onReceiveMessageCallback(event){
-  console.log('Received Message ' + event.data.size);
+  //console.log('Received Message ' + event.data.size);
   receiveBuffer.push(event.data);
   receivedSize += event.data.size;
-  console.log(receivedSize+" "+file_rec.size);
+  //console.log(receivedSize+" "+file_rec.size);
   receivedProgress.value=receivedSize;
   newprogress=(receivedProgress.value/file_rec.size)*100;
   $('#file1').attr('aria-valuenow', newprogress).css('width',newprogress+'%');
+  if(newprogress>prevprogress+1){
+	  prevprogress=newprogress;
+	  socket.emit("received-chunks",{username:ExchangerUsername, progress:newprogress});
+  }
   if (receivedSize === file_rec.size) {
 	console.log("RECEIVED ENTIRE FILE");  
     var received = new window.Blob(receiveBuffer);
@@ -301,8 +306,8 @@ $(function() {
         }
         else console.log("entire file sent to data channel");
         sendProgress.value = offset + e.target.result.byteLength;
-        newprogress=(sendProgress.value/file.size)*100;
-        $('#file1').attr('aria-valuenow', newprogress).css('width',newprogress+'%');
+        //newprogress=(sendProgress.value/file.size)*100;
+        //$('#file1').attr('aria-valuenow', newprogress).css('width',newprogress+'%');
       };
     })(file);
     var slice = file.slice(offset, offset + chunkSize);
@@ -514,7 +519,11 @@ sliceFile(0);
 	 sendData();//start sending :))) 
 	  
   });
-
+  
+  socket.on("received-chunks",function(prog){
+	 newprogress=prog; 
+	 $('#file1').attr('aria-valuenow', newprogress).css('width',newprogress+'%'); 
+  });
   socket.on("PartnerDisconnected", function() {
     //stop transfer or show dialog that partner has been disconnected retry from main page
     offerComplete = false;
