@@ -1,5 +1,5 @@
 $(function() {
-
+  //alert("started");
   // implementing username form in a different way like socket.io
   var $mainContent = $('.main-content'), // which contains userlist and search functionality
     username = '', // variable to store username entered.
@@ -13,7 +13,14 @@ $(function() {
     $alertUsername = $('.alert-username'),
     $listOfUsers = $('#listOfUsers'),
     $cancelButton = $('#waiting_message .cancel-button button');
-
+    
+  //var fileInput=$('#file-1'),
+  var bitrateDiv = document.getElementById('bitrate'),
+	  downloadAnchor = document.getElementById('download'),
+	  statusMessage=document.getElementById('status'),
+	  //progress=document.getElementById('file1'),
+	  bitrateMax = 0;
+  
   alert("Running");
 
   /*
@@ -42,7 +49,7 @@ $(function() {
   //         $loginPage.hide();
   //         $mainContent.fadeIn(100);
   //         $loginPage.off('click');        // to remove the click event handler
-  //     }
+  //     }s
   // }
 
   $window.keydown(function(event) {
@@ -94,7 +101,7 @@ $(function() {
     // console.log(target_username);
     socket.emit('offer', target_username);
     ExchangerUsername = target_username;
-
+	
     $cancelButton.on('click', function() {
       socket.emit('cancel', target_username);
     });
@@ -106,16 +113,7 @@ $(function() {
       /*{
                'urls': 'stun:stun.l.google.com:19302'
                },
-               {
-               'urls': 'turn:192.158.29.39:3478?transport=udp',
-               'credential': 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-               'username': '28224511:1379330808'
-               },
-               {
-               'urls': 'turn:192.158.29.39:3478?transport=tcp',
-               'credential': 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-               'username': '28224511:1379330808'
-               }*/
+               */
       {
         urls: 'stun:10.249.208.95:3478',
         credentials: 'test',
@@ -134,6 +132,14 @@ $(function() {
   var ExchangerUsername; //variable for name of requested username
   var dataChannel;
   var offerComplete = false;
+  var file_rec;
+  var file;
+  var sender=false;//to maintain state of the client(whether he/she is a sender or a receiver)
+  var receiveBuffer=[];
+  var receivedSize = 0;
+  var receivedProgress={value:0};
+  var sendProgress={value:0};
+  var newprogress=0;
   // call start() to initiate peer connection process(should be called once 'Y' answer has been received (or sent))
 
   function start() {
@@ -183,34 +189,31 @@ $(function() {
     dataChannel = myPeerConn.createDataChannel("datachannel");
 
 
-    dataChannel.onmessage = function(e) {
-      console.log("DC message:" + e.data);
-    };
+    dataChannel.onmessage = onReceiveMessageCallback;
+    
     dataChannel.onopen = function() {
       console.log("------ DATACHANNEL OPENED ------");
     };
     dataChannel.onclose = function() {
-      console.log("------- DC closed! -------")
+      console.log("------- DC closed! -------");
     };
     dataChannel.onerror = function() {
-      console.log("DC ERROR!!!")
+      console.log("DC ERROR!!!");
     };
 
   }
 
   function receiveChannelCallback(event) {
     dataChannel = event.channel;
-    dataChannel.onmessage = function(e) {
-      console.log("DC message:" + e.data);
-    };
+    dataChannel.onmessage = onReceiveMessageCallback;	//the function that will push the received data into a buffer
     dataChannel.onopen = function() {
       console.log("------ DATACHANNEL OPENED ------(by other side)");
     };
     dataChannel.onclose = function() {
-      console.log("------- DC closed! -------")
+      console.log("------- DC closed! -------");
     };
     dataChannel.onerror = function() {
-      console.log("DC ERROR!!!")
+      console.log("DC ERROR!!!");
     };
   }
   // call SendOffer when any username is clicked and
@@ -249,6 +252,68 @@ $(function() {
 
   }
 
+  function onReceiveMessageCallback(event){
+  console.log('Received Message ' + event.data.size);
+  receiveBuffer.push(event.data);
+  receivedSize += event.data.size;
+  console.log(receivedSize+" "+file_rec.size);
+  receivedProgress.value=receivedSize;
+  newprogress=(receivedProgress.value/file_rec.size)*100;
+  $('#file1').attr('aria-valuenow', newprogress).css('width',newprogress+'%');
+  if (receivedSize === file_rec.size) {
+	console.log("RECEIVED ENTIRE FILE");  
+    var received = new window.Blob(receiveBuffer);
+    receiveBuffer = [];
+	console.log("converted array to blob");
+    downloadAnchor.href = URL.createObjectURL(received);
+    console.log(downloadAnchor.href);
+    downloadAnchor.download = file_rec.name;
+    //console.log(downloadAnchor.download);
+    downloadAnchor.textContent ='Click to download \'' + file_rec.name + '\' (' + file_rec.size + ' bytes)';
+    downloadAnchor.style.display = 'block';
+	console.log("Download link created");  
+    var bitrate = Math.round(receivedSize * 8 /
+        ((new Date()).getTime() - timestampStart));
+    bitrateDiv.innerHTML = '<strong>Average Bitrate:</strong> ' +
+        bitrate + ' kbits/sec (max: ' + bitrateMax + ' kbits/sec)';
+
+    //if (statsInterval) {
+    //  window.clearInterval(statsInterval);
+    //  statsInterval = null;
+    //}
+
+    //closeDataChannels();
+	}
+		
+	}
+  
+  
+  function sendData(){
+	 console.log("Begun sending"); 
+	 var chunkSize = 16384;
+	 var sliceFile = function(offset) {
+     var reader = new window.FileReader();
+     reader.onload = (function() {
+     return function(e) {
+        dataChannel.send(e.target.result);
+        if (file.size > offset + e.target.result.byteLength) {
+          window.setTimeout(sliceFile, 0, offset + chunkSize);
+        }
+        else console.log("entire file sent to data channel");
+        sendProgress.value = offset + e.target.result.byteLength;
+        newprogress=(sendProgress.value/file.size)*100;
+        $('#file1').attr('aria-valuenow', newprogress).css('width',newprogress+'%');
+      };
+    })(file);
+    var slice = file.slice(offset, offset + chunkSize);
+    reader.readAsArrayBuffer(slice);
+  };
+sliceFile(0); 
+  	  
+  }
+  
+  
+  
   socket.on("cancel", function(username, waitingList) {
     var html = '';
     var $requestList = $('.request-list');
@@ -268,13 +333,41 @@ $(function() {
   });
 
   $('#file-send-button').click(function() {
-    console.log(username + "I am closer");
-    dataChannel.send("hey yo");
-    dataChannel.send("Bye yo");
+    console.log(username + " sending message");
+    //file = fileInput.files[0];
+	input = document.getElementById('file-1');
+    if (!input) {
+      console.log("Um, couldn't find the fileinput element.");
+	  return;
+    }
+    else if (!input.files) {
+      console.log("This browser doesn't seem to support the `files` property of file inputs.");
+      return;
+    }
+    else if (!input.files[0]) {
+      console.log("Please select a file before clicking 'Load'");               
+      return;
+    }
+    else {
+      file = input.files[0];
+	}
+	console.log('File is ' + [file.name, file.size, file.type, file.lastModifiedDate].join(' '));
+	statusMessage.textContent = '';
+	downloadAnchor.textContent = '';
+	if(file==null) console.log('No file selected');
+	if (file.size === 0) {
+		bitrateDiv.innerHTML = '';
+		statusMessage.textContent = 'File is empty, please select a non-empty file';
+		console.log('File is empty, please select a non-empty file');
+		//closeDataChannels();
+		return;
+	}
+	sender=true;
+	socket.emit("file-desc",{target:ExchangerUsername, fileData:{size:file.size, name:file.name, type:file.type, lastModifiedDate:file.lastModifiedDate} });
     //dataChannel.close();
   });
 
-
+	
 
 
   socket.on("offer", function(username) {
@@ -318,7 +411,7 @@ $(function() {
 
     // accept or deny
     // append as feed on the side//IE ANOTHER MODAL
-    //CHANGE THAT MODAL'S CSS DISPLAY ATTRIBUTE FROM HIDDEN TO BLOCK OR SOMETHING
+    //CHANGE THAT MODALS CSS DISPLAY ATTRIBUTE FROM HIDDEN TO BLOCK OR SOMETHING
   });
 
   socket.on("answer", function(msg) {
@@ -371,7 +464,7 @@ $(function() {
       } else {
         console.log("Process complete");
       }
-    })
+    });
   });
 
   socket.on("candidate", function(candidate) {
@@ -386,6 +479,40 @@ $(function() {
           console.log(reason);
         });
     }
+  });
+  
+  socket.on("file-desc",function(file_desc){
+	  console.log("file-desc received");
+	  if(!sender){						//to make sure we have not already sent a file offer to the other client 
+										//(we will disable the send button on other side to make sure only one person 
+										//sends a file at a time, but just to be sure) 
+		console.log("ok");
+		//console.log(file_desc.name);
+		console.log('File is ' + [file_desc.name, file_desc.size, file_desc.type, file_desc.lastModifiedDate].join(' '));
+		//file_rec.size=file_desc.size;
+		//console.log(file_desc.size);			
+		//file_rec.name=file_desc.name;	//metadata of the file to be received
+		//file_rec.type=file_desc.type;
+		//file_rec.lastModifiedDate=file_desc.lastModifiedDate;
+		file_rec={name:file_desc.name, size:file_desc.size, type:file_desc.type, lastModifiedDate:file_desc.lastModifiedDate};
+		console.log("file offer of "+file_rec.name+" accepted");
+		socket.emit("file accepted",ExchangerUsername); // can put a feature later to ask the user whether  
+									  // he/she wants to accept the file, and based on that respond as accepted/refused
+	}
+	else{
+		sender=false; //if both have sent at the same time, cancel both
+		console.log("file refused");
+		socket.emit("file refused",ExchangerUsername);
+	}
+  });
+  
+  socket.on("file refused",function(){
+	 sender=false; 
+  });
+  
+  socket.on("file accepted",function(){
+	 sendData();//start sending :))) 
+	  
   });
 
   socket.on("PartnerDisconnected", function() {

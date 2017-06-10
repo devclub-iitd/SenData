@@ -10,7 +10,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/style.css" />
-
+	
 </head>
 
 <body>
@@ -122,17 +122,21 @@
                 </h3>
                 <p> File 1:</p>
                 <div class="progress">
-                    <div class="progress-bar" id="file1" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                        60%
+                    <div class="progress-bar" id="file1" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                        
                     </div>
                 </div>
-                <p> File 2:</p>
+                <!-- <p> File 2:</p>
                 <div class="progress">
                     <div class="progress-bar" id="file2" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 20%;">
                         20%
                     </div>
-                </div>
+                </div> -->
             </div>
+            
+            <div id="bitrate"></div> 
+			<a id="download"></a>
+			<span id="status"></span> 
         </div>
     </div>
     <!--End Main Content-->
@@ -187,6 +191,7 @@
 <script src="js/bootstrap.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="js/main.js"></script>
+
 <script>
     //WHEN WE COPY PASTE THE SAME FUNCTION IN THE MAIN FILE IT DOESN'T WORK
     //        alert("Running");

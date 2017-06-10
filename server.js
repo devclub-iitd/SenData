@@ -169,6 +169,28 @@ io.on('connection', function(socket) {
     var user = logged_clients[username];
     socket.broadcast.to(user).emit("session-desc", msg);
   });
+  
+  socket.on("file-desc",function(msg){
+	  username=msg.target;
+	  fileData=msg.fileData;
+	  var user=logged_clients[username];
+	  if (user!=null) {
+		  console.log("Sending file-desc to: ",username);
+		  socket.broadcast.to(user).emit("file-desc",fileData);
+		}
+  });
+  
+  socket.on("file accepted",function(username){
+	  var user=logged_clients[username];
+	 if (user!=null) socket.broadcast.to(user).emit("file accepted"); 
+  });
+  
+  socket.on("file refused",function(username){
+	  var user=logged_clients[username];
+	  if (user!=null) socket.broadcast.to(user).emit("file refused");
+	  
+  });
+  
 });
 
 http.listen(3001, '0.0.0.0', function() {
