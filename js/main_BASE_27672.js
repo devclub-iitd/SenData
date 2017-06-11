@@ -144,7 +144,7 @@ $(function() {
   // call start() to initiate peer connection process(should be called once 'Y' answer has been received (or sent))
 
   function start() {
-    myPeerConn = new RTCPeerConnection(configuration)//, connection);
+    myPeerConn = new RTCPeerConnection(configuration, connection);
 
 
     // send any ice candidates to the other peer
