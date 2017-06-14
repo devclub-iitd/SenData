@@ -74,7 +74,7 @@
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-body">
-                                    WAITING FOR CONFIRMATION ...
+                                    <!--Waiting for confirmation from username ...-->
                                 </div>
                                 <div class="loader"></div>
                                 <div class="cancel-button">
@@ -100,16 +100,22 @@
         </div>
         <div class="transfer-page">
             <!-- Username Display -->
-            <div class="user-name">
-                <h2> User Name </h2>
+            <div class="alert alert-info user-name" role="alert">
+                To go back click
+                <a href="#" class="alert-link"> here</a>
             </div>
             <br>
 
             <!-- File Selection -->
             <div class="file-choose">
                 <!--<form action="" method="POST" enctype="multipart/form-data">-->
-                <input type="file" name="file-1[]" id="file-1" class="inputfile" data-multiple-caption="{count} files selected" multiple style="display: none;" />
-                <label for="file-1"><i class="fa fa-upload" aria-hidden="true"></i><span>&nbsp;Browse files &hellip;</span></label><br>
+                <input type="file" name="file-1[]" id="file-1" class="inputfile" data-multiple-caption="{count}" multiple style="display: none;" />
+                <label for="file-1">
+                    <i class="fa fa-upload" aria-hidden="true"></i>
+                    <span>&nbsp;Choose files &hellip;</span>
+                </label>
+                <h4 id="file-desc">No files selected</h4>
+                <br>
                 <input type="submit" value="Send" id="file-send-button" class="btn btn-default">
                 <!--</form>-->
                 <hr>
@@ -122,9 +128,7 @@
                 </h3>
                 <p> File 1:</p>
                 <div class="progress">
-                    <div class="progress-bar" id="file1" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
-                        
-                    </div>
+                    <div class="progress-bar" id="file1" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
                 </div>
                 <!-- <p> File 2:</p>
                 <div class="progress">
