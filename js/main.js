@@ -284,8 +284,8 @@ $(function() {
             downloadAnchor.textContent ='Click to download \'' + file_rec.name + '\' (' + file_rec.size + ' bytes)';
             downloadAnchor.style.display = 'block';
             console.log("Download link created");
-            var bitrate = Math.round(receivedSize * 8 /
-                ((new Date()).getTime() - timestampStart));
+            //var bitrate = Math.round(receivedSize * 8 /
+            //    ((new Date()).getTime() - timestampStart));
             bitrateDiv.innerHTML = '<strong>Average Bitrate:</strong> ' +
                 bitrate + ' kbits/sec (max: ' + bitrateMax + ' kbits/sec)';
 
