@@ -21,6 +21,7 @@ $(function() {
         //progress=document.getElementById('file1'),
         bitrateMax = 0;
 
+    var TURN_SERVER_IP='10.249.211.250'
     // alert("Running");
 
   /*
@@ -121,7 +122,7 @@ $(function() {
            },
            */
             {
-                urls: 'stun:10.249.208.95:3478',
+                urls: 'stun:'+TURN_SERVER_IP+':3478',
                 credentials: 'test',
                 username: 'test'
             }
@@ -165,6 +166,23 @@ $(function() {
     }
 
     function sendLocalDesc() { //send local description to ExchangerUsername
+        //Create data channel and set event handling(the one who sends offer does this)
+        dataChannel = myPeerConn.createDataChannel("datachannel");
+
+
+        dataChannel.onmessage = onReceiveMessageCallback;
+
+        dataChannel.onopen = function() {
+            console.log("------ DATACHANNEL OPENED ------");
+        };
+        dataChannel.onclose = function() {
+            console.log("------- DC closed! -------");
+        };
+        dataChannel.onerror = function() {
+            console.log("DC ERROR!!!");
+        };
+        
+        
         console.log("TRYING TO CREATE OFFER");
         var sdpConstraints = {
             'mandatory': {
@@ -192,21 +210,7 @@ $(function() {
                 console.log(reason);
             });
 
-        //Create data channel and set event handling(the one who sends offer does this)
-        dataChannel = myPeerConn.createDataChannel("datachannel");
-
-
-        dataChannel.onmessage = onReceiveMessageCallback;
-
-        dataChannel.onopen = function() {
-            console.log("------ DATACHANNEL OPENED ------");
-        };
-        dataChannel.onclose = function() {
-            console.log("------- DC closed! -------");
-        };
-        dataChannel.onerror = function() {
-            console.log("DC ERROR!!!");
-        };
+        
 
     }
 
@@ -247,6 +251,8 @@ $(function() {
             //    if request accepted
             ExchangerUsername = requestingUsername;
             start();
+            //Set datachannel response on the other end(the client who receives the offer)
+            myPeerConn.ondatachannel = receiveChannelCallback;
             $homePage.hide();
             $transferPage.fadeIn();
             var $transferPageHeader = $('.user-name');
@@ -469,7 +475,7 @@ $(function() {
                         });
                         console.log("Received remote description, now sending my local description");
                         //Set datachannel response on the other end(the client who receives the offer)
-                        myPeerConn.ondatachannel = receiveChannelCallback;
+                        ////myPeerConn.ondatachannel = receiveChannelCallback;
 
                     })
                     .catch(function(reason) {
