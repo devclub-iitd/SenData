@@ -111,6 +111,11 @@ a {
 .alert-username{
     display: none;
 }
+
+.alert-blankusername{
+    display: none;
+}
+
 /* Site Footer */
 .footer {
     margin-bottom: auto;
