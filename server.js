@@ -138,6 +138,8 @@ io.on('connection', function(socket) {
             connected_clients[username] = waiting_clients[username];
             delete waiting_clients[username];
             io.sockets.emit('updateUsersList', Object.keys(connected_clients));
+            offer_list[socket.username].splice(offer_list[socket.username].indexOf(username),1);
+            // console.log(offer_list);
             // if answer is no add the username to connected_clients
             // then emit list again
         } else {

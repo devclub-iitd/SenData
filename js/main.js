@@ -283,6 +283,7 @@ $(function() {
         } else {
             //    if request rejected
             btn.parent().parent().remove();
+
         }
         socket.emit('answer', {
             'username': requestingUsername,
