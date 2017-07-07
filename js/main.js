@@ -29,13 +29,10 @@ $(function() {
 
     /*
      page_number
-
      case:0      page showing online user_names
      case:1      page/popup showing waiting for permission
      (other buttons should not be accesible during this time)
      case:2      page of send
-
-
      */
     //var app = require('express')();
     //var io = require('socket.io')(http);
@@ -136,13 +133,13 @@ $(function() {
         $transferPage.hide();
         $homePage.show();
     });
-	
-	$('#file-1').change(function(){
-		input = document.getElementById('file-1');
-		file=input.files[0];
-		$('#file-desc').text(file.name);
-	});
-	
+
+    $('#file-1').change(function(){
+        input = document.getElementById('file-1');
+        file=input.files[0];
+        $('#file-desc').text(file.name);
+    });
+
     var configuration = { //Needed for RTCPeerConnection
         'iceServers': [
             /*{
@@ -370,9 +367,9 @@ $(function() {
 
     socket.on("cancel", function(dat) {
 
-      //data.username
-      //data.waitingList
-      console.log(dat);
+        //data.username
+        //data.waitingList
+        console.log(dat);
 
         var html = '';
         var $requestList = $('.request-list');

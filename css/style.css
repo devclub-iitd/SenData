@@ -8,6 +8,7 @@ body {
     max-width: 100%;
     min-height: 100%;
     width: 100%;
+
 }
 
 section {
@@ -32,8 +33,15 @@ a {
 }
 
 .page-header h1 small {
-    font-size: 15px;
+    font-size: 20px;
+    color: #f7e1b5;
 }
+
+.page-header h1 {
+    font-size: 120%
+    font-family: "Britannic Bold";
+}
+
 /* Welcome greeting */
 .welcome {
     margin: 0;
@@ -72,7 +80,6 @@ a {
     text-align: center;
 }
 .users-list {
-    background: #fff;
     border: 1px solid #ccc;
     -webkit-border-radius:5px;
     -moz-border-radius:5px;
@@ -80,6 +87,16 @@ a {
     max-height: 450px;
     min-height: 300px;
     overflow-y: auto;
+    margin-left: 5%;
+}
+
+.online-user {
+    background-color: #0f0f0f;
+    color: #e4b9c0;
+}
+
+.online-user:hover {
+    background-color: #080808;
 }
 
 /* Style for login page */
@@ -101,6 +118,7 @@ a {
     font-size: 150%;
     padding: 15px;
     width: 60%;
+    color: black;
 }
 
 .login-page .login-form .usernameInput:focus {
@@ -114,9 +132,7 @@ a {
 
 .alert-blankusername{
     display: none;
-}
-
-/* Site Footer */
+/}* Site Footer */
 .footer {
     margin-bottom: auto;
 }
@@ -129,11 +145,23 @@ a {
     text-align: center;
     margin: 0 5%;
     padding: 5px;
+    font-size: small;
+    color: #e4b9c0;
     clear: both;
+    vertical-align: bottom;
 }
+
+.copyrights {
+    color: darkgoldenrod;
+}
+
 /* Waiting for Confirmation modal */
 #waiting_message .cancel-button {
     margin-bottom: 15px;
+}
+
+#waiting_message .modal-body {
+    color: black;
 }
 
 #connection_request .modal-dialog .btn-reply .btn{
