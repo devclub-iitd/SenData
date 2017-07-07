@@ -351,7 +351,7 @@ $(function() {
 
     function sendData() {
         console.log("Begun sending");
-        $('#fileBeingSent').text(file.name);
+        $('#fileBeingSent').text(file.name+"("+Math.round(file.size/1000)+" KB)");
         var chunkSize = 16384;
         var sliceFile = function(offset) {
             var reader = new window.FileReader();
@@ -581,7 +581,7 @@ $(function() {
             socket.emit("file accepted", ExchangerUsername); // can put a feature later to ask the user whether
             // he/she wants to accept the file, and based on that respond as accepted/refused
 			$('#file-send-button').prop('disabled',true);	
-			$('#fileBeingSent').text(file_desc.name);
+			$('#fileBeingSent').text(file_rec.name+"("+Math.round(file_rec.size/1000)+" KB)");
         } else {
             sender = false; //if both have sent at the same time, cancel both
             console.log("file refused");
