@@ -136,7 +136,13 @@ $(function() {
         $transferPage.hide();
         $homePage.show();
     });
-
+	
+	$('#file-1').change(function(){
+		input = document.getElementById('file-1');
+		file=input.files[0];
+		$('#file-desc').text(file.name);
+	});
+	
     var configuration = { //Needed for RTCPeerConnection
         'iceServers': [
             /*{
