@@ -20,6 +20,12 @@ section {
 a {
     text-decoration: none;
 }
+
+.body-wrapper, #info{
+    min-height: 100%;
+    height: inherit;
+}
+
 .row{
     margin-right:0;
 }
@@ -38,7 +44,7 @@ a {
 }
 
 .page-header h1 {
-    font-size: 120%
+    /*font-size: 120%*/
     font-family: "Britannic Bold";
 }
 
@@ -96,7 +102,7 @@ a {
 }
 
 .online-user:hover {
-    background-color: #080808;
+    background-color: gainsboro;
 }
 
 /* Style for login page */
@@ -119,6 +125,8 @@ a {
     padding: 15px;
     width: 60%;
     color: black;
+    position: relative;
+    top: 100px;
 }
 
 .login-page .login-form .usernameInput:focus {
@@ -132,9 +140,13 @@ a {
 
 .alert-blankusername{
     display: none;
-/}* Site Footer */
-.footer {
-    margin-bottom: auto;
+}
+
+/*Site Footer*/
+
+#footer {
+    position: absolute;
+    bottom: 0;
 }
 
 #facebook_link {
@@ -161,7 +173,11 @@ a {
 }
 
 #waiting_message .modal-body {
-    color: black;
+    color: #d58512;
+}
+
+#waiting_message .modal-content {
+    background-color: #262626;
 }
 
 #connection_request .modal-dialog .btn-reply .btn{
