@@ -305,6 +305,7 @@ $(function() {
         receivedProgress.value = receivedSize;
         newprogress = (receivedProgress.value / file_rec.size) * 100;
         $('#file1').attr('aria-valuenow', newprogress).css('width', newprogress + '%');
+        $("#fileProgress").text("Progress- "+Math.round(newprogress)+"%");
         if (newprogress > prevprogress + 1) {
             prevprogress = newprogress;
             socket.emit("received-chunks", {
@@ -314,6 +315,11 @@ $(function() {
         }
         if (receivedSize === file_rec.size) {
             console.log("RECEIVED ENTIRE FILE");
+            socket.emit("received-chunks", {
+                username: ExchangerUsername,
+                progress: 100
+            });
+            $("#fileProgress").text("Progress- "+"100%");
             var received = new window.Blob(receiveBuffer);
             receiveBuffer = [];
             console.log("converted array to blob");
@@ -592,6 +598,7 @@ $(function() {
     socket.on("received-chunks", function(prog) {
         newprogress = prog;
         $('#file1').attr('aria-valuenow', newprogress).css('width', newprogress + '%');
+        $("#fileProgress").text("Progress- "+Math.round(newprogress)+"%");
     });
     socket.on("PartnerDisconnected", function() {
         //stop transfer or show dialog that partner has been disconnected retry from main page
