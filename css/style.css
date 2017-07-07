@@ -20,7 +20,9 @@ section {
 a {
     text-decoration: none;
 }
-
+#container div canvas{
+    display: none; !important;
+}
 .body-wrapper, #info{
     min-height: 100%;
     height: inherit;
