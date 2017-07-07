@@ -254,6 +254,11 @@ io.on('connection', function(socket) {
             //  console.log("progress: "+msg.progress);
         }
     });
+    
+    socket.on("Cancel Connection",function(username){
+		var user = logged_clients[username];
+		if (user != null) socket.broadcast.to(user).emit("Cancel Connection");
+	});
 });
 
 http.listen(3001, '0.0.0.0', function() {

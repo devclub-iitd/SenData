@@ -64,7 +64,11 @@ $(function() {
     //         $loginPage.off('click');        // to remove the click event handler
     //     }s
     // }
-
+	
+	//$("#backLink").click(function(){
+		
+	//});
+	
     $window.keydown(function(event) {
         // When the client hits ENTER on their keyboard
 
@@ -132,8 +136,9 @@ $(function() {
 
     $(document).on('click', '.user-name a', function() {
         //   cancel the connection for both users
-        $transferPage.hide();
-        $homePage.show();
+        console.log("Connection terminated");
+        socket.emit("Cancel Connection",ExchangerUsername);
+        cancel_connection();
     });
 
     $('#file-1').change(function(){
@@ -242,6 +247,28 @@ $(function() {
 
     }
 
+    function cancel_connection(){
+		console.log("Connection terminated");
+		$transferPage.hide();
+        $homePage.show();
+		myPeerConn.close();
+		dataChannel.close();
+	    ExchangerUsername=null;
+		offerComplete = false;
+		sender = false; 
+		receiveBuffer = [];
+		receivedSize = 0;
+		receivedProgress = {
+        value: 0
+		};
+		sendProgress = {
+        value: 0
+		};
+		newprogress = 0;
+		prevprogress = 0;
+
+	};
+    
     function receiveChannelCallback(event) {
         dataChannel = event.channel;
         dataChannel.onmessage = onReceiveMessageCallback; //the function that will push the received data into a buffer
@@ -607,6 +634,9 @@ $(function() {
         //stop transfer or show dialog that partner has been disconnected retry from main page
         offerComplete = false;
     });
-
+	
+	socket.on("Cancel Connection",function(){
+		cancel_connection();
+	});
 
 });
