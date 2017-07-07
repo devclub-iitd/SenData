@@ -2,9 +2,17 @@
   "name": "sendata",
   "version": "0.0.1",
   "description": "Simple tool for sending file in an Intranet environment",
+  "scripts": {
+    "postinstall": "cp node_modules/webrtc-adapter/out/adapter.js js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/devclub-iitd/sendata.git"
+  },
+  "license": "MIT",
   "dependencies": {
     "express": "^4.15.3",
-    "socket.io": "^2.0.2",
-    "webrtc-adapter": "^4.0.1"
+    "socket.io": "^2.0.3",
+    "webrtc-adapter": "^4.1.1"
   }
 }
