@@ -23,7 +23,9 @@ $(function() {
         bitrateMax = 0;
 
     var TURN_SERVER_IP = '10.249.211.250'
-
+	
+	$("#download").hide();
+	
     var offers_for_me = [];
     // alert("Running");
 
@@ -326,14 +328,15 @@ $(function() {
             downloadAnchor.href = URL.createObjectURL(received);
             console.log(downloadAnchor.href);
             downloadAnchor.download = file_rec.name;
+            $("#download").show();
             //console.log(downloadAnchor.download);
-            downloadAnchor.textContent = 'Click to download \'' + file_rec.name + '\' (' + file_rec.size + ' bytes)';
-            downloadAnchor.style.display = 'block';
+            //downloadAnchor.textContent = "DOWNLOAD";
+            //downloadAnchor.style.display = 'block';
             console.log("Download link created");
             //var bitrate = Math.round(receivedSize * 8 /
             //    ((new Date()).getTime() - timestampStart));
-            bitrateDiv.innerHTML = '<strong>Average Bitrate:</strong> ' +
-                bitrate + ' kbits/sec (max: ' + bitrateMax + ' kbits/sec)';
+            //bitrateDiv.innerHTML = '<strong>Average Bitrate:</strong> ' +
+            //    bitrate + ' kbits/sec (max: ' + bitrateMax + ' kbits/sec)';
 
             //if (statsInterval) {
             //  window.clearInterval(statsInterval);
