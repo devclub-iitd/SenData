@@ -362,11 +362,16 @@ $(function() {
 
 
 
-    socket.on("cancel", function(username, waitingList) {
+    socket.on("cancel", function(dat) {
+
+      //data.username
+      //data.waitingList
+      console.log(dat);
+
         var html = '';
         var $requestList = $('.request-list');
-        for (var i = 0; i < waitingList.length; i++) {
-            html += '<li>' + waitingList[i] + '<span class="request-btn"> <a class="btn btn-success" href="#"><i class="fa fa-check" aria-hidden="true"></i></a> <a class="btn btn-danger" href="#"><i class="fa fa-times" aria-hidden="true"></i></a> </span></li>';
+        for (var i = 0; i < dat.length; i++) {
+            html += '<li>' + dat[i] + '<span class="request-btn"> <a class="btn btn-success" href="#"><i class="fa fa-check" aria-hidden="true"></i></a> <a class="btn btn-danger" href="#"><i class="fa fa-times" aria-hidden="true"></i></a> </span></li>';
         }
         $requestList.html(html);
     });
