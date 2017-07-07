@@ -90,7 +90,7 @@ a {
     -webkit-border-radius:5px;
     -moz-border-radius:5px;
     border-radius:5px;
-    max-height: 450px;
+    max-height: 300px;
     min-height: 300px;
     overflow-y: auto;
     margin-left: 5%;
@@ -98,11 +98,12 @@ a {
 
 .online-user {
     background-color: #0f0f0f;
-    color: #e4b9c0;
+    color: white;
 }
 
 .online-user:hover {
-    background-color: gainsboro;
+    background-color: #262626;
+    color: white;
 }
 
 /* Style for login page */
@@ -126,7 +127,7 @@ a {
     width: 60%;
     color: black;
     position: relative;
-    top: 100px;
+    margin-top: 100px;
 }
 
 .login-page .login-form .usernameInput:focus {
@@ -157,7 +158,7 @@ a {
     text-align: center;
     margin: 0 5%;
     padding: 5px;
-    font-size: small;
+    font-size: larger;
     color: #e4b9c0;
     clear: both;
     vertical-align: bottom;
@@ -245,12 +246,14 @@ a {
     border-radius:5px;
     list-style-type: none;
     min-height:300px;
-    max-height: 400px;
+    max-height: 300px;
 }
 #user-requests .request-list li{
     border-bottom:1px solid #ccc;
     display: block;
     padding: 5px;
+    background-color: #0f0f0f;
+    color: white;
 }
 #user-requests .request-list li .btn{
     -webkit-border-radius:30px;
