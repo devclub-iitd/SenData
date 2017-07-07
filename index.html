@@ -10,192 +10,435 @@
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/style.css" />
+    <style>
+        body {
+            color: #ffffff;
+            background-color: #000000;
+            margin: 0px;
+            overflow: hidden;
+        }
+        #info {
+            position: absolute;
+            top: 0px;
+            width: 100%;
+            padding: 5px;
+            font-family: Monospace;
+            font-size: 13px;
+            text-align: center;
+            font-weight: bold;
+        }
+        a {
+            color: #fff;
+        }
+    </style>
 
 </head>
 
 <body>
-<!-- Body-wrapper -->
-<div class="body-wrapper">
-    <!-- Header Content -->
-    <header class="container-fluid">
-        <div class="page-header">
-            <h1>Sendata
-                <small>Simple tool for sending file in an Intranet environment</small>
-            </h1>
-        </div>
-    </header>
-    <!-- End Header Content -->
 
-    <!-- Main Content -->
-    <div class="main-content row">
-        <div class="home-page container">
+<!-- Background-->
+<div class="background" style="z-index: 0">
+    <!--Background-->
 
-            <!--i think some other guy can style this div below better so that search comes to the right of this-->
+    <div id="container"></div>
+    <div id="info">
+        <!-- Body-wrapper -->
+        <div class="body-wrapper" style="z-index: 9999;">
 
-            <div class="row">
-                <div class="welcome col-sm-12 col-xs-12 col-md-9">
-                    <h3 id="welcomeLine">Welcome!</h3>
+            <!-- Header Content -->
+            <header class="container-fluid">
+                <div class="page-header">
+                    <h1>Sendata
+                        <small>Simple tool for sending file in an Intranet environment</small>
+                    </h1>
                 </div>
-                <div class="section-top col-sm-9 col-xs-11 col-md-3">
+            </header>
+            <!-- End Header Content -->
 
-                    <form class="navbar-form search-bar" >
-                        <div class="form-group">
-                            <input type="text" id="search-input" autocomplete="off" class="form-control" placeholder="Search for online users" name="user" onkeyup="dynamicSearch()">
-                            <!--i wonder what would happen if we turn autocomplete on the above tag? Nothing happens we have to place some AJAX there I think-->
+            <!-- Main Content -->
+            <div class="main-content row">
+                <div class="home-page container_homepage">
+
+                    <!--i think some other guy can style this div below better so that search comes to the right of this-->
+
+                    <div class="row">
+                        <div class="welcome col-sm-12 col-xs-12 col-md-9">
+                            <h3 id="welcomeLine">Welcome!</h3>
                         </div>
-                        <button type="submit" class="btn btn-default" id="user-search-button">
-                            <i class="fa fa-search search-icon" aria-hidden="true"></i>
-                        </button>
-                    </form>
+                        <div class="section-top col-sm-9 col-xs-11 col-md-3">
 
-                    <div id="search-results"></div>
-                </div>
-            </div>
-            <!--<br>-->
-            <!-- Search Bar -->
-            <div class="row">
-                <div class="col-xs-11 col-sm-11 col-md-8" id="user-section">
-                    <h2>Online Users</h2>
-                    <!-- List of online users -->
-                    <div class="users-list" id="listOfUsers">
-                        <!--<div class="user">-->
-                        <!--<button type="button" class="btn btn-default btn-block online-user" data-toggle="modal" data-target="#waiting_message">-->
-                        <!--Anaconda-->
-                        <!--</button>-->
-                        <!--</div>-->
-                        <!--<div class="user">-->
-                        <!--<button type="button" class="btn btn-default btn-block online-user" data-toggle="modal" data-target="#waiting_message">-->
-                        <!--batgirl-->
-                        <!--</button>-->
-                        <!--</div>-->
-                    </div>
-                    <!-- Modal for when the user wants to connect with one of the online users -->
-                    <div class="modal fade" id="waiting_message" data-backdrop = "static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-body">
-                                    <!--Waiting for confirmation from username ...-->
+                            <form class="navbar-form search-bar" >
+                                <div class="form-group">
+                                    <input type="text" id="search-input" autocomplete="off" class="form-control" placeholder="Search for online users" name="user" onkeyup="dynamicSearch()">
+                                    <!--i wonder what would happen if we turn autocomplete on the above tag? Nothing happens we have to place some AJAX there I think-->
                                 </div>
-                                <div class="loader"></div>
-                                <div class="cancel-button">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-default" id="user-search-button">
+                                    <i class="fa fa-search search-icon" aria-hidden="true"></i>
+                                </button>
+                            </form>
+
+                            <div id="search-results"></div>
+                        </div>
+                    </div>
+                    <!--<br>-->
+                    <!-- Search Bar -->
+                    <div class="row">
+                        <div class="col-xs-11 col-sm-11 col-md-8" id="user-section">
+                            <h2>Online Users</h2>
+                            <!-- List of online users -->
+                            <div class="users-list" id="listOfUsers">
+                                <!--<div class="user">-->
+                                <!--<button type="button" class="btn btn-default btn-block online-user" data-toggle="modal" data-target="#waiting_message">-->
+                                <!--Anaconda-->
+                                <!--</button>-->
+                                <!--</div>-->
+                                <!--<div class="user">-->
+                                <!--<button type="button" class="btn btn-default btn-block online-user" data-toggle="modal" data-target="#waiting_message">-->
+                                <!--batgirl-->
+                                <!--</button>-->
+                                <!--</div>-->
+                            </div>
+                            <!-- Modal for when the user wants to connect with one of the online users -->
+                            <div class="modal fade" id="waiting_message" data-backdrop = "static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <!--Waiting for confirmation from username ...-->
+                                        </div>
+                                        <div class="loader"></div>
+                                        <div class="cancel-button">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="col-xs-11 col-sm-12 col-md-4" id="user-requests">
+                            <h2>User Requests</h2>
+                            <ul class="request-list">
+                                <!--<li>-->
+                                <!--user1-->
+                                <!--<span class="request-btn">-->
+                                <!--<a class="btn btn-success" href="#"><i class="fa fa-check" aria-hidden="true"></i></a>-->
+                                <!--<a class="btn btn-danger" href="#"><i class="fa fa-times" aria-hidden="true"></i></a>-->
+                                <!--</span>-->
+                                <!--</li>-->
+                            </ul>
+                        </div>
                     </div>
                 </div>
-                <div class="col-xs-11 col-sm-12 col-md-4" id="user-requests">
-                    <h2>User Requests</h2>
-                    <ul class="request-list">
-                        <!--<li>-->
-                        <!--user1-->
-                        <!--<span class="request-btn">-->
-                        <!--<a class="btn btn-success" href="#"><i class="fa fa-check" aria-hidden="true"></i></a>-->
-                        <!--<a class="btn btn-danger" href="#"><i class="fa fa-times" aria-hidden="true"></i></a>-->
-                        <!--</span>-->
-                        <!--</li>-->
-                    </ul>
+                <div class="transfer-page">
+                    <!-- Username Display -->
+                    <div class="alert alert-info user-name" role="alert">
+                        To go back click
+                        <a href="#" class="alert-link"> here</a>
+                    </div>
+                    <br>
+
+                    <!-- File Selection -->
+                    <div class="file-choose">
+                        <!--<form action="" method="POST" enctype="multipart/form-data">-->
+                        <input type="file" name="file-1[]" id="file-1" class="inputfile" data-multiple-caption="{count}" multiple style="display: none;" />
+                        <label for="file-1">
+                            <i class="fa fa-upload" aria-hidden="true"></i>
+                            <span>&nbsp;Choose files &hellip;</span>
+                        </label>
+                        <h4 id="file-desc">No files selected</h4>
+                        <br>
+                        <input type="submit" value="Send" id="file-send-button" class="btn btn-default">
+                        <!--</form>-->
+                        <hr>
+                    </div>
+
+                    <!-- Transfer Progress Indicator -->
+                    <div class="progress_bar">
+                        <h3>
+                            Progress -
+                        </h3>
+                        <p id="fileBeingSent"> File 1:</p>
+                        <div class="progress">
+                            <div class="progress-bar" id="file1" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                        </div>
+                        <!-- <p> File 2:</p>
+                        <div class="progress">
+                            <div class="progress-bar" id="file2" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 20%;">
+                                20%
+                            </div>
+                        </div> -->
+                    </div>
+
+                    <div id="bitrate"></div>
+                    <a id="download"></a>
+                    <span id="status"></span>
                 </div>
             </div>
-        </div>
-        <div class="transfer-page">
-            <!-- Username Display -->
-            <div class="alert alert-info user-name" role="alert">
-                To go back click
-                <a href="#" class="alert-link"> here</a>
-            </div>
-            <br>
+            <!--End Main Content-->
+            <!-- Login-page -->
+            <div class="login-page">
+                <form class="login-form">
+                    <div class="form-group">
+                        <!--<label for="username">User Name</label>-->
+                        <input type="text"  class="usernameInput" id="username" placeholder="Enter your username" autocomplete="off">
+                        <!--i removed class form-control from above ... it looks less sexy but also displays on Firefox-->
+                    </div>
 
-            <!-- File Selection -->
-            <div class="file-choose">
-                <!--<form action="" method="POST" enctype="multipart/form-data">-->
-                <input type="file" name="file-1[]" id="file-1" class="inputfile" data-multiple-caption="{count}" multiple style="display: none;" />
-                <label for="file-1">
-                    <i class="fa fa-upload" aria-hidden="true"></i>
-                    <span>&nbsp;Choose files &hellip;</span>
-                </label>
-                <h4 id="file-desc">No files selected</h4>
+                </form>
+                <div class="alert-username">
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Warning!</strong> Username already exists. Please try another one ...
+                    </div>
+                </div>
+                <div class="alert-blankusername">
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Warning!</strong> Better check yourself, you're not looking too good.
+                    </div>
+                </div>
+            </div>
+            <!--End Login-page-->
+
+            <!-- Footer -->
+            <section class="footer">
+
+                <!-- Club Description (Not sure if necessary) -->
+                <p id="site-desc">Dev Club is a community of tech-minded people in IIT Delhi who experience what real world collaborative software development is and allows everyone to pursue big, useful and exciting projects which are not possible alone. Also, we have a community
+                    in which we discuss new ideas regarding development and learn a lot while having fun.</p><br>
+
+                <!-- Important Links -->
+                <div class="footer-nav">
+                    <a class="link" id="facebook_link" href="https://www.facebook.com/tech.iitd/"> <img
+                            src="images/facebook_logo.png" height=30px width=30px></a>
+                    <a class="link" id="github_link" href="https://github.com/devclub-iitd"> <img src="images/github_logo.png"
+                                                                                                  height=30px width=30px></a>
+                </div>
                 <br>
-                <input type="submit" value="Send" id="file-send-button" class="btn btn-default">
-                <!--</form>-->
-                <hr>
-            </div>
 
-            <!-- Transfer Progress Indicator -->
-            <div class="progress_bar">
-                <h3>
-                    Progress -
-                </h3>
-                <p id="fileBeingSent"> File 1:</p>
-                <div class="progress">
-                    <div class="progress-bar" id="file1" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                <!-- Copyright Info -->
+                <div class="copyrights">
+                    <p>
+                        &copy All Rights Reserved 2017 <br> Created by Dev Club, IIT DELHI
+                    </p>
                 </div>
-                <!-- <p> File 2:</p>
-                <div class="progress">
-                    <div class="progress-bar" id="file2" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 20%;">
-                        20%
-                    </div>
-                </div> -->
-            </div>
+            </section>
+            <!--End footer-->
 
-            <div id="bitrate"></div>
-            <a id="download"></a>
-            <span id="status"></span>
         </div>
+        <!--End Body-wrapper-->
     </div>
-    <!--End Main Content-->
+    <script src="js/three.js"></script>
 
-    <!-- Login-page -->
-    <div class="login-page">
-        <form class="login-form">
-            <div class="form-group">
-                <!--<label for="username">User Name</label>-->
-                <input type="text"  class="usernameInput" id="username" placeholder="Enter your username" autocomplete="off">
-                <!--i removed class form-control from above ... it looks less sexy but also displays on Firefox-->
-            </div>
+    <script src="js/Detector.js"></script>
+    <script src="js/stats.min.js"></script>
 
-        </form>
-        <div class="alert-username">
-            <div class="alert alert-danger alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <strong>Warning!</strong> Username already exists. Please try another one ...
-            </div>
-        </div>
-        <div class="alert-blankusername">
-            <div class="alert alert-danger alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <strong>Warning!</strong> Better check yourself, you're not looking too good.
-            </div>
-        </div>
-    </div>
-    <!--End Login-page-->
+    <script type="x-shader/x-vertex" id="vertexshader">
 
-    <!-- Footer -->
-    <section class="footer">
+			attribute float size;
+			attribute vec3 customColor;
 
-        <!-- Club Description (Not sure if necessary) -->
-        <p id="site-desc">Dev Club is a community of tech-minded people in IIT Delhi who experience what real world collaborative software development is and allows everyone to pursue big, useful and exciting projects which are not possible alone. Also, we have a community
-            in which we discuss new ideas regarding development and learn a lot while having fun.</p><br>
+			varying vec3 vColor;
 
-        <!-- Important Links -->
-        <div class="footer-nav">
-            <a class="link" id="facebook_link" href="https://www.facebook.com/tech.iitd/"> <img
-                    src="images/facebook_logo.png" height=30px width=30px></a>
-            <a class="link" id="github_link" href="https://github.com/devclub-iitd"> <img src="images/github_logo.png"
-                                                                                          height=30px width=30px></a>
-        </div>
-        <br>
+			void main() {
 
-        <!-- Copyright Info -->
-        <div class="copyrights">
-            <p>
-                &copy All Rights Reserved 2017 <br> Created by Dev Club, IIT DELHI
-            </p>
-        </div>
-    </section>
-    <!--End footer-->
+				vColor = customColor;
+
+				vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+
+				gl_PointSize = size * ( 300.0 / -mvPosition.z );
+
+				gl_Position = projectionMatrix * mvPosition;
+
+			}
+
+		</script>
+
+    <script type="x-shader/x-fragment" id="fragmentshader">
+
+			uniform vec3 color;
+			uniform sampler2D texture;
+
+			varying vec3 vColor;
+
+			void main() {
+
+				gl_FragColor = vec4( color * vColor, 1.0 );
+
+				gl_FragColor = gl_FragColor * texture2D( texture, gl_PointCoord );
+
+				if ( gl_FragColor.a < ALPHATEST ) discard;
+
+			}
+
+		</script>
+
+
+    <script>
+
+        if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+
+        var renderer, scene, camera, stats;
+
+        var particles, uniforms;
+
+        var PARTICLE_SIZE = 20;
+
+        var raycaster, intersects;
+        var mouse, INTERSECTED;
+
+        init();
+        animate();
+
+        function init() {
+
+            var container = document.getElementById( 'container' );
+
+            scene = new THREE.Scene();
+
+            camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
+            camera.position.z = 250;
+
+            //
+
+            var geometry1 = new THREE.BoxGeometry( 200, 200, 200, 16, 16, 16 );
+            var vertices = geometry1.vertices;
+
+            var positions = new Float32Array( vertices.length * 3 );
+            var colors = new Float32Array( vertices.length * 3 );
+            var sizes = new Float32Array( vertices.length );
+
+            var vertex;
+            var color = new THREE.Color();
+
+            for ( var i = 0, l = vertices.length; i < l; i ++ ) {
+
+                vertex = vertices[ i ];
+                vertex.toArray( positions, i * 3 );
+
+                color.setHSL( 0.01 + 0.1 * ( i / l ), 1.0, 0.5 );
+                color.toArray( colors, i * 3 );
+
+                sizes[ i ] = PARTICLE_SIZE * 0.5;
+
+            }
+
+            var geometry = new THREE.BufferGeometry();
+            geometry.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
+            geometry.addAttribute( 'customColor', new THREE.BufferAttribute( colors, 3 ) );
+            geometry.addAttribute( 'size', new THREE.BufferAttribute( sizes, 1 ) );
+
+            //
+
+            var material = new THREE.ShaderMaterial( {
+
+                uniforms: {
+                    color:   { value: new THREE.Color( 0xffffff ) },
+                    texture: { value: new THREE.TextureLoader().load( "images/disc.png" ) }
+                },
+                vertexShader: document.getElementById( 'vertexshader' ).textContent,
+                fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
+
+                alphaTest: 0.9
+
+            } );
+
+            //
+
+            particles = new THREE.Points( geometry, material );
+            scene.add( particles );
+
+            //
+
+            renderer = new THREE.WebGLRenderer();
+            renderer.setPixelRatio( window.devicePixelRatio );
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            container.appendChild( renderer.domElement );
+
+            //
+
+            raycaster = new THREE.Raycaster();
+            mouse = new THREE.Vector2();
+
+            //
+
+            stats = new Stats();
+            container.appendChild( stats.dom );
+
+            //
+
+            window.addEventListener( 'resize', onWindowResize, false );
+            document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+
+        }
+
+        function onDocumentMouseMove( event ) {
+
+            event.preventDefault();
+
+            mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+            mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+        }
+
+        function onWindowResize() {
+
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+
+            renderer.setSize( window.innerWidth, window.innerHeight );
+
+        }
+
+        function animate() {
+
+            requestAnimationFrame( animate );
+
+            render();
+            stats.update();
+
+        }
+
+        function render() {
+
+            particles.rotation.x += 0.0005;
+            particles.rotation.y += 0.001;
+
+            var geometry = particles.geometry;
+            var attributes = geometry.attributes;
+
+            raycaster.setFromCamera( mouse, camera );
+
+            intersects = raycaster.intersectObject( particles );
+
+            if ( intersects.length > 0 ) {
+
+                if ( INTERSECTED != intersects[ 0 ].index ) {
+
+                    attributes.size.array[ INTERSECTED ] = PARTICLE_SIZE;
+
+                    INTERSECTED = intersects[ 0 ].index;
+
+                    attributes.size.array[ INTERSECTED ] = PARTICLE_SIZE * 1.25;
+                    attributes.size.needsUpdate = true;
+
+                }
+
+            } else if ( INTERSECTED !== null ) {
+
+                attributes.size.array[ INTERSECTED ] = PARTICLE_SIZE;
+                attributes.size.needsUpdate = true;
+                INTERSECTED = null;
+
+            }
+
+            renderer.render( scene, camera );
+
+        }
+
+    </script>
+
 </div>
-<!--End Body-wrapper-->
+
+
 
 <script src="js/jquery-3.2.1.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
