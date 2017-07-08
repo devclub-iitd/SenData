@@ -317,7 +317,7 @@ $(function() {
             $homePage.hide();
             $transferPage.fadeIn();
             var $transferPageHeader = $('.user-name');
-            $transferPageHeader.html('<p>You are now connected to ' + socket.partner + $transferPageHeader.html() + '</p>');
+            $transferPageHeader.html('<p>You are now connected to ' + socket.partner + '. To go back click <a href="#" class="alert-link" id="backLink"> here </a>. </p>');
         } else {
             //    if request rejected
             btn.parent().parent().remove();
