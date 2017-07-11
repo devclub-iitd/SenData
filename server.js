@@ -104,7 +104,7 @@ io.on('connection', function(socket) {
         //TO SEND SOMETHING TO BOTH THE USERS IE ONE GETS THE ACCEPT REJECT MODAL
         //THE OTHER GETS THE WAITING FOR CONFRIRMATION MODAL
       }
-    } else {
+    } else if(logged_clients[username] == undefined){
       //imitate answer == 'n'
 
 
@@ -119,6 +119,28 @@ io.on('connection', function(socket) {
       // then emit list again
 
 
+    }else{
+      offer_list[username]=[];
+      offer_list[username].push(socket.username);
+      console.log(offer_list);
+      var user = connected_clients[username];
+      waiting_clients[socket.username] = socket.id;
+      // console.log(username);
+      delete connected_clients[socket.username];
+      // console.log(connected_clients);
+      io.sockets.emit('updateUsersList', Object.keys(connected_clients));
+
+      if (waiting_clients[username] == null) { //if user is not in waiting list
+        // socket.partner = username;
+        console.log("Test username " + username);
+        socket.broadcast.to(user).emit("offer", {
+          username: socket.username,
+          pid: socket.id
+        }); //I THINK WE SHOULD NOT USE THE KEYWORD OFFER IE THE SAME THING AS THAT OF CLIENT MAKING AN OFFER IT SHOULD BE "OFFERgoingToPartner"
+
+        //TO SEND SOMETHING TO BOTH THE USERS IE ONE GETS THE ACCEPT REJECT MODAL
+        //THE OTHER GETS THE WAITING FOR CONFRIRMATION MODAL
+      }
     }
 
     //TO WRITE AN ELSE FUNCTIONLITY IE IF THE USERNAME IS NOT IN  THE LATEST LIST ANYMORE...
@@ -169,19 +191,22 @@ io.on('connection', function(socket) {
           delete waiting_clients[offer_list[socket.username][i]];
         }
       }
-      for (i = 0; i < offer_list[username].length; i++) {
+      if(offer_list[username] !=undefined){
+        for (i = 0; i < offer_list[username].length; i++) {
 
-        // if (waiting_clients[offer_list[socket.username][i]] != waiting_clients[username]) {
-        socket.broadcast.to(waiting_clients[offer_list[username][i]]).emit('answer', {
-          answer: 'n'
-        });
-        //connected_clients[username] = waiting_clients[username];
-        connected_clients[offer_list[username][i]] = waiting_clients[offer_list[username][i]];
-        console.log("Adding " + offer_list[username][i] + " to available clients");
-        console.log(connected_clients);
-        delete waiting_clients[offer_list[username][i]];
-        // }
+          // if (waiting_clients[offer_list[socket.username][i]] != waiting_clients[username]) {
+          socket.broadcast.to(waiting_clients[offer_list[username][i]]).emit('answer', {
+            answer: 'n'
+          });
+          //connected_clients[username] = waiting_clients[username];
+          connected_clients[offer_list[username][i]] = waiting_clients[offer_list[username][i]];
+          console.log("Adding " + offer_list[username][i] + " to available clients");
+          console.log(connected_clients);
+          delete waiting_clients[offer_list[username][i]];
+          // }
+        }
       }
+
       delete connected_clients[socket.username];
       delete connected_clients[username];
       io.sockets.emit('updateUsersList', Object.keys(connected_clients));
@@ -199,10 +224,11 @@ io.on('connection', function(socket) {
 
     delete waiting_clients[socket.username];
 
-    offer_list[target_username] = removeA(offer_list[target_username], socket.username);
-    temp =
-      console.log("Target Username :" + target_username);
-    console.log("Offer List :" + offer_list[target_username][0]);
+    if (offer_list[target_username] != undefined) {
+      offer_list[target_username] = removeA(offer_list[target_username], socket.username);
+    }
+    temp = console.log("Target Username :" + target_username);
+    console.log("Offer List :" + offer_list[target_username]);
 
     connected_clients[socket.username] = socket.id;
     logged_clients[socket.username] = socket.id;
