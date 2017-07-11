@@ -15,4 +15,18 @@ For running the server-
 
 (Taken from https://stackoverflow.com/questions/22233980/implementing-our-own-stun-turn-server-for-webrtc-application)
 
-After doing this, in js/main.js file, change the value of TURN_SERVER_IP variable to your turn server ip address.
+After doing this, in js/main.js file, change the value of TURN_SERVER_IP variable to your turn server ip address.\
+
+
+
+
+FOR IITD intranet 
+the following steps worked for me on Ubuntu (to run npm install --save)
+
+##for npm
+sudo npm config set proxy http://proxy22.iitd.ac.in:3128 -g
+sudo npm config set https-proxy http://proxy22.iitd.ac.in:3128 -g
+##first try above if doesnt work then do the below things
+sudo npm config set strict-ssl false -g
+sudo npm config set registry "http://registry.npmjs.org/" -g
+
