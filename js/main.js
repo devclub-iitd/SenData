@@ -68,9 +68,9 @@ $(function() {
     //     }s
     // }
 
-    //$("#backLink").click(function(){
+    $("#backLink").click(function(){
 
-    //});
+    });
 
     $window.keydown(function(event) {
         // When the client hits ENTER on their keyboard
@@ -273,7 +273,10 @@ $(function() {
         newprogress = 0;
         prevprogress = 0;
 
-    };
+        // Clear the requests
+        $('.request-list').html("");
+        
+    }
 
     function receiveChannelCallback(event) {
         dataChannel = event.channel;
@@ -312,7 +315,7 @@ $(function() {
             //    if request accepted
             ExchangerUsername = requestingUsername;
             start();
-            //Set datachannel response on the other end(the client who receives the offer)
+            //Set data-channel response on the other end(the client who receives the offer)
             myPeerConn.ondatachannel = receiveChannelCallback;
             $homePage.hide();
             $transferPage.fadeIn();
@@ -321,7 +324,6 @@ $(function() {
         } else {
             //    if request rejected
             btn.parent().parent().remove();
-
         }
         socket.emit('answer', {
             'username': requestingUsername,
@@ -409,7 +411,6 @@ $(function() {
 
 
     socket.on("cancel", function(dat) {
-
         //data.username
         //data.waitingList
         console.log(dat);
