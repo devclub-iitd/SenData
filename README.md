@@ -2,7 +2,7 @@
 Simple tool for sending file in an Intranet environment
 
 1) Go to the directory of the project in command prompt.
-2) run "npm install --save"
+2) run "npm install"
 3) run "node server.js" 
 4) Open http://localhost:3001 
 

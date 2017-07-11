@@ -22,7 +22,7 @@ $(function() {
         //progress=document.getElementById('file1'),
         bitrateMax = 0;
 
-    var TURN_SERVER_IP = '127.0.0.1'
+    var TURN_SERVER_IP = '127.0.0.1';
 
     $("#download").hide();
 
