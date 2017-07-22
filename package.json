@@ -13,6 +13,6 @@
   "dependencies": {
     "express": "^4.15.3",
     "socket.io": "^2.0.3",
-    "webrtc-adapter": "^4.2.0"
+    "webrtc-adapter": "^4.2.1"
   }
 }
