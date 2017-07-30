@@ -364,6 +364,19 @@ $(function() {
             console.log(downloadAnchor.href);
             downloadAnchor.download = file_rec.name;
             $("#download").show();
+            $('#file-send-button').prop('disabled', false);
+            sender = false;
+			receiveBuffer = [];
+			receivedSize = 0;
+			receivedProgress = {
+				value: 0
+			};
+			sendProgress = {
+				value: 0
+			};
+			newprogress = 0;
+			prevprogress = 0;
+			$("#download").trigger('click');
             //console.log(downloadAnchor.download);
             //downloadAnchor.textContent = "DOWNLOAD";
             //downloadAnchor.style.display = 'block';
@@ -600,11 +613,6 @@ $(function() {
             console.log("ok");
             //console.log(file_desc.name);
             console.log('File is ' + [file_desc.name, file_desc.size, file_desc.type, file_desc.lastModifiedDate].join(' '));
-            //file_rec.size=file_desc.size;
-            //console.log(file_desc.size);
-            //file_rec.name=file_desc.name;	//metadata of the file to be received
-            //file_rec.type=file_desc.type;
-            //file_rec.lastModifiedDate=file_desc.lastModifiedDate;
             file_rec = {
                 name: file_desc.name,
                 size: file_desc.size,
@@ -636,10 +644,26 @@ $(function() {
         newprogress = prog;
         $('#file1').attr('aria-valuenow', newprogress).css('width', newprogress + '%');
         $("#fileProgress").text("Progress- " + Math.round(newprogress) + "%");
-    });
+        if(newprogress==100) {
+			$('#file-send-button').prop('disabled', false);
+			sender = false;
+			receiveBuffer = [];
+			receivedSize = 0;
+			receivedProgress = {
+				value: 0
+			};
+			sendProgress = {
+				value: 0
+			};
+			newprogress = 0;
+			prevprogress = 0;
+		} 
+	});
     socket.on("PartnerDisconnected", function() {
         //stop transfer or show dialog that partner has been disconnected retry from main page
-        offerComplete = false;
+        console.log("Partner disconnected");
+        alert("Your partner has disconnected");
+        cancel_connection();
     });
 
     socket.on("Cancel Connection", function() {

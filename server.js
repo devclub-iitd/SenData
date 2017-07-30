@@ -43,9 +43,11 @@ io.on('connection', function(socket) {
   });
 
   socket.on('disconnect', function(data) {
+	console.log(socket.partner);
     if (socket.partner) {
-      if (socket.partner in connected_clients) {
-        socket.broadcast.to(connected_clients[socket.partner]).emit("PartnerDisconnected");
+      if (socket.partner in logged_clients) {
+        socket.broadcast.to(logged_clients[socket.partner]).emit("PartnerDisconnected");
+        console.log("Sent message to other user");
       }
     } else if (undefined != socket.username)
     // console.log(socket.username);
