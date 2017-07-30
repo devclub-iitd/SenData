@@ -55,6 +55,7 @@ io.on('connection', function(socket) {
     } else if (undefined != socket.username)
     // console.log(socket.username);
     {
+      if (offer_list[socket.username]!=undefined)
       for (i = 0; i < offer_list[socket.username].length; i++) {
         socket.broadcast.to(waiting_clients[offer_list[socket.username][i]]).emit('answer', {
           answer: 'n'
@@ -182,7 +183,7 @@ io.on('connection', function(socket) {
         partner: socket.username,
         partnerid: socket.id
       });
-
+      if (offer_list[socket.username]!=undefined)
       for (i = 0; i < offer_list[socket.username].length; i++) {
 
         if (waiting_clients[offer_list[socket.username][i]] != waiting_clients[username]) {
