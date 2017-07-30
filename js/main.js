@@ -136,8 +136,7 @@ $(function() {
     });
 
     $(document).on('click', '.user-name a', function() {
-        //   cancel the 
- for both users
+        //   cancel the for both users
         console.log("Connection terminated");
         socket.emit("Cancel Connection", ExchangerUsername);
         cancel_connection();
@@ -281,7 +280,7 @@ $(function() {
 
         // Clear the requests
         $('.request-list').html("");
-        
+
     }
 
     function receiveChannelCallback(event) {
@@ -663,7 +662,7 @@ $(function() {
 			};
 			newprogress = 0;
 			prevprogress = 0;
-		} 
+		}
 	});
     socket.on("PartnerDisconnected", function() {
         //stop transfer or show dialog that partner has been disconnected retry from main page
