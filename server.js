@@ -49,6 +49,8 @@ io.on('connection', function(socket) {
       if (socket.partner in logged_clients) {
         socket.broadcast.to(logged_clients[socket.partner]).emit("PartnerDisconnected");
         console.log("Sent message to other user");
+        connected_clients[socket.partner]=socket.partnerid;
+        io.sockets.emit('updateUsersList', Object.keys(connected_clients));
       }
     } else if (undefined != socket.username)
     // console.log(socket.username);
