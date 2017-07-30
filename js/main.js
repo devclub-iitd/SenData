@@ -136,7 +136,8 @@ $(function() {
     });
 
     $(document).on('click', '.user-name a', function() {
-        //   cancel the connection for both users
+        //   cancel the 
+ for both users
         console.log("Connection terminated");
         socket.emit("Cancel Connection", ExchangerUsername);
         cancel_connection();
@@ -154,11 +155,16 @@ $(function() {
              'urls': 'stun:stun.l.google.com:19302'
              },
              */
-            {
+            /*{
                 urls: 'stun:' + TURN_SERVER_IP + ':3478',
                 credentials: 'test',
                 username: 'test'
-            }
+            }*/
+	{
+	url: 'turn:numb.viagenie.ca',
+	credential: 'muazkh',
+	username: 'webrtc@live.com'
+	}
         ]
     };
     var connection = {
