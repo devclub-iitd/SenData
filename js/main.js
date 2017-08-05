@@ -160,7 +160,7 @@ $(function() {
                 username: 'test'
             }*/
 	{
-	url: 'turn:numb.viagenie.ca',
+	urls: 'turn:numb.viagenie.ca',
 	credential: 'muazkh',
 	username: 'webrtc@live.com'
 	}
@@ -193,7 +193,7 @@ $(function() {
     // call start() to initiate peer connection process(should be called once 'Y' answer has been received (or sent))
 
     function start() {
-        myPeerConn = new RTCPeerConnection(configuration) //, connection);
+        myPeerConn = new RTCPeerConnection(configuration , connection);
 
 
         // send any ice candidates to the other peer
