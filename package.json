@@ -13,9 +13,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "express": "^4.15.3",
+    "express": "^4.15.4",
     "socket.io": "^2.0.3",
-    "webrtc-adapter": "^4.2.1"
+    "webrtc-adapter": "^4.2.2"
   },
   "engines": {
     "node": "6.11.1"
