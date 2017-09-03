@@ -7,7 +7,7 @@ var waiting_clients = [];
 var logged_clients = [];
 var offer_list = {};
 var status;
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 7000;
 //var soc_room = {};
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/index.html');
