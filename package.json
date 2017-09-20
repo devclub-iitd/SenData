@@ -16,7 +16,7 @@
     "express": "^4.15.4",
     "grunt": "^1.0.1",
     "socket.io": "^2.0.3",
-    "webrtc-adapter": "^5.0.1"
+    "webrtc-adapter": "^5.0.4"
   },
   "engines": {
     "node": "6.11.1"
