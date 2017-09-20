@@ -22,12 +22,16 @@ For local testing (sender-receiver on same pc, but different browser tabs), the 
 
 Otherwise, a TURN server might be required. For this purpose, install and run coturn. The commands are-
 
->sudo apt-get install coturn
+```bash
+sudo apt-get install coturn
+```
 
 For running the server-
 
->sudo turnserver -a -o -v -n  --no-dtls --no-tls -u test:test -r "someRealm"
->turnserver -v
+```bash
+sudo turnserver -a -o -v -n  --no-dtls --no-tls -u test:test -r "someRealm"
+turnserver -v
+```
 
 (Taken from https://stackoverflow.com/questions/22233980/implementing-our-own-stun-turn-server-for-webrtc-application)
 
@@ -39,14 +43,17 @@ the following steps are observed to work on Ubuntu (to run npm install --save)
 
 1.for npm
 
+```bash
 sudo npm config set proxy http://proxy22.iitd.ac.in:3128 -g
 sudo npm config set https-proxy http://proxy22.iitd.ac.in:3128 -g
+```
 
 2.Secondary Fix(If above does not work)
 
+```bash
 sudo npm config set strict-ssl false -g
 sudo npm config set registry "http://registry.npmjs.org/" -g
-
+```
 
 
 -------------------------------------------------------------------------------------------------------------------------------------------
@@ -58,4 +65,4 @@ sudo npm config set registry "http://registry.npmjs.org/" -g
 4. Set up functionality to send multiple files at once.
 
 # Bugs List
-1.Blob initiation on receving with Chrome not working.
+1. Blob initiation on receving with Chrome not working.
