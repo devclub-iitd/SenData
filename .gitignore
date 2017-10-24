@@ -5,6 +5,7 @@ __pycache__/
 
 .idea/
 
+.Rhistory
 
 # C extensions
 *.so

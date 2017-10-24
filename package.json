@@ -2,7 +2,7 @@
   "name": "sendata",
   "version": "0.0.1",
   "description": "Simple tool for sending file in an Intranet environment",
-   "main": "server.js",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "postinstall": "cp node_modules/webrtc-adapter/out/adapter.js js"
@@ -13,9 +13,11 @@
   },
   "license": "MIT",
   "dependencies": {
+
     "express": "^4.16.2",
     "socket.io": "^2.0.4",
     "webrtc-adapter": "^5.0.6"
+
   },
   "engines": {
     "node": "6.11.1"
