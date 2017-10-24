@@ -362,7 +362,7 @@ $(function() {
                 progress: 100
             });
             $("#fileProgress").text("Progress- " + "100%");
-            var received = new window.Blob(receiveBuffer);
+            var received = new window.Blob(receiveBuffer);//to change here , probably
             receiveBuffer = [];
             console.log("converted array to blob");
             downloadAnchor.href = URL.createObjectURL(received);
@@ -402,7 +402,7 @@ $(function() {
     }
 
 
-    function sendData() {
+    function sendData() {//main changes here for BLOB change for now splitting into bytes
         console.log("Begun sending");
         $('#fileBeingSent').text(file.name + "(" + Math.round(file.size / 1000) + " KB)");
         var chunkSize = 16384;
@@ -640,12 +640,12 @@ $(function() {
         sender = false;
     });
 
-    socket.on("file accepted", function() {
+    socket.on("file accepted", function() {//here's the sendData!
         sendData(); //start sending :)))
 
     });
 
-    socket.on("received-chunks", function(prog) {
+    socket.on("received-chunks", function(prog) {//to change this too for blobs chrome to arrayBuffer
         newprogress = prog;
         $('#file1').attr('aria-valuenow', newprogress).css('width', newprogress + '%');
         $("#fileProgress").text("Progress- " + Math.round(newprogress) + "%");
