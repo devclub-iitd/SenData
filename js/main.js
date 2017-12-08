@@ -210,7 +210,7 @@ $(function() {
     function sendLocalDesc() { //send local description to ExchangerUsername
         //Create data channel and set event handling(the one who sends offer does this)
         dataChannel = myPeerConn.createDataChannel("datachannel");
-
+        dataChannel.binaryType='arraybuffer';
 
         dataChannel.onmessage = onReceiveMessageCallback;
 
@@ -285,6 +285,7 @@ $(function() {
 
     function receiveChannelCallback(event) {
         dataChannel = event.channel;
+        dataChannel.binaryType='arraybuffer';
         dataChannel.onmessage = onReceiveMessageCallback; //the function that will push the received data into a buffer
         dataChannel.onopen = function() {
             console.log("------ DATACHANNEL OPENED ------(by other side)");
@@ -634,6 +635,7 @@ $(function() {
             console.log("file refused");
             socket.emit("file refused", ExchangerUsername);
         }
+        console.log("end")
     });
 
     socket.on("file refused", function() {
@@ -641,7 +643,9 @@ $(function() {
     });
 
     socket.on("file accepted", function() {//here's the sendData!
+        console.log("trying to send")
         sendData(); //start sending :)))
+        console.log("send completed")
 
     });
 
