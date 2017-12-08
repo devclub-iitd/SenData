@@ -207,7 +207,8 @@ $(function() {
         };
     }
 
-    function sendLocalDesc() { //send local description to ExchangerUsername
+    function sendLocalDesc() {
+        //send local description to ExchangerUsername
         //Create data channel and set event handling(the one who sends offer does this)
         dataChannel = myPeerConn.createDataChannel("datachannel");
         dataChannel.binaryType='arraybuffer';
@@ -341,9 +342,10 @@ $(function() {
     }
 
     function onReceiveMessageCallback(event) {
-        //console.log('Received Message ' + event.data.size);
+        console.log("onReceiveMessageCallback called")
+        // console.log('Received Message ' + event.data.size);
         receiveBuffer.push(event.data);
-        receivedSize += event.data.size;
+        receivedSize += event.data.byteLength;
         //console.log(receivedSize+" "+file_rec.size);
         receivedProgress.value = receivedSize;
         newprogress = (receivedProgress.value / file_rec.size) * 100;
