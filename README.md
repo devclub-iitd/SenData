@@ -1,4 +1,4 @@
-# Studyportal
+# SenData
 
 ## What is it all about?
 SenData is a simple tool for sharing files at a high speed, aimed at an intranet environment without any external software. It is based to run simply using your internet browser.
