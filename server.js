@@ -66,7 +66,6 @@ io.on('connection', function (socket) {
         delete logged_clients[socket.username];
         delete waiting_clients[socket.username];
         io.sockets.emit("updateUsersList", Object.keys(connected_clients));
-        // console.log(socket.username + " disconnected");
     });
 
     socket.on("offer", function (username) {
