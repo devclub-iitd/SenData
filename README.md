@@ -60,9 +60,9 @@ sudo npm config set registry "http://registry.npmjs.org/" -g
 
 # TODO List
 1. Increase and test speed of file sending.
-2. Increase site loading time.
+2. Decrease site loading time.
 3. Increase maximum limit of size of file that can be sent.
 4. Set up functionality to send multiple files at once.
 
 # Bugs List
-1. Blob initiation on receving with Chrome not working.
+~~1. Blob initiation on receving with Chrome not working.~~
