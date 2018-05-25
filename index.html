@@ -27,6 +27,32 @@
             </div>
         </header>
         <!-- End Header Content -->
+         <!-- Login-page -->
+        <div class="login-page">
+            <form class="login-form">
+                <div class="form-group">
+                    <!--<label for="username">User Name</label>-->
+                    <input type="text"  class="usernameInput" id="username" placeholder="Enter your username" autocomplete="off">
+                    <br>
+                    <p>Enter any name which will be visible to other users online.</p>
+                    <!--i removed class form-control from above ... it looks less sexy but also displays on Firefox-->
+                </div>
+
+            </form>
+            <div class="alert-username">
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Warning!</strong> Username already exists. Please try another one ...
+                </div>
+            </div>
+            <div class="alert-blankusername">
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Warning!</strong> Better check yourself, you're not looking too good.
+                </div>
+            </div>
+        </div>
+        <!--End Login-page-->
 
         <!-- Main Content -->
         <div class="main-content row">
@@ -219,6 +245,7 @@
                         <div class="progress">
                             <div class="progress-bar" id="file1" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
                         </div>
+                      <!--   Reject button is for canceling sending/ recieving .This should work from both sides ... After rejecting we should look for next file to share. -->
                         <a id = "stop-progress" class ="btn btn-danger"> Reject </a>
                     <!-- <p> File 2:</p>
                     <div class="progress">
@@ -240,32 +267,7 @@
         </div>
         <!--End Main Content-->
         
-        <!-- Login-page -->
-        <div class="login-page">
-            <form class="login-form">
-                <div class="form-group">
-                    <!--<label for="username">User Name</label>-->
-                    <input type="text"  class="usernameInput" id="username" placeholder="Enter your username" autocomplete="off">
-                    <br>
-                    <p>Enter any name which will be visible to other users online.</p>
-                    <!--i removed class form-control from above ... it looks less sexy but also displays on Firefox-->
-                </div>
-
-            </form>
-            <div class="alert-username">
-                <div class="alert alert-danger alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong>Warning!</strong> Username already exists. Please try another one ...
-                </div>
-            </div>
-            <div class="alert-blankusername">
-                <div class="alert alert-danger alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong>Warning!</strong> Better check yourself, you're not looking too good.
-                </div>
-            </div>
-        </div>
-        <!--End Login-page-->
+       
 
         <!-- Footer -->
         <section id="footer">

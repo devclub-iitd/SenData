@@ -293,15 +293,15 @@ $(function () {
         sender = false;
     });
 
-    socket.on("file accepted", function (data) {// here funtion gets the username of the user he will now send the file to
+    socket.on("file accepted", function (data) {// This is for sender's end. Here funtion gets the username of the user he will now send the file to
         //here's the sendData!
         console.log(data.target+"asdfasdfasdf"+ data.username );
         console.log("trying to send");
         $progressBar.fadeIn();
         sendData(); //start sending :)))
         console.log("send completed");
-        socket.emit("status",data);//want to tell the user that has sent the file that file has been sent
-        $progressBar.fadeOut();
+        socket.emit("status",data);//want to tell the user that has sent the file that file has been sent. Here can add more info to put in file shar history
+        $progressBar.fadeOut();// this works (this is for sender's side)
 
 
     });
