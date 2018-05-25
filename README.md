@@ -1,29 +1,7 @@
 # SenData
 
 ## What is it all about?
-SenData is a simple tool for sharing files at a high speed, aimed at an intranet environment without any external software. It is based to run simply using your internet browser.
-
-### Technology used
-The website is hosted on serber using nodeJs.
-
-To signal messages and metadata between browsers, socket.io is used.
-
-WebRTC is used to initiate a peer to peer connection between browsers and to send the file as a blob.
-
------------------------------------------------------------------------------------------
-
-## Getting Started: 
-1. Install Nodejs on your computer.
-2. Go to the directory of the project in command prompt and run "npm install".
-3. Run "node server.js". 
-4. Open http://localhost:3001. 
-
-For local testing (sender-receiver on same pc, but different browser tabs), the above mentioned steps are observed to be working correctly. 
-
-Otherwise, a TURN server might be required. For this purpose, install and run coturn. The commands are-
-
-```bash
-sudo apt-get install coturn
+SenData is a simple tool for sharing files at a high speed, aimed at an intranet environment without any external software. It is based to run simply using your internet browser. "ll coturn
 ```
 
 For running the server-
