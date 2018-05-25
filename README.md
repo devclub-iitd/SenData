@@ -37,8 +37,8 @@ sudo npm config set registry "http://registry.npmjs.org/" -g
 -------------------------------------------------------------------------------------------------------------------------------------------
 
 # TODO List
-1. Increase and test speed of file sending.
-2. Decrease site loading time.
+1. Make bakend part of chat/file share history.
+2. For transfering multiple files make queue of file requests...and execution 
 3. Increase maximum limit of size of file that can be sent.
 4. Set up functionality to send multiple files at once.
 
