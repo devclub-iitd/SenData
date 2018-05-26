@@ -218,44 +218,6 @@ $(function () {
         }
     });
 
-    socket.on("session-desc", function (message) {
-        console.log("session-desc received");
-        myPeerConn.setRemoteDescription(message.sdp).then(function () {
-            console.log("received something");
-            if (myPeerConn.remoteDescription.type === 'offer') {
-                myPeerConn.createAnswer().then(function (answer) {
-                    return myPeerConn.setLocalDescription(answer);
-                })
-                    .then(function () {
-                        socket.emit("session-desc", {
-                            target: ExchangerUsername,
-                            type: "file-stream",
-                            sdp: myPeerConn.localDescription
-                        });
-                        console.log("Received remote description, now sending my local description");
-
-                    })
-                    .catch(function (reason) {
-                        // An error occurred, so handle the failure to connect
-                    });
-            } else {
-                console.log("Process complete");
-            }
-        });
-    });
-
-    socket.on("candidate", function (candidate) {
-        console.log("Received IceCandidate");
-        myPeerConn.addIceCandidate(candidate) //add remote icecandidate
-            .then(function () {
-                console.log('AddIceCandidate success.');
-            })
-            .catch(function (reason) {
-                console.log('Error in adding IceCandidate');
-                console.log(reason);
-            });
-    });
-
     socket.on("file-desc", function (file_desc) {
         console.log("file-desc received");
         if (!sender) { //to make sure we have not already sent a file offer to the other client
@@ -316,29 +278,29 @@ $(function () {
 
     socket.on("send", function (hash){
         getClient();
-        console.log(hash);
-        client.add(hash,function(torrent){console.log("bla");
-        console.log(torrent.name);
-        torrent.on('error',(err)=>alert(err));
-        torrent.on('download',function () {
-            var progress = torrent.progress *100;
-            console.log(progress);
-            $('#file1').attr('aria-valuenow', progress).css('width', progress  + '%');
-            $("#fileProgress").text("Progress- " + Math.round(progress) + "%");
-            });
-        torrent.on('done',function(){
-            var file = torrent.files[0];
+        
+        client.add(hash,function(torrent){
+            torrent.on('error',(err)=>alert(err));
+            
+            torrent.on('download',function () {
+                var progress = torrent.progress *100;
+                $('#file1').attr('aria-valuenow', progress).css('width', progress  + '%');
+                $("#fileProgress").text("Progress- " + Math.round(progress) + "%");
+                });
+        
+            torrent.on('done',function(){
+                var file = torrent.files[0];
 
-            file.getBlobURL(function(error,url){
-                if(error) return;
-                downloadAnchor.href = url;
-                downloadAnchor.download =file.name
-                downloadAnchor.textContent = "Download"+file.name;
-                $("#download").show();
+                file.getBlobURL(function(error,url){
+                    if(error) return;
+                        downloadAnchor.href = url;
+                        downloadAnchor.download =file.name
+                        downloadAnchor.textContent = "Download"+file.name;
+                        $("#download").show();
+                });
             });
         });
-
-    });});
+    });
 
     function requestHandler(answer, btn) {
         var requestingUsername = btn.parent().parent()[0].textContent;
@@ -375,8 +337,6 @@ $(function () {
         console.log("Connection terminated");
         $transferPage.hide();
         $homePage.show();
-        myPeerConn.close();
-        dataChannel.close();
         ExchangerUsername = null;
         offerComplete = false;
         sender = false;
@@ -397,13 +357,12 @@ $(function () {
     }
 
     function sendData() {
-        console.log("Begun sending");
         $('#fileBeingSent').text(file.name + "(" + Math.round(file.size / 1000) + " KB)");
+
         getClient();
-        console.log(file.name);
         var torrent = client.seed(file, function (torrent) {});
+
         torrent.on("infoHash",function(){
-            console.log(ExchangerUsername);
             socket.emit("send", {
                 user:ExchangerUsername,
                 hash:torrent.magnetURI
@@ -421,6 +380,7 @@ $(function () {
             tracker:{
             rtcConfig: configuration}
         });
+        
         client.on("error",function(err){alert(err)});
         client.on("warning",function(w){alert(w)})
     }
