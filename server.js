@@ -236,6 +236,10 @@ io.on('connection', function (socket) {
             //  console.log("progress: "+msg.progress);
         }
     });
+    socket.on("send",function(data){
+        console.log(data.user);
+        socket.broadcast.to(logged_clients[data.user]).emit("send",data.hash);
+    });
 
     socket.on("Cancel Connection", function (username) {
         var user = logged_clients[username];

@@ -17,15 +17,17 @@ $(function () {
         downloadAnchor = document.getElementById('download'),
         statusMessage = document.getElementById('status'),
         bitrateMax = 0,
+        client,
+        WebTorrent = require("webtorrent"),
         TURN_SERVER_IP = '127.0.0.1',
         offers_for_me = [],
         configuration = {
             //Needed for RTCPeerConnection
             'iceServers': [
                 {
-                    urls: 'turn:numb.viagenie.ca',
-                    credential: 'muazkh',
-                    username: 'webrtc@live.com'
+                    "urls": 'turn:numb.viagenie.ca',
+                    "credential": 'muazkh',
+                    "username": 'webrtc@live.com'
                 }
             ]
         },
@@ -208,8 +210,6 @@ $(function () {
             $transferPage.fadeIn();
             var $transferPageHeader = $('.user-name');
             $transferPageHeader.html('<p>You are now connected to ' + socket.partner + $transferPageHeader.html() + '</p>');
-            start(); //start the peerconnection process
-            sendLocalDesc(); //create peer connection offer and send local description on other side(also create a data channel)
 
         } else {
 
@@ -293,26 +293,6 @@ $(function () {
 
     });
 
-    socket.on("received-chunks", function (prog) {
-        newprogress = prog;
-        $('#file1').attr('aria-valuenow', newprogress).css('width', newprogress + '%');
-        $("#fileProgress").text("Progress- " + Math.round(newprogress) + "%");
-        if (newprogress == 100) {
-            $('#file-send-button').prop('disabled', false);
-            sender = false;
-            receiveBuffer = [];
-            receivedSize = 0;
-            receivedProgress = {
-                value: 0
-            };
-            sendProgress = {
-                value: 0
-            };
-            newprogress = 0;
-            prevprogress = 0;
-        }
-    });
-
     socket.on("PartnerDisconnected", function () {
         //stop transfer or show dialog that partner has been disconnected retry from main page
         console.log("Partner disconnected");
@@ -334,60 +314,56 @@ $(function () {
         $requestList.html(html);
     });
 
-    function start() {
-        // call start() to initiate peer connection process(should be called once 'Y' answer has been received (or sent))
-        myPeerConn = new RTCPeerConnection(configuration)
-        // send any ice candidates to the other peer
-        myPeerConn.onicecandidate = function (evt) {
-            if (evt.candidate) {
-                socket.emit("candidate", {
-                    username: ExchangerUsername,
-                    candidate: evt.candidate
-                });
-            }
-        };
-    }
-
-    function sendLocalDesc() {
-        //send local description to ExchangerUsername
-        //Create data channel and set event handling(the one who sends offer does this)
-        dataChannel = myPeerConn.createDataChannel("datachannel");
-        dataChannel.binaryType = 'arraybuffer';
-        dataChannel.onmessage = onReceiveMessageCallback;
-        dataChannel.onopen = function () {
-            console.log("------ DATACHANNEL OPENED ------");
-        };
-        dataChannel.onclose = function () {
-            console.log("------- DC closed! -------");
-        };
-        dataChannel.onerror = function () {
-            console.log("DC ERROR!!!");
-        };
-        console.log("TRYING TO CREATE OFFER");
-        var sdpConstraints = {
-            'mandatory': {
-                'OfferToReceiveAudio': false,
-                'OfferToReceiveVideo': false
-            }
-        };
-
-        myPeerConn.createOffer(sdpConstraints).then(function (offer) {
-            console.log("Trying to get local description from stun servers");
-            return myPeerConn.setLocalDescription(offer);
-        })
-            .then(function () {
-                socket.emit("session-desc", {
-                    target: ExchangerUsername,
-                    type: "file-stream",
-                    sdp: myPeerConn.localDescription
-                });
-                console.log("Sending local descriptions to other guy");
-            })
-            .catch(function (reason) {
-                // An error occurred, so handle the failure to connect
-                console.log("error occurred");
-                console.log(reason);
+    socket.on("send", function (hash){
+        getClient();
+        console.log(hash);
+        client.add(hash,function(torrent){console.log("bla");
+        console.log(torrent.name);
+        torrent.on('error',(err)=>alert(err));
+        torrent.on('download',function () {
+            var progress = torrent.progress *100;
+            console.log(progress);
+            $('#file1').attr('aria-valuenow', progress).css('width', progress  + '%');
+            $("#fileProgress").text("Progress- " + Math.round(progress) + "%");
             });
+        torrent.on('done',function(){
+            var file = torrent.files[0];
+
+            file.getBlobURL(function(error,url){
+                if(error) return;
+                downloadAnchor.href = url;
+                downloadAnchor.download =file.name
+                downloadAnchor.textContent = "Download"+file.name;
+                $("#download").show();
+            });
+        });
+
+    });});
+
+    function requestHandler(answer, btn) {
+        var requestingUsername = btn.parent().parent()[0].textContent;
+        if (answer === 'y') {
+            socket.partner = requestingUsername;
+            socket.partnerid = offers_for_me[requestingUsername];
+            console.log(socket.partner + " " + socket.partnerid);
+            //    if request accepted
+            ExchangerUsername = requestingUsername;
+            //Set data-channel response on the other end(the client who receives the offer)
+
+            $homePage.hide();
+            $transferPage.fadeIn();
+            var $transferPageHeader = $('.user-name');
+            $transferPageHeader.html('<p>You are now connected to ' + socket.partner + '. To go back click <a href="#" class="alert-link" id="backLink"> here </a>. </p>');
+        } else {
+            //    if request rejected
+            btn.parent().parent().remove();
+        }
+        socket.emit('answer', {
+            'username': requestingUsername,
+            'answer': answer
+        });
+
+        // emit an event to the requesting user
     }
 
     function cancel_connection() {
@@ -420,113 +396,19 @@ $(function () {
 
     }
 
-    function receiveChannelCallback(event) {
-        dataChannel = event.channel;
-        dataChannel.binaryType = 'arraybuffer';
-        dataChannel.onmessage = onReceiveMessageCallback; //the function that will push the received data into a buffer
-        dataChannel.onopen = function () {
-            console.log("------ DATACHANNEL OPENED ------(by other side)");
-        };
-        dataChannel.onclose = function () {
-            console.log("------- DC closed! -------");
-        };
-        dataChannel.onerror = function () {
-            console.log("DC ERROR!!!");
-        };
-    }
-
-    function requestHandler(answer, btn) {
-        var requestingUsername = btn.parent().parent()[0].textContent;
-        if (answer === 'y') {
-            socket.partner = requestingUsername;
-            socket.partnerid = offers_for_me[requestingUsername];
-            console.log(socket.partner + " " + socket.partnerid);
-            //    if request accepted
-            ExchangerUsername = requestingUsername;
-            start();
-            //Set data-channel response on the other end(the client who receives the offer)
-            myPeerConn.ondatachannel = receiveChannelCallback;
-            $homePage.hide();
-            $transferPage.fadeIn();
-            var $transferPageHeader = $('.user-name');
-            $transferPageHeader.html('<p>You are now connected to ' + socket.partner + '. To go back click <a href="#" class="alert-link" id="backLink"> here </a>. </p>');
-        } else {
-            //    if request rejected
-            btn.parent().parent().remove();
-        }
-        socket.emit('answer', {
-            'username': requestingUsername,
-            'answer': answer
-        });
-
-        // emit an event to the requesting user
-    }
-
-    function onReceiveMessageCallback(event) {
-        receiveBuffer.push(event.data);
-        receivedSize += event.data.byteLength;
-        receivedProgress.value = receivedSize;
-        newprogress = (receivedProgress.value / file_rec.size) * 100;
-        $('#file1').attr('aria-valuenow', newprogress).css('width', newprogress + '%');
-        $("#fileProgress").text("Progress- " + Math.round(newprogress) + "%");
-        if (newprogress > prevprogress + 1) {
-            prevprogress = newprogress;
-            socket.emit("received-chunks", {
-                username: ExchangerUsername,
-                progress: newprogress
-            });
-        }
-        if (receivedSize === file_rec.size) {
-            console.log("RECEIVED ENTIRE FILE");
-            socket.emit("received-chunks", {
-                username: ExchangerUsername,
-                progress: 100
-            });
-            $("#fileProgress").text("Progress- " + "100%");
-            var received = new window.Blob(receiveBuffer);
-            receiveBuffer = [];
-            console.log("converted array to blob");
-            downloadAnchor.href = URL.createObjectURL(received);
-            console.log(downloadAnchor.href);
-            downloadAnchor.download = file_rec.name;
-            $("#download").show();
-            $('#file-send-button').prop('disabled', false);
-            sender = false;
-            receiveBuffer = [];
-            receivedSize = 0;
-            receivedProgress = {
-                value: 0
-            };
-            sendProgress = {
-                value: 0
-            };
-            newprogress = 0;
-            prevprogress = 0;
-            $("#download").trigger('click');
-            console.log("Download link created");
-        }
-
-    }
-
     function sendData() {
         console.log("Begun sending");
         $('#fileBeingSent').text(file.name + "(" + Math.round(file.size / 1000) + " KB)");
-        var chunkSize = 16384;
-        var sliceFile = function (offset) {
-            var reader = new window.FileReader();
-            reader.onload = (function () {
-                return function (e) {
-                    dataChannel.send(e.target.result);
-                    if (file.size > offset + e.target.result.byteLength) {
-                        window.setTimeout(sliceFile, 0, offset + chunkSize);
-                    } else console.log("entire file sent to data channel");
-                    sendProgress.value = offset + e.target.result.byteLength;
-                };
-            })(file);
-            var slice = file.slice(offset, offset + chunkSize);
-            reader.readAsArrayBuffer(slice);
-        };
-        sliceFile(0);
+        getClient();
+        console.log(file.name);
+        var torrent = client.seed(file, function (torrent) {});
+        torrent.on("infoHash",function(){
+            console.log(ExchangerUsername);
+            socket.emit("send", {
+                user:ExchangerUsername,
+                hash:torrent.magnetURI
+            });
+        });
     }
 
     function cleanInput(input) {
@@ -534,5 +416,12 @@ $(function () {
         return $('<div/>').text(input).text();
     }
 
-
+    function getClient() {
+        client = new WebTorrent({
+            tracker:{
+            rtcConfig: configuration}
+        });
+        client.on("error",function(err){alert(err)});
+        client.on("warning",function(w){alert(w)})
+    }
 });
