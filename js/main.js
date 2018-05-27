@@ -10,6 +10,7 @@ $(function () {
         $homePage = $('.home-page'), // home page
         $transferPage = $('.transfer-page'), // file transfer page
         $progressBar = $('.progress_bar'),// prgress bar
+        $chatbox = $('.chat'),
         $userRequest = $('#user-requests'), // sidebar to accept or deny a connection
         socket = io(),
         $testmes = $('#first-message'),
@@ -276,7 +277,8 @@ $(function () {
             console.log("file offer of " + file_rec.name + " accepted");
             socket.emit("file accepted", {
                         target: ExchangerUsername,
-                        from: username
+                        from: username,
+                        file: file_desc.name
                         }); // can put a feature later to ask the user whether
             // he/she wants to accept the file, and based on that respond as accepted/refused
             $('#file-send-button').prop('disabled', true);
@@ -295,22 +297,25 @@ $(function () {
 
     socket.on("file accepted", function (data) {// This is for sender's end. Here funtion gets the username of the user he will now send the file to
         //here's the sendData!
-        console.log(data.target+"asdfasdfasdf"+ data.username );
         console.log("trying to send");
         $progressBar.fadeIn();
         sendData(); //start sending :)))
         console.log("send completed");
         socket.emit("status",data);//want to tell the user that has sent the file that file has been sent. Here can add more info to put in file shar history
         $progressBar.fadeOut();// this works (this is for sender's side)
+        var filehistory = "<li class = 'chatbox-file-history-sent'> " + "You sent " + data.file + " to " + data.target + ".  </li>" ;
+        $(filehistory).prependTo($chatbox);//delivering file history to chat box of the sender
+
 
 
     });
 
     socket.on("status",function(data) { // this should fade out the progress bar after file seding is complete (this is only for reciver side)
-     console.log("sentfsdfsdfsdfsdfsdfsdfsdf");
      $progressBar.fadeOut();
-     console.log("recived file" + data.target + "to" + data.from);
-     $testmes.innerHTML = "hi";
+     console.log(data.target + "sent" + data.file + "to" + data.from);
+     // class of the chat/file share history ul is chat  
+     var filehistory = "<li class = 'chatbox-file-history-recieved'> " +   " You recieved  " + data.file + " from " + data.from + ". </li>" ;
+    $(filehistory).prependTo($chatbox);//delivering file history to chat box
     });
 
     socket.on("received-chunks", function (prog) {

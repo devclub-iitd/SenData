@@ -46,7 +46,7 @@ io.on('connection', function (socket) {
         if (socket.partner) {
             if (socket.partner in logged_clients) {
                 socket.broadcast.to(logged_clients[socket.partner]).emit("PartnerDisconnected");
-                console.log("Sent message to other user");
+                // console.log("Sent message to other user");
                 connected_clients[socket.partner] = socket.partnerid;
                 io.sockets.emit('updateUsersList', Object.keys(connected_clients));
             }
@@ -225,12 +225,10 @@ io.on('connection', function (socket) {
     });
 
     socket.on("status" , function (data){
-                console.log("hey");
                 username = data.from;
                var user = logged_clients[username];
         socket.broadcast.to(user).emit("status", data);
     });
-console.log("heyr");
     socket.on("file refused", function (username) {
         var user = logged_clients[username];
         if (user != null) socket.broadcast.to(user).emit("file refused");

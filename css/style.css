@@ -443,6 +443,12 @@ btn:hover {
 
 /*chat widget here
 */
+.chatbox-file-history-recieved{
+    color: green;
+}
+.chatbox-file-history-sent{
+    color: brown;
+}
 .chat
 {
     list-style: none;
