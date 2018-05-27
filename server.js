@@ -80,14 +80,14 @@ io.on('connection', function (socket) {
             io.sockets.emit('updateUsersList', Object.keys(connected_clients));
             if (waiting_clients[username] == null) { //if user is not in waiting list
                 // console.log("Test username " + username);
-                socket.broadcast.to(user).emit("offer", {// may be this code broadcasts only to user who is rquested
+                socket.broadcast.to(user).emit("offer", {
                     username: socket.username,
                     pid: socket.id // the name and id of the user who sent the request
                 });
             }
         } else if (logged_clients[username] == undefined) {
             //imitate answer == 'n'
-            socket.broadcast.to(socket.id).emit('answer', {
+            socket.broadcast.to(socket.id).emit('answer', {// this broadcasts to the user who is requesting with an immediate message no as there is no such user logged in which he is requesting 
                 answer: 'n'
             });
             delete offer_list[username];
@@ -243,7 +243,7 @@ io.on('connection', function (socket) {
         }
     });
 
-    socket.on("Cancel Connection", function (username) {// hears for cancel connection may be from any ot the two users
+    socket.on("Cancel Connection", function (username) {// This function hears for "cancel connection" from any ot the two users
         var user = logged_clients[username];
         if (user != null) socket.broadcast.to(user).emit("Cancel Connection");
 
