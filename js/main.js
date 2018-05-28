@@ -1,4 +1,6 @@
 $(function () {
+    var requests = [];
+    // var downloadstatus = TRUE;
 
     var $mainContent = $('.main-content'), // which contains userlist and search functionality
         username = '', // variable to store username entered.
@@ -7,8 +9,11 @@ $(function () {
         $window = $(window),
         $homePage = $('.home-page'), // home page
         $transferPage = $('.transfer-page'), // file transfer page
+        $progressBar = $('.progress_bar'),// prgress bar
+        $chatbox = $('.chat'),
         $userRequest = $('#user-requests'), // sidebar to accept or deny a connection
         socket = io(),
+        $testmes = $('#first-message'),
         $alertUsername = $('.alert-username'),
         $alertUsername_blank = $('.alert-blankusername'),
         $listOfUsers = $('#listOfUsers'),
@@ -86,6 +91,7 @@ $(function () {
                 } else {
                     $loginPage.hide();
                     $mainContent.fadeIn();
+                    $progressBar.hide();
                     $loginPage.off('click');
                 }
             });
@@ -137,11 +143,11 @@ $(function () {
     });
 
     $(document).on('click', '.online-user', function () {
-        // code for what happens when user clicks on a list item
+        // code for what happens when user clicks on a list item of online_users
         var target_username = $(this).text();
         socket.emit('offer', target_username);
         $('#waiting_message').find('.modal-body').html('<h3>Waiting for confirmation from ' + target_username + '</h3>');
-        ExchangerUsername = target_username;
+        ExchangerUsername = target_username;// all this is from the one who sends request to other
 
         $cancelButton.on('click', function () {
             socket.emit('cancel', target_username);
@@ -156,12 +162,12 @@ $(function () {
     });
 
     $(document).on('click', '#user-requests .btn-success', function () {
-        // code for what happens when user clicks on a list item
+        // code for what happens when user clicks on a list item that is a yes to a particular request
         requestHandler('y', $(this));
     });
 
     $(document).on('click', '#user-requests .btn-danger', function () {
-        // code for what happens when user clicks on a list item
+        // code for what happens when user clicks on a list item that is a no to a particular request
         requestHandler('n', $(this));
     });
 
@@ -173,7 +179,7 @@ $(function () {
         var requestList = $('.request-list');
 
         // create a new list element and prepend it to the existing list
-        var newRequest = '<li>' + data.username;
+        var newRequest = '<li id="request-li">' + data.username;
         newRequest += '<span class="request-btn">';
         newRequest += '<a class="btn btn-success" href="#"><i class="fa fa-check" aria-hidden="true"></i></a>';
         newRequest += '<a class="btn btn-danger" href="#"><i class="fa fa-times" aria-hidden="true"></i></a>';
@@ -269,10 +275,14 @@ $(function () {
                 lastModifiedDate: file_desc.lastModifiedDate
             };
             console.log("file offer of " + file_rec.name + " accepted");
-            socket.emit("file accepted", ExchangerUsername); // can put a feature later to ask the user whether
+            socket.emit("file accepted", {
+                        target: ExchangerUsername,
+                        from: username,
+                        file: file_desc.name
+                        }); // can put a feature later to ask the user whether
             // he/she wants to accept the file, and based on that respond as accepted/refused
             $('#file-send-button').prop('disabled', true);
-            $('#fileBeingSent').text(file_rec.name + "(" + Math.round(file_rec.size / 1000) + " KB)");
+            $('#fileBeingSent').text(file_rec.name + "(" + Math.round(file_rec.size / 1000) + " KB)"+"(receiving..)");
         } else {
             sender = false; //if both have sent at the same time, cancel both
             console.log("file refused");
@@ -285,12 +295,27 @@ $(function () {
         sender = false;
     });
 
-    socket.on("file accepted", function () {
+    socket.on("file accepted", function (data) {// This is for sender's end. Here funtion gets the username of the user he will now send the file to
         //here's the sendData!
-        console.log("trying to send")
+        console.log("trying to send");
+        $progressBar.fadeIn();
         sendData(); //start sending :)))
-        console.log("send completed")
+        console.log("send completed");
+        socket.emit("status",data);//want to tell the user that has sent the file that file has been sent. Here can add more info to put in file shar history
+        $progressBar.fadeOut();// this works (this is for sender's side)
+        var filehistory = "<li class = 'chatbox-file-history-sent'> " + "You sent " + data.file + " to " + data.target + ".  </li>" ;
+        $(filehistory).prependTo($chatbox);//delivering file history to chat box of the sender
 
+
+
+    });
+
+    socket.on("status",function(data) { // this should fade out the progress bar after file seding is complete (this is only for reciver side)
+     $progressBar.fadeOut();
+     console.log(data.target + "sent" + data.file + "to" + data.from);
+     // class of the chat/file share history ul is chat  
+     var filehistory = "<li class = 'chatbox-file-history-recieved'> " +   " You recieved  " + data.file + " from " + data.from + ". </li>" ;
+    $(filehistory).prependTo($chatbox);//delivering file history to chat box
     });
 
     socket.on("received-chunks", function (prog) {
@@ -397,7 +422,8 @@ $(function () {
         socket.partnerid = null;
 
         console.log("Connection terminated");
-        $transferPage.hide();
+        $transferPage.fadeOut();
+        $progressBar.fadeOut();
         $homePage.show();
         myPeerConn.close();
         dataChannel.close();
@@ -489,6 +515,7 @@ $(function () {
             downloadAnchor.href = URL.createObjectURL(received);
             console.log(downloadAnchor.href);
             downloadAnchor.download = file_rec.name;
+            $progressBar.fadeIn();
             $("#download").show();
             $('#file-send-button').prop('disabled', false);
             sender = false;
@@ -510,7 +537,7 @@ $(function () {
 
     function sendData() {
         console.log("Begun sending");
-        $('#fileBeingSent').text(file.name + "(" + Math.round(file.size / 1000) + " KB)");
+        $('#fileBeingSent').text(file.name + "(" + Math.round(file.size / 1000) + " KB)" + " sending ... " );
         var chunkSize = 16384;
         var sliceFile = function (offset) {
             var reader = new window.FileReader();
