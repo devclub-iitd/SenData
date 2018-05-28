@@ -111,6 +111,10 @@ io.on('connection', function (socket) {
         }
     });
 
+    socket.on('done',function(data){
+        socket.broadcast.to(logged_clients[data.user]).emit('send');
+    });
+
     socket.on("answer", function (msg) {
         username = msg.username;
         answer = msg.answer;
@@ -237,7 +241,7 @@ io.on('connection', function (socket) {
         }
     });
     socket.on("send",function(data){
-        console.log(data.user);
+        console.log(data.user, logged_clients[data.user]);
         socket.broadcast.to(logged_clients[data.user]).emit("send",data.hash);
     });
 

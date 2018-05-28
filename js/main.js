@@ -18,26 +18,19 @@ $(function () {
         statusMessage = document.getElementById('status'),
         bitrateMax = 0,
         client,
-        WebTorrent = require("webtorrent"),
+        idbChunkStore = require('idb-chunk-store'),
         TURN_SERVER_IP = '127.0.0.1',
         offers_for_me = [],
         configuration = {
             //Needed for RTCPeerConnection
             'iceServers': [
                 {
-                    "urls": 'turn:numb.viagenie.ca',
-                    "credential": 'muazkh',
-                    "username": 'webrtc@live.com'
+                    urls: 'turn:numb.viagenie.ca',
+                    credential: 'muazkh',
+                    username: 'webrtc@live.com'
                 }
             ]
-        },
-        connection = {
-            'optional': [{
-                'DtlsSrtpKeyAgreement': true
-            }, {
-                'SctpDataChannels': true
-            }]
-        },
+},
         myPeerConn, //variable to store the RTCPeerConnection object,
         ExchangerUsername, //variable for name of requested username
         dataChannel,
@@ -278,14 +271,15 @@ $(function () {
 
     socket.on("send", function (hash){
         getClient();
-        
-        client.add(hash,function(torrent){
+        console.log(hash);
+        client.add(hash,{store:idbChunkStore},function(torrent){
+            console.log(hash);
             torrent.on('error',(err)=>alert(err));
             
             torrent.on('download',function () {
                 var progress = torrent.progress *100;
                 $('#file1').attr('aria-valuenow', progress).css('width', progress  + '%');
-                $("#fileProgress").text("Progress- " + Math.round(progress) + "%");
+                $("#fileProgress").text("Progress- " +torrent.downloadSpeed+ Math.round(progress) + "%");
                 });
         
             torrent.on('done',function(){
@@ -300,6 +294,7 @@ $(function () {
                 });
             });
         });
+        console.log(hash)
     });
 
     function requestHandler(answer, btn) {
@@ -363,6 +358,7 @@ $(function () {
         var torrent = client.seed(file, function (torrent) {});
 
         torrent.on("infoHash",function(){
+            console.log(torrent.magnetURI);
             socket.emit("send", {
                 user:ExchangerUsername,
                 hash:torrent.magnetURI

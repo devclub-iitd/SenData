@@ -16,9 +16,10 @@
   "dependencies": {
     "express": "^4.16.2",
     "grunt": "^1.0.1",
+    "idb-chunk-store": "^0.2.0",
     "socket.io": "^2.0.4",
-    "webrtc-adapter": "^6.0.3",
-    "webtorrent": "^0.100.0"
+    "twilio": "^3.17.1",
+    "webrtc-adapter": "^6.0.3"
   },
   "engines": {
     "node": ">=6.11.1"
