@@ -44,3 +44,6 @@ sudo npm config set registry "http://registry.npmjs.org/" -g
 
 # Bugs List
 ~~1. Blob initiation on receving with Chrome not working.~~
+
+# Report Bugs/Suggestions
+Follow this link - http://bit.do/bugsuggestion to report a bug or give a suggestion.
