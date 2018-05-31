@@ -337,6 +337,7 @@ $(function () {
         sender = false;
         receiveBuffer = [];
         receivedSize = 0;
+        client.destroy();
         receivedProgress = {
             value: 0
         };
