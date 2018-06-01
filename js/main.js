@@ -88,6 +88,7 @@ $(() => {
       downloadAnchor.href = URL.createObjectURL(received);
       console.log(downloadAnchor.href);
       downloadAnchor.download = fileRec.name;
+      statusMessage.textContent = 'This contains download link to ' + fileRec.name;
       $progressBar.fadeIn();
       $('#download').show();
       $('#file-send-button').prop('disabled', false);
@@ -321,8 +322,6 @@ $(() => {
     [file] = input.files;
 
     console.log(`File is ${[file.name, file.size, file.type, file.lastModifiedDate].join(' ')}`);
-    statusMessage.textContent = '';
-    downloadAnchor.textContent = '';
     if (file == null) console.log('No file selected');
     if (file.size === 0) {
       bitrateDiv.innerHTML = '';
@@ -534,7 +533,7 @@ $(() => {
     console.log('send completed');
     socket.emit('status', data);// want to tell the user that has sent the file that file has been sent. Here can add more info to put in file shar history
     $progressBar.fadeOut();// this works (this is for sender's side)
-    const filehistory = `<li class = 'chatbox-file-history-sent'>  You sent ${data.file} to ${data.target}.  </li>`;
+    const filehistory = `<li class = 'chatbox-file-history-sent'>  You sent ${data.file} to ${data.from}.  </li>`;
     $(filehistory).prependTo($chatbox);// delivering file history to chat box of the sender
   });
 
@@ -542,7 +541,7 @@ $(() => {
     $progressBar.fadeOut();
     console.log(`${data.target}sent${data.file}to${data.from}`);
     // class of the chat/file share history ul is chat
-    const filehistory = `<li class = 'chatbox-file-history-recieved'>  You recieved  ${data.file} from ${data.from}. </li>`;
+    const filehistory = `<li class = 'chatbox-file-history-recieved'>  You recieved  ${data.file} from ${data.target}. </li>`;
     $(filehistory).prependTo($chatbox);// delivering file history to chat box
   });
 

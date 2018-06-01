@@ -79,6 +79,10 @@ canvas{
     margin-left: auto;
 }
 
+#status{
+    color: grey;
+    text-align: center;
+}
 
 /* Search Bar */
 .section-top {
@@ -174,7 +178,7 @@ canvas{
     bottom: 0;
     /*height: 200px;*/
     left: 0;
-    position: absolute;
+    position: fixed;
     width: 100%;
 }
 
