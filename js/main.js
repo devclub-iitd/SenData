@@ -59,6 +59,13 @@ $(function () {
         newprogress = 0,
         prevprogress = 0;
 
+        //message
+        chats = document.getElementById("chats"),
+        message = document.getElementById("btn-input"),
+        sendButton = document.getElementById("btn-chat");
+        typing = document.getElementById("typing");
+
+
     $("#download").hide();
 
     $('window.onbeforeunload').click(function (e) {
@@ -170,6 +177,33 @@ $(function () {
         // code for what happens when user clicks on a list item that is a no to a particular request
         requestHandler('n', $(this));
     });
+
+
+    //messages 
+    sendButton.addEventListener('click',function(){
+        if(message.value){
+            messagetime = new Date().getTime()/1000;
+            socket.emit("message",{message : message.value,socket : socket.partnerid,username: username,time: message});
+            chats.innerHTML += "<li class='right clearfix'><span class='chat-img pull-right'><img src='/images/ME.png' alt='User Avatar' class='img-circle' /></span><div class='chat-body clearfix'><div class='header'><small class=' text-muted'><span class='glyphicon glyphicon-time'></span><span class = 'time'>0</span><span class= 'timeunit'> mins</sapn> ago</small><strong class='pull-right primary-font'>"+ "You" +"</strong></div><p>"+message.value+"</p></div></li>";
+            message.value ="";
+        }
+    });
+
+    message.addEventListener('keyup',function(e){
+        if (e.keyCode === 13) {
+            if(message.value){
+                messagetime = new Date().getTime()/1000;
+                socket.emit("message",{message : message.value,socket : socket.partnerid,username: username,time: message});
+                chats.innerHTML += "<li class='right clearfix'><span class='chat-img pull-right'><img src='/images/ME.png' alt='User Avatar' class='img-circle' /></span><div class='chat-body clearfix'><div class='header'><small class=' text-muted'><span class='glyphicon glyphicon-time'></span><span class = 'time'>0</span><span class = 'timeunit'> mins</span> ago</small><strong class='pull-right primary-font'>"+ "You" +"</strong></div><p>"+message.value+"</p></div></li>";
+                message.value ="";
+            }
+        }
+    });
+
+    message.addEventListener("keydown",function(){
+        socket.emit("typing",{socket: socket.partnerid, username: username});
+    })
+
 
     socket.on("offer", function (data) {
         console.log("My Username is " + username);
@@ -358,6 +392,19 @@ $(function () {
         }
         $requestList.html(html);
     });
+
+
+    socket.on("message",function(msg){
+        chats.innerHTML += "<li class='left clearfix'><span class='chat-img pull-left'><img src='/images/U.png' alt='User Avatar' class='img-circle' /></span><div class='chat-body clearfix'><div class='header'><small class=' text-muted' id = '" + message.time + "'><span class='glyphicon glyphicon-time'></span><span class = 'time'>0</span><span class= 'timeunit'> mins</sapn> ago</small><strong class='pull-left primary-font'>"+ msg.username +"</strong></div><p>"+msg.message+"</p></div></li>";
+
+    });
+
+
+    socket.on("typing",function(username){
+        typing.innerHTML = username + " is typing...";
+        setTimeout(function(){typing.innerHTML = ""},5000);
+    });
+
 
     function start() {
         // call start() to initiate peer connection process(should be called once 'Y' answer has been received (or sent))
@@ -561,5 +608,18 @@ $(function () {
         return $('<div/>').text(input).text();
     }
 
+    // time Updation
+    setInterval(function(){
+        var time = document.getElementsByClassName("time");
+        var l = time.length;
+        for(var i = 0 ; i < l ; i++){
+            var c = time[i].innerHTML;
+            time[i].innerHTML = (parseInt(c) + 1); 
+        }
+    },60000);
+    
+
 
 });
+
+

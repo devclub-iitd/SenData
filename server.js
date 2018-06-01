@@ -260,7 +260,22 @@ io.on('connection', function (socket) {
         io.sockets.emit('updateUsersList', Object.keys(connected_clients));
 
     });
+
+    //message handler
+    socket.on("message",function(msg){
+        socket.broadcast.to(msg.socket).emit("message",msg);
+
+        //console.log("message");
+    });
+
+    socket.on("typing",function(msg){
+        socket.broadcast.to(msg.socket).emit("typing",msg.username);
+    })
+
+
 });
+
+
 
 function removeA(arr) {
     var what, a = arguments,
@@ -274,3 +289,4 @@ function removeA(arr) {
     }
     return arr;
 }
+
