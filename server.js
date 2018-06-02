@@ -29,7 +29,7 @@ io.on('connection', function (socket) {
             connected_clients[username] = socket.id;
             logged_clients[username] = socket.id;
             socket.username = username;
-            // console.log(username + " connected");
+            console.log(username + " connected");
             socket.emit('login', 0);
             io.sockets.emit('updateUsersList', Object.keys(connected_clients));
             offer_list[username] = [];
@@ -82,12 +82,12 @@ io.on('connection', function (socket) {
                 // console.log("Test username " + username);
                 socket.broadcast.to(user).emit("offer", {
                     username: socket.username,
-                    pid: socket.id
+                    pid: socket.id // the name and id of the user who sent the request
                 });
             }
         } else if (logged_clients[username] == undefined) {
             //imitate answer == 'n'
-            socket.broadcast.to(socket.id).emit('answer', {
+            socket.broadcast.to(socket.id).emit('answer', {// this broadcasts to the user who is requesting with an immediate message no as there is no such user logged in which he is requesting 
                 answer: 'n'
             });
             delete offer_list[username];
@@ -165,7 +165,7 @@ io.on('connection', function (socket) {
             delete connected_clients[socket.username];
             delete connected_clients[username];
             io.sockets.emit('updateUsersList', Object.keys(connected_clients));
-            // console.log(connected_clients);
+             console.log(connected_clients);
             socket.partner = username;
             socket.partnerid = waiting_clients[username];
             delete offer_list[socket.username];
@@ -217,16 +217,22 @@ io.on('connection', function (socket) {
         fileData = msg.fileData;
         var user = logged_clients[username];
         if (user != null) {
-            // console.log("Sending file-desc to: ", username);
+         console.log("Sending file-desc to: ", username);
             socket.broadcast.to(user).emit("file-desc", fileData);
         }
     });
 
-    socket.on("file accepted", function (username) {
+    socket.on("file accepted", function (data) {
+        username = data.target;
         var user = logged_clients[username];
-        if (user != null) socket.broadcast.to(user).emit("file accepted");
+        if (user != null) socket.broadcast.to(user).emit("file accepted", data);// 
     });
 
+    socket.on("status" , function (data){
+                username = data.from;
+               var user = logged_clients[username];
+        socket.broadcast.to(user).emit("status", data);
+    });
     socket.on("file refused", function (username) {
         var user = logged_clients[username];
         if (user != null) socket.broadcast.to(user).emit("file refused");
@@ -245,7 +251,15 @@ io.on('connection', function (socket) {
         socket.broadcast.to(logged_clients[data.user]).emit("send",data.hash);
     });
 
-    socket.on("Cancel Connection", function (username) {
+    socket.on("progress",function(data){
+        socket.broadcast.to(logged_clients[data.user]).emit("progress",data.progress)
+    });
+
+    socket.on("reject",function(user){
+        socket.broadcast.to(logged_clients[user]).emit("reject",{});
+    });
+
+    socket.on("Cancel Connection", function (username) {// This function hears for "cancel connection" from any ot the two users
         var user = logged_clients[username];
         if (user != null) socket.broadcast.to(user).emit("Cancel Connection");
 
