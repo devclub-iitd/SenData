@@ -68,3 +68,6 @@ typings/
 
 # VSCode
 .vscode/
+
+js/bundle.js
+.idea/*
