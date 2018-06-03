@@ -8,5 +8,8 @@
         "browser": true,
         "es6": true,
         "jquery": true
-    }    
+    },
+    "rules": {
+      "no-param-reassign": ["error", { "props": false }]
+    }
 }

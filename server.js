@@ -41,7 +41,7 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('disconnect', (data) => {
+  socket.on('disconnect', () => {
     // console.log(socket.partner);
     if (socket.partner) {
       if (socket.partner in loggedClients) {
@@ -121,7 +121,7 @@ io.on('connection', (socket) => {
       connectedClients[username] = waitingClients[username];
       delete waitingClients[username];
       io.sockets.emit('updateUsersList', Object.keys(connectedClients));
-      if (offerList[socket.username] != undefined) {
+      if (offerList[socket.username] !== undefined) {
         offerList[socket.username].splice(offerList[socket.username].indexOf(username), 1);
       }
       // if answer is no add the username to connected_clients
@@ -176,7 +176,7 @@ io.on('connection', (socket) => {
     if (offerList[targetUsername] !== undefined) {
       offerList[targetUsername] = removeA(offerList[targetUsername], socket.username);
     }
-    const temp = console.log(`Target Username :${targetUsername}`);
+    console.log(`Target Username :${targetUsername}`);
     // console.log("Offer List :" + offer_list[target_username]);
 
     connectedClients[socket.username] = socket.id;
@@ -241,17 +241,17 @@ io.on('connection', (socket) => {
     }
   });
 
-	socket.on("send",function(data){
+  socket.on('send', (data) => {
     console.log(data.user, loggedClients[data.user]);
-     socket.broadcast.to(loggedClients[data.user]).emit("send",data.hash);
+    socket.broadcast.to(loggedClients[data.user]).emit('send', data.hash);
   });
 
-  socket.on("progress",function(data){
-    socket.broadcast.to(loggedClients[data.user]).emit("progress",data.progress)
+  socket.on('progress', (data) => {
+    socket.broadcast.to(loggedClients[data.user]).emit('progress', data.progress);
   });
 
-  socket.on("reject",function(user){
-    socket.broadcast.to(loggedClients[user]).emit("reject",{});
+  socket.on('reject', (user) => {
+    socket.broadcast.to(loggedClients[user]).emit('reject', {});
   });
 
   socket.on('Cancel Connection', (username) => { // This function hears for "cancel connection" from any ot the two users
@@ -286,12 +286,14 @@ io.on('connection', (socket) => {
 
 function removeA(arr) {
   let what;
-  let a = arguments;
+  const a = arguments;
   let L = a.length;
   let ax;
   while (L > 1 && arr.length) {
-    what = a[--L];
-    while ((ax = arr.indexOf(what)) !== -1) {
+    L -= 1;
+    what = a[L];
+    ax = arr.indexOf(what);
+    while (ax !== -1) {
       arr.splice(ax, 1);
     }
   }
