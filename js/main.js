@@ -383,18 +383,20 @@ $(() => {
           user: ExchangerUsername,
           prog: progress,
         });
-        if (progress === 100) { client.destroy(); }
       });
 
       torrent.on('done', () => {
         [file] = torrent.files;
 
         file.getBlobURL((error, url) => {
-          if (error) return;
+          if (error) {alert(error);return};
+          console.log("file is here");
           downloadAnchor.href = url;
           downloadAnchor.download = file.name;
           downloadAnchor.textContent = `Download ${file.name}`;
           $('#download').show();
+
+          client.destroy();
         });
       });
     });
