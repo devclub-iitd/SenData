@@ -354,7 +354,6 @@ $(() => {
     sendData(); // start sending :)))
     console.log('send completed');
     socket.emit('status', data);// want to tell the user that has sent the file that file has been sent. Here can add more info to put in file shar history
-    $progressBar.fadeOut();// this works (this is for sender's side)
     const filehistory = `<li class = 'chatbox-file-history-sent'>  You sent ${data.file} to ${data.target}.  </li>`;
     $(filehistory).prependTo($chatbox);// delivering file history to chat box of the sender
   });

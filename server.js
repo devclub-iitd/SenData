@@ -247,7 +247,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('progress', (data) => {
-    socket.broadcast.to(loggedClients[data.user]).emit('progress', data.progress);
+    socket.broadcast.to(loggedClients[data.user]).emit('progress', data.prog);
   });
 
   socket.on('reject', (user) => {
