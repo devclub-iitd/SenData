@@ -20,7 +20,7 @@ $(() => {
   const $cancelButton = $('#waiting_message .cancel-button button');
   const fileSendButton = $('#file-send-button');
   const bitrateDiv = document.getElementById('bitrate');
-  const downloadAnchor = document.getElementById('download');
+  const downloadAnchor = $('#download');
   const statusMessage = document.getElementById('status');
 
   //   const bitrateMax = 0;
@@ -183,7 +183,9 @@ $(() => {
     $(fileStatus).appendTo($chatbox);
 
     statusMessage.textContent = '';
-    downloadAnchor.textContent = '';
+    $('#file1').attr('aria-valuenow', 0).css('width', '0%');
+    downloadAnchor.fadeOut();
+
     if (file == null) console.log('No file selected');
     if (file.size === 0) {
       bitrateDiv.innerHTML = '';
@@ -342,6 +344,7 @@ $(() => {
       }); // can put a feature later to ask the user whether
       // he/she wants to accept the file, and based on that respond as accepted/refused
       fileSendButton.prop('disabled', true);
+      $('#file1').attr('aria-valuenow', 0).css('width','0%');
       $('#fileBeingSent').text(`${fileRec.name}(${Math.round(fileRec.size / 1000)} KB) (receiving..)`);
     } else {
       sender = false; // if both have sent at the same time, cancel both
@@ -359,7 +362,11 @@ $(() => {
   socket.on('file accepted', (data) => { // This is for sender's end. Here funtion gets the username of the user he will now send the file to
     // here's the sendData!
     console.log('trying to send');
+
     $progressBar.fadeIn();
+    $('#stop-progress').html('Cancel');
+    $('#fileProgress').text('Establishing Connection');
+
     sendData(); // start sending :)))
     console.log('send completed');
     });
@@ -392,6 +399,7 @@ $(() => {
         [file] = torrent.files;
 
         $progressBar.fadeOut();
+
         // class of the chat/file share history ul is chat
         const filehistory = `<li class = 'chatbox-file-history-recieved'>  You recieved  ${file.name} from ${ExchangerUsername}. </li>`;
         $(filehistory).appendTo($chatbox);// delivering file history to chat box
@@ -399,9 +407,9 @@ $(() => {
         file.getBlobURL((error, url) => {
           if (error) {alert(error);return};
           console.log("file is here");
-          downloadAnchor.href = url;
-          downloadAnchor.download = file.name;
-          downloadAnchor.textContent = `Download ${file.name}`;
+          downloadAnchor.prop('href', url);
+          downloadAnchor.prop('download', file.name);
+          downloadAnchor.text(`Download ${file.name}`);
           $('#download').show();
 
           client.destroy();
@@ -412,12 +420,13 @@ $(() => {
   });
 
   socket.on('progress', (progress) => {
-    $progressBar.fadeIn();
-    $('#stop-progress').html('Cancel');
+
     $('#file1').attr('aria-valuenow', progress).css('width', `${progress}%`);
     $('#fileProgress').text(`Progress- ${Math.round(progress)}%`);
     if (progress === 100) { 
       client.destroy(); 
+      sender = false;
+
       $progressBar.fadeOut();
       const filehistory = `<li class = 'chatbox-file-history-sent'>  You sent ${file.name} to ${ExchangerUsername}.  </li>`;
       $(filehistory).appendTo($chatbox);// delivering file history to chat box of the sender
