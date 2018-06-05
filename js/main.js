@@ -18,6 +18,7 @@ $(() => {
   const $alertUsernameBlank = $('.alert-blankusername');
   const $listOfUsers = $('#listOfUsers');
   const $cancelButton = $('#waiting_message .cancel-button button');
+  const fileSendButton = $('#file-send-button');
   const bitrateDiv = document.getElementById('bitrate');
   const downloadAnchor = document.getElementById('download');
   const statusMessage = document.getElementById('status');
@@ -161,7 +162,7 @@ $(() => {
     $('#file-desc').text(file.name);
   });
 
-  $('#file-send-button').click(() => {
+  fileSendButton.click(() => {
     console.log(`${username} sending message`);
     const input = document.getElementById('file-1');
     if (!input) {
@@ -177,6 +178,10 @@ $(() => {
     [file] = input.files;
 
     console.log(`File is ${[file.name, file.size, file.type, file.lastModifiedDate].join(' ')}`);
+
+    const fileStatus = `<li class = 'chatbox-file-history-sent'>  Sending  ${file.name} to ${ExchangerUsername}. </li>`;
+    $(fileStatus).appendTo($chatbox);
+
     statusMessage.textContent = '';
     downloadAnchor.textContent = '';
     if (file == null) console.log('No file selected');
@@ -232,9 +237,13 @@ $(() => {
   $('#stop-progress').click(() => {
     client.destroy();
     sender = false;
-    $('#file-send-button').prop('disabled', false);
-    $('#fileProgress').text('Cancelled');
+    fileSendButton.prop('disabled', false);
+
     socket.emit('reject', ExchangerUsername);
+    $('#fileProgress').text('Cancelled');
+    
+    const fileStatus = `<li class = 'chatbox-file-history-cancel'>  You cancelled file transfer. </li>`;
+    $(fileStatus).appendTo($chatbox);
   });
 
   // messages
@@ -332,7 +341,7 @@ $(() => {
         file: fileDesc.name,
       }); // can put a feature later to ask the user whether
       // he/she wants to accept the file, and based on that respond as accepted/refused
-      $('#file-send-button').prop('disabled', true);
+      fileSendButton.prop('disabled', true);
       $('#fileBeingSent').text(`${fileRec.name}(${Math.round(fileRec.size / 1000)} KB) (receiving..)`);
     } else {
       sender = false; // if both have sent at the same time, cancel both
@@ -353,24 +362,18 @@ $(() => {
     $progressBar.fadeIn();
     sendData(); // start sending :)))
     console.log('send completed');
-    socket.emit('status', data);// want to tell the user that has sent the file that file has been sent. Here can add more info to put in file shar history
-    const filehistory = `<li class = 'chatbox-file-history-sent'>  You sent ${data.file} to ${data.target}.  </li>`;
-    $(filehistory).prependTo($chatbox);// delivering file history to chat box of the sender
-  });
-
-  socket.on('status', (data) => { // this should fade out the progress bar after file seding is complete (this is only for reciver side)
-    $progressBar.fadeOut();
-    console.log(`${data.target}sent${data.file}to${data.from}`);
-    // class of the chat/file share history ul is chat
-    const filehistory = `<li class = 'chatbox-file-history-recieved'>  You recieved  ${data.file} from ${data.from}. </li>`;
-    $(filehistory).prependTo($chatbox);// delivering file history to chat box
-  });
+    });
 
   socket.on('send', (hash) => {
     getClient();
     console.log(hash);
     client.add(hash, (torrent) => {
-      console.log(hash);
+
+      [file] = torrent.files;
+
+      const fileStatus = `<li class = 'chatbox-file-history-recieved'>  Receiving  ${file.name} from ${ExchangerUsername}. </li>`;
+      $(fileStatus).appendTo($chatbox);
+
       torrent.on('error', (err) => { alert(err); });
 
       torrent.on('download', () => {
@@ -388,6 +391,11 @@ $(() => {
       torrent.on('done', () => {
         [file] = torrent.files;
 
+        $progressBar.fadeOut();
+        // class of the chat/file share history ul is chat
+        const filehistory = `<li class = 'chatbox-file-history-recieved'>  You recieved  ${file.name} from ${ExchangerUsername}. </li>`;
+        $(filehistory).appendTo($chatbox);// delivering file history to chat box
+        
         file.getBlobURL((error, url) => {
           if (error) {alert(error);return};
           console.log("file is here");
@@ -397,6 +405,7 @@ $(() => {
           $('#download').show();
 
           client.destroy();
+          fileSendButton.prop('disabled', false);
         });
       });
     });
@@ -407,14 +416,23 @@ $(() => {
     $('#stop-progress').html('Cancel');
     $('#file1').attr('aria-valuenow', progress).css('width', `${progress}%`);
     $('#fileProgress').text(`Progress- ${Math.round(progress)}%`);
-    if (progress === 100) { client.destroy(); }
+    if (progress === 100) { 
+      client.destroy(); 
+      $progressBar.fadeOut();
+      const filehistory = `<li class = 'chatbox-file-history-sent'>  You sent ${file.name} to ${ExchangerUsername}.  </li>`;
+      $(filehistory).appendTo($chatbox);// delivering file history to chat box of the sender
+    }
   });
 
   socket.on('reject', () => {
     client.destroy();
     $('#fileProgress').text('Cancelled');
+
+    const fileStatus = `<li class = 'chatbox-file-history-cancel'>  Transfer cancelled by ${ExchangerUsername}. </li>`;
+    $(fileStatus).appendTo($chatbox);
+    
     sender = false;
-    $('#file-send-button').prop('disabled', false);
+    fileSendButton.prop('disabled', false);
   });
 
   socket.on('PartnerDisconnected', () => {

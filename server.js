@@ -223,11 +223,6 @@ io.on('connection', (socket) => {
     if (user != null) socket.broadcast.to(user).emit('file accepted', data);//
   });
 
-  socket.on('status', (data) => {
-    const username = data.from;
-    const user = loggedClients[username];
-    socket.broadcast.to(user).emit('status', data);
-  });
   socket.on('file refused', (username) => {
     const user = loggedClients[username];
     if (user != null) socket.broadcast.to(user).emit('file refused');
