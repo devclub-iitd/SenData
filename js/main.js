@@ -88,6 +88,7 @@ $(() => {
       downloadAnchor.href = URL.createObjectURL(received);
       console.log(downloadAnchor.href);
       downloadAnchor.download = fileRec.name;
+      statusMessage.textContent = 'This contains download link to ' + fileRec.name;
       $progressBar.fadeIn();
       $('#download').show();
       $('#file-send-button').prop('disabled', false);
@@ -158,7 +159,11 @@ $(() => {
     console.log('Connection terminated');
     $transferPage.fadeOut();
     $progressBar.fadeOut();
+    statusMessage.textContent='';
+    $('#download').hide();
+    chats.innerHTML='';
     $homePage.show();
+    $(".user-name").innerHTML='can';
     myPeerConn.close();
     dataChannel.close();
     ExchangerUsername = null;
@@ -261,9 +266,6 @@ $(() => {
     sliceFile(0);
   }
 
-
-  $('#download').hide();
-
   $('window.onbeforeunload').click((e) => {
     e.preventDefault();
   });
@@ -321,8 +323,6 @@ $(() => {
     [file] = input.files;
 
     console.log(`File is ${[file.name, file.size, file.type, file.lastModifiedDate].join(' ')}`);
-    statusMessage.textContent = '';
-    downloadAnchor.textContent = '';
     if (file == null) console.log('No file selected');
     if (file.size === 0) {
       bitrateDiv.innerHTML = '';
@@ -445,7 +445,7 @@ $(() => {
       $homePage.hide();
       $transferPage.fadeIn();
       const $transferPageHeader = $('.user-name');
-      $transferPageHeader.html(`<p>You are now connected to ${socket.partner}${$transferPageHeader.html()}</p>`);
+      $transferPageHeader.html(`<p>You are now connected to ${socket.partner}. To go back click <a href="#" class="alert-link" id="backLink"> here </a>. </p>`);
       start(); // start the peerconnection process
       // create peer connection offer and send
       //   local description on other side(also create a data channel)
@@ -534,7 +534,7 @@ $(() => {
     console.log('send completed');
     socket.emit('status', data);// want to tell the user that has sent the file that file has been sent. Here can add more info to put in file shar history
     $progressBar.fadeOut();// this works (this is for sender's side)
-    const filehistory = `<li class = 'chatbox-file-history-sent'>  You sent ${data.file} to ${data.target}.  </li>`;
+    const filehistory = `<li class = 'chatbox-file-history-sent'>  You sent ${data.file} to ${data.from}.  </li>`;
     $(filehistory).prependTo($chatbox);// delivering file history to chat box of the sender
   });
 
@@ -542,7 +542,7 @@ $(() => {
     $progressBar.fadeOut();
     console.log(`${data.target}sent${data.file}to${data.from}`);
     // class of the chat/file share history ul is chat
-    const filehistory = `<li class = 'chatbox-file-history-recieved'>  You recieved  ${data.file} from ${data.from}. </li>`;
+    const filehistory = `<li class = 'chatbox-file-history-recieved'>  You recieved  ${data.file} from ${data.target}. </li>`;
     $(filehistory).prependTo($chatbox);// delivering file history to chat box
   });
 
