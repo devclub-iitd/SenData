@@ -15,12 +15,13 @@ $(() => {
   const socket = window.io();
   //   const $testmes = $('#first-message');
   const $alertUsername = $('.alert-username');
+  const $transferPageHeader = $('.user-name');
   const $alertUsernameBlank = $('.alert-blankusername');
   const $listOfUsers = $('#listOfUsers');
   const $cancelButton = $('#waiting_message .cancel-button button');
   const fileSendButton = $('#file-send-button');
   const bitrateDiv = document.getElementById('bitrate');
-  const downloadAnchor = $('#download');
+  const $downloadAnchor = $('#download');
   const statusMessage = document.getElementById('status');
 
   //   const bitrateMax = 0;
@@ -63,12 +64,20 @@ $(() => {
     $transferPage.fadeOut();
     $progressBar.fadeOut();
     $homePage.show();
+    $transferPageHeader.html('');
+    $downloadAnchor.fadeOut();
+    $downloadAnchor.prop('href','');
+    $downloadAnchor.html('');
+    // Clear the requests
+    $('.request-list').html('');
+
     ExchangerUsername = null;
     // offerComplete = false;
     sender = false;
-    client.destroy();
-    // Clear the requests
-    $('.request-list').html('');
+    if (client !== null) {
+      client.destroy();
+      client = null;
+    }
   }
 
   function requestHandler(answer, btn) {
@@ -82,7 +91,6 @@ $(() => {
       // Set data-channel response on the other end(the client who receives the offer)
       $homePage.hide();
       $transferPage.fadeIn();
-      const $transferPageHeader = $('.user-name');
       $transferPageHeader.html(`<p>You are now connected to ${socket.partner}. To go back click <a href="#" class="alert-link" id="backLink"> here </a>. </p>`);
     } else {
       //    if request rejected
@@ -184,7 +192,7 @@ $(() => {
 
     statusMessage.textContent = '';
     $('#file1').attr('aria-valuenow', 0).css('width', '0%');
-    downloadAnchor.fadeOut();
+    $downloadAnchor.fadeOut();
 
     if (file == null) console.log('No file selected');
     if (file.size === 0) {
@@ -238,6 +246,7 @@ $(() => {
 
   $('#stop-progress').click(() => {
     client.destroy();
+    client = null;
     sender = false;
     fileSendButton.prop('disabled', false);
 
@@ -313,11 +322,12 @@ $(() => {
       socket.partner = msg.partner;
       socket.partnerid = msg.partnerid;
 
+      socket.emit('ack', msg);
       // stop the progress loader
       $homePage.hide();
       $transferPage.fadeIn();
       const $transferPageHeader = $('.user-name');
-      $transferPageHeader.html(`<p>You are now connected to ${socket.partner}${$transferPageHeader.html()}</p>`);
+      $transferPageHeader.html(`<p>You are now connected to ${socket.partner}. To go back click <a href="#" class="alert-link" id="backLink"> here </a>. </p>`);
     } else {
       // remove modal after informing partner has said no
       ExchangerUsername = null; // else set ExchangeUsername to None
@@ -407,12 +417,13 @@ $(() => {
         file.getBlobURL((error, url) => {
           if (error) {alert(error);return};
           console.log("file is here");
-          downloadAnchor.prop('href', url);
-          downloadAnchor.prop('download', file.name);
-          downloadAnchor.text(`Download ${file.name}`);
+          $downloadAnchor.prop('href', url);
+          $downloadAnchor.prop('download', file.name);
+          $downloadAnchor.text(`Download ${file.name}`);
           $('#download').show();
 
           client.destroy();
+          client = null;
           fileSendButton.prop('disabled', false);
         });
       });
@@ -425,6 +436,7 @@ $(() => {
     $('#fileProgress').text(`Progress- ${Math.round(progress)}%`);
     if (progress === 100) { 
       client.destroy(); 
+      client = null;
       sender = false;
 
       $progressBar.fadeOut();
@@ -435,6 +447,8 @@ $(() => {
 
   socket.on('reject', () => {
     client.destroy();
+    client = null;
+
     $('#fileProgress').text('Cancelled');
 
     const fileStatus = `<li class = 'chatbox-file-history-cancel'>  Transfer cancelled by ${ExchangerUsername}. </li>`;

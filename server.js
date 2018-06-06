@@ -42,7 +42,6 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    // console.log(socket.partner);
     if (socket.partner) {
       if (socket.partner in loggedClients) {
         socket.broadcast.to(loggedClients[socket.partner]).emit('PartnerDisconnected');
@@ -163,11 +162,14 @@ io.on('connection', (socket) => {
       delete connectedClients[username];
       io.sockets.emit('updateUsersList', Object.keys(connectedClients));
       console.log(connectedClients);
-      socket.partner = username;
-      socket.partnerid = waitingClients[username];
       delete offerList[socket.username];
       delete offerList[username];
     }
+  });
+
+  socket.on('ack', (msg) => {
+    socket.partner = msg.partner;
+    socket.partnerid = msg.partnerid;
   });
 
   socket.on('cancel', (targetUsername) => {
@@ -281,14 +283,12 @@ io.on('connection', (socket) => {
 
 function removeA(arr) {
   let what;
-  const a = arguments;
+  let a = arguments;
   let L = a.length;
   let ax;
   while (L > 1 && arr.length) {
-    L -= 1;
-    what = a[L];
-    ax = arr.indexOf(what);
-    while (ax !== -1) {
+    what = a[--L];
+    while ((ax = arr.indexOf(what)) !== -1) {
       arr.splice(ax, 1);
     }
   }
