@@ -487,6 +487,10 @@ btn:hover {
     color: #777777;
 }
 
+#download{
+    display: none;
+}
+
 .panel .slidedown .glyphicon, .chat .glyphicon
 {
     margin-right: 5px;

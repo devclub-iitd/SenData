@@ -159,7 +159,11 @@ $(() => {
     console.log('Connection terminated');
     $transferPage.fadeOut();
     $progressBar.fadeOut();
+    statusMessage.textContent='';
+    $('#download').hide();
+    chats.innerHTML='';
     $homePage.show();
+    $(".user-name").innerHTML='can';
     myPeerConn.close();
     dataChannel.close();
     ExchangerUsername = null;
@@ -261,9 +265,6 @@ $(() => {
     };
     sliceFile(0);
   }
-
-
-  $('#download').hide();
 
   $('window.onbeforeunload').click((e) => {
     e.preventDefault();
@@ -444,7 +445,7 @@ $(() => {
       $homePage.hide();
       $transferPage.fadeIn();
       const $transferPageHeader = $('.user-name');
-      $transferPageHeader.html(`<p>You are now connected to ${socket.partner}${$transferPageHeader.html()}</p>`);
+      $transferPageHeader.html(`<p>You are now connected to ${socket.partner}. To go back click <a href="#" class="alert-link" id="backLink"> here </a>. </p>`);
       start(); // start the peerconnection process
       // create peer connection offer and send
       //   local description on other side(also create a data channel)
