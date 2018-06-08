@@ -452,6 +452,9 @@ btn:hover {
 .chatbox-file-history-sent{
     color: brown;
 }
+.chatbox-file-history-cancel{
+    color: red;
+}
 .chat
 {
     list-style: none;

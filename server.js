@@ -41,8 +41,7 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('disconnect', (data) => {
-    // console.log(socket.partner);
+  socket.on('disconnect', () => {
     if (socket.partner) {
       if (socket.partner in loggedClients) {
         socket.broadcast.to(loggedClients[socket.partner]).emit('PartnerDisconnected');
@@ -121,7 +120,7 @@ io.on('connection', (socket) => {
       connectedClients[username] = waitingClients[username];
       delete waitingClients[username];
       io.sockets.emit('updateUsersList', Object.keys(connectedClients));
-      if (offerList[socket.username] != undefined) {
+      if (offerList[socket.username] !== undefined) {
         offerList[socket.username].splice(offerList[socket.username].indexOf(username), 1);
       }
       // if answer is no add the username to connected_clients
@@ -163,11 +162,14 @@ io.on('connection', (socket) => {
       delete connectedClients[username];
       io.sockets.emit('updateUsersList', Object.keys(connectedClients));
       console.log(connectedClients);
-      socket.partner = username;
-      socket.partnerid = waitingClients[username];
       delete offerList[socket.username];
       delete offerList[username];
     }
+  });
+
+  socket.on('ack', (msg) => {
+    socket.partner = msg.partner;
+    socket.partnerid = msg.partnerid;
   });
 
   socket.on('cancel', (targetUsername) => {
@@ -176,7 +178,7 @@ io.on('connection', (socket) => {
     if (offerList[targetUsername] !== undefined) {
       offerList[targetUsername] = removeA(offerList[targetUsername], socket.username);
     }
-    const temp = console.log(`Target Username :${targetUsername}`);
+    console.log(`Target Username :${targetUsername}`);
     // console.log("Offer List :" + offer_list[target_username]);
 
     connectedClients[socket.username] = socket.id;
@@ -223,11 +225,6 @@ io.on('connection', (socket) => {
     if (user != null) socket.broadcast.to(user).emit('file accepted', data);//
   });
 
-  socket.on('status', (data) => {
-    const username = data.from;
-    const user = loggedClients[username];
-    socket.broadcast.to(user).emit('status', data);
-  });
   socket.on('file refused', (username) => {
     const user = loggedClients[username];
     if (user != null) socket.broadcast.to(user).emit('file refused');
@@ -239,6 +236,19 @@ io.on('connection', (socket) => {
       socket.broadcast.to(user).emit('received-chunks', msg.progress);
       //  console.log("progress: "+msg.progress);
     }
+  });
+
+  socket.on('send', (data) => {
+    console.log(data.user, loggedClients[data.user]);
+    socket.broadcast.to(loggedClients[data.user]).emit('send', data.hash);
+  });
+
+  socket.on('progress', (data) => {
+    socket.broadcast.to(loggedClients[data.user]).emit('progress', data.prog);
+  });
+
+  socket.on('reject', (user) => {
+    socket.broadcast.to(loggedClients[user]).emit('reject', {});
   });
 
   socket.on('Cancel Connection', (username) => { // This function hears for "cancel connection" from any ot the two users
@@ -284,4 +294,3 @@ function removeA(arr) {
   }
   return arr;
 }
-
