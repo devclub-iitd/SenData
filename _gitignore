@@ -99,3 +99,5 @@ node_modules/
 #Pycharm Settings
 .idea/*
 *.iml
+
+js/bundle.js
