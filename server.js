@@ -30,7 +30,7 @@ io.on('connection', (socket) => {
       connectedClients[username] = socket.id;
       loggedClients[username] = socket.id;
       socket.username = username;
-      console.log(`${username} connected`);
+      //console.log(`${username} connected`);
       socket.emit('login', 0);
       io.sockets.emit('updateUsersList', Object.keys(connectedClients));
       offerList[username] = [];
@@ -161,7 +161,7 @@ io.on('connection', (socket) => {
       delete connectedClients[socket.username];
       delete connectedClients[username];
       io.sockets.emit('updateUsersList', Object.keys(connectedClients));
-      console.log(connectedClients);
+      //console.log(connectedClients);
       delete offerList[socket.username];
       delete offerList[username];
     }
@@ -178,7 +178,7 @@ io.on('connection', (socket) => {
     if (offerList[targetUsername] !== undefined) {
       offerList[targetUsername] = removeA(offerList[targetUsername], socket.username);
     }
-    console.log(`Target Username :${targetUsername}`);
+    //console.log(`Target Username :${targetUsername}`);
     // console.log("Offer List :" + offer_list[target_username]);
 
     connectedClients[socket.username] = socket.id;
@@ -214,7 +214,7 @@ io.on('connection', (socket) => {
     const { fileData } = msg;
     const user = loggedClients[username];
     if (user != null) {
-      console.log('Sending file-desc to: ', username);
+      //console.log('Sending file-desc to: ', username);
       socket.broadcast.to(user).emit('file-desc', fileData);
     }
   });
@@ -239,7 +239,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('send', (data) => {
-    console.log(data.user, loggedClients[data.user]);
+    //console.log(data.user, loggedClients[data.user]);
     socket.broadcast.to(loggedClients[data.user]).emit('send', data.hash);
   });
 
