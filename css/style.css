@@ -1,30 +1,13 @@
-/*Colours for reference
-    Google Green
-Hex: #3cba54
-RGB: 60, 186, 84
-
-    Google Yellow
-Hex: #f4c20d
-RGB: 244, 194, 13
-
-    Google Red
-Hex: #db3236
-RGB: 219, 50, 54
-
-    Google Blue
-Hex: #4885ed
-RGB: 72, 133, 237*/
-/* General Styling */
-* {
+* 
+{
     margin: 0;
     padding: 0;
 }
 
-body {
+body 
+{
     background-image: url("../images/bg1.jpg");
-
-/*    background-color: #7EC0EE;
-*/    background-repeat: no-repeat;
+    background-repeat: no-repeat;
     background-size: 100% 100%;
     background-attachment: fixed;
     color: black;
@@ -44,122 +27,146 @@ body {
 
 /*This is for the heading SenDATA
 */
-#s1{
+#s1
+{
     color:#4885ed ;
 }
-#s2{
+#s2
+{
      color: #3cba54;
 }
-#s3{
+#s3
+{
     color: #db3236;
 }
-section {
+section 
+{
     margin-top: 30px;
     text-align: center;
     margin-bottom: auto;
 }
 
-a {
+a
+{
     text-decoration: none;
 }
-canvas{
+canvas
+{
     display: block;
     vertical-align:bottom;
 }
-.content{
+.content
+{
     z-index: 100;
 }
-.body-wrapper, #info{
-/*    min-height: 100%;
-*/    margin:0 0 200px;
+.body-wrapper, #info
+{
+    margin:0 0 200px;
     height: 100%;
 }
-#request-li:hover{
-/*    background-color: #f5f5f5;
-*/    font-size: 1.5em;
+#request-li:hover
+{
+    font-size: 1.5em;
     box-shadow: 5px 5px 5px #888888;
 }
 
-.row{
+.row
+{
     margin-right:0;
 }
-.main-content {
+.main-content 
+{
     display: none; /* Hide until user enters username*/
     margin-left: 15%;
     margin-right: 15%;
     height: 100%;
-    }
+}
 
 
 /* Header */
-.page-header {
+.page-header 
+{
     margin-top: 0;
 }
 
-.page-header h1 small {
+.page-header h1 small 
+{
     font-size: 20px;
     color: brown;
 }
 
-.page-header h1 {
+.page-header h1 
+{
     /*font-size: 120%*/
     font-family: "Britannic Bold";
 }
 
 /* Welcome greeting */
-.welcome {
+.welcome 
+{
     margin: 0;
     text-align: left;
 }
-#welcomeLine{
+#welcomeLine
+{
     margin-left: auto;
 }
-.page-header{
+.page-header
+{
 font-family: 'Roboto', sans-serif;
 }
 
 /* Search Bar */
-.section-top {
+.section-top 
+{
     padding: 0;
     margin-top: 15px;
     text-align: center;
 }
-.search-bar .form-group{
+.search-bar .form-group
+{
     display: inline-block;
 }
-.search-bar {
+.search-bar 
+{
     padding: 0;
     margin: auto;
 }
-.search-bar .form-control{
+.search-bar .form-control
+{
     max-width:90%;
     width:100%;
 }
-.search-bar .search-icon {
+.search-bar .search-icon 
+{
     font-size: 150%;
 }
 
 /* User Section */
-#user-section {
+#user-section 
+{
     margin-top: 0;
     padding: 0;
     text-align: center;
 }
-.users-list {
+.users-list 
+{
     -webkit-border-radius:10px;
     -moz-border-radius:10px;
     min-height: 300px;
     overflow-y: auto;
 }
 
-.online-user {
+.online-user 
+{
     background-color: inherit;
     color: black;
     font-size: 16px;
     transition-duration:0.2s;
 }
 
-.online-user:hover {
+.online-user:hover 
+{
      background-color: inherit;
      color: black;
     box-shadow: 5px 5px 5px #888888;
@@ -167,17 +174,20 @@ font-family: 'Roboto', sans-serif;
 }
 
 /* Style for login page */
-.login-page {
+.login-page 
+{
     margin: auto;
     text-align: center;
     width: 50%;
 }
 
-.login-page .login-form label {
+.login-page .login-form label 
+{
     font-size: 200%;
 }
 
-.login-page .login-form .usernameInput {
+.login-page .login-form .usernameInput 
+{
     border: 1px solid black;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
@@ -190,34 +200,39 @@ font-family: 'Roboto', sans-serif;
     margin-top: 100px;
 }
 
-.login-page .login-form .usernameInput:focus {
+.login-page .login-form .usernameInput:focus 
+{
     border: 1px solid #999;
     outline-width: 0;
 }
 
-.alert-username{
+.alert-username
+{
     display: none;
 }
 
-.alert-blankusername{
+.alert-blankusername
+{
     display: none;
 }
 
 /*Site Footer*/
 
-#footer {
+#footer 
+{
     bottom: 0;
-    /*height: 200px;*/
     left: 0;
     position: absolute;
     width: 100%;
 }
 
-#facebook_link {
+#facebook_link 
+{
     margin-right: 1%;
 }
 
-#site-desc {
+#site-desc 
+{
     text-align: center;
     margin: 0 5%;
     padding: 5px;
@@ -227,50 +242,56 @@ font-family: 'Roboto', sans-serif;
     vertical-align: bottom;
 }
 
-.copyrights {
+.copyrights 
+{
     color: black;
 }
 
 /* Waiting for Confirmation modal */
-#waiting_message .cancel-button {
+#waiting_message .cancel-button 
+{
     background-color: inherit;
     margin-bottom: 15px;
 }
-
-#waiting_message .cancel-button {
-}
-
-#waiting_message .modal-body {
+#waiting_message .modal-body 
+{
     color: #c0c0c0;
 }
 
-#waiting_message .modal-content {
+#waiting_message .modal-content 
+{
     background-color: #262626;
 }
 
 /* Cancel the connection modal */
-#cancel_message .cancel-button {
+#cancel_message .cancel-button 
+{
     background-color: inherit;
     margin-bottom: 15px;
 }
 
-#waiting_message .modal-content {
+#waiting_message .modal-content 
+{
     background-color: #262626;
 }
-#connection_request .modal-dialog .btn-reply .btn{
+#connection_request .modal-dialog .btn-reply .btn
+{
     margin-bottom: 5px;
     margin-right: 10px;
 }
 
-#btn-chat{
+#btn-chat
+{
     background-color: #f4c20d;
 }
 
-.message{
+.message
+{
     margin-top: 15px;
 }
 
-.btn-reply{
+.btn-reply
+{
     margin-top: 10px;
     margin-bottom: 20px;
 }
@@ -305,47 +326,52 @@ font-family: 'Roboto', sans-serif;
     }
 }
 
-#waiting_message {
+#waiting_message 
+{
     vertical-align: middle;
     margin-top: 12%;
 }
-#cancel_message {
+#cancel_message 
+{
     vertical-align: middle;
     margin-top: 12%;
 }
 
 /* User Request Sidebar*/
-#user-requests{
+#user-requests
+{
     margin: auto;
     overflow-y: auto;
     padding-left: 20px;
     position: relative;
     text-align: center;
 }
-#user-requests .request-list{
+#user-requests .request-list
+{
   
     -webkit-border-radius:10px;
     -moz-border-radius:10px;
   
     list-style-type: none;
     min-height:300px;
-  
-
 }
-.user_request_username{
+.user_request_username
+{
     font-size: 20px;
     font-weight: 2;
     color: brown;
 }
 
-#user-requests .request-list li{
+#user-requests .request-list li
+{
     border-bottom:1px solid #ccc;
     display: block;
     padding: 5px;
     background-color: inherit;
     color: black;
 }
-#user-requests .request-list li .btn{
+#user-requests .request-list li .btn
+{
     -webkit-border-radius:30px;
     -moz-border-radius:30px;
     border-radius:30px;
@@ -353,7 +379,8 @@ font-family: 'Roboto', sans-serif;
     font-size: 50%;
     padding: 3px 4px;
 }
-#user-requests .request-list li .btn-danger{
+#user-requests .request-list li .btn-danger
+{
     padding:3px 5px;
 }
 #user-requests .request-btn{
@@ -363,22 +390,27 @@ font-family: 'Roboto', sans-serif;
 }
 
 /* Transfer Page */
-.transfer-page{
+.transfer-page
+{
     display: none;
 }
 
-.user-name {
+.user-name 
+{
     text-align: center;
 }
 
-.file-choose {
+.file-choose 
+{
+
     color: black;
     text-align: center;
     align-content: center;
 }
 
 /* File Upload Button */
-.js .inputfile {
+.js .inputfile 
+{
     width: 0.1px;
     height: 0.1px;
     opacity: 80%;
@@ -389,22 +421,26 @@ font-family: 'Roboto', sans-serif;
     border-radius: 5px;
     border:black;
 }
-.js .inputfile hover {
+.js .inputfile hover 
+{
     opacity: 100%;
     
 }
 
-button, input {
+button, input 
+{
     line-height: normal;
 }
 
-button, input, select, textarea {
+button, input, select, textarea
+{
     font-family: inherit;
     font-size: 100%;
     margin: 0;
 }
 
-.inputfile + label {
+.inputfile + label 
+{
     border: 1px solid grey;
     border-radius: 0.5rem;
     color: black
@@ -419,32 +455,38 @@ button, input, select, textarea {
     padding: 0.625rem 1.25rem;
 }
 
-#file1 {
+#file1
+{
     width: 0%;
 }
-.file-choose #fileupload {
+.file-choose #fileupload 
+{
     text-align: center;
     margin-left: 44%;
 }
 
-.upload-button {
+.upload-button 
+{
     background: #4286f4;
     color:white;
     opacity:0.9;
     transition-duration: 0.5s;
 }
  
-.upload-button:hover{
+.upload-button:hover
+{
     opacity: 1;
     box-shadow: 5px 5px 2px grey;
 
 } 
-#sequence {
+#sequence 
+{
     border-radius: 10px;
     border: 5px black;
 
 }
-#file-choose-send {
+#file-choose-send 
+{
     background-color:  #4885ed;
     border-radius: 10px;
     border: 5px black;
@@ -452,41 +494,49 @@ button, input, select, textarea {
 }
 
 
-#file_selection {
+#file_selection 
+{
     font-size: medium;
 }
-#file-send-button{
+#file-send-button
+{
     border-radius: 10px;
     border: black;
     background-color: #3cba54;
 }
-#file-send-button{
+#file-send-button
+{
     opacity: 0.9;
     color: white;
     transition-duration: 0.2s;
 }
-#file-send-button:hover{
+#file-send-button:hover
+{
     opacity: 1;
     color: white;
     box-shadow: 5px 5px 2px grey;
 }
 
-btn:hover {
+btn:hover 
+{
     box-shadow: 5px 5px 2px grey;
 }
 
 
-.progress_bar {
+.progress_bar 
+{
     display:none; /* sholud only be displayed when actual sending occurs*/
     margin-left: 
     10px;
     padding-left: 10px;
     margin-right: 40%;
 }
-#status{
+#status
+{
     color: grey;
 }
-#particles-js{
+#particles-js
+{
     width: 100%;
     height: 100%;
     background-color: #3c3c3c;
@@ -501,13 +551,16 @@ btn:hover {
 
 /*chat widget here
 */
-.chatbox-file-history-recieved{
+.chatbox-file-history-recieved
+{
     color: green;
 }
-.chatbox-file-history-sent{
+.chatbox-file-history-sent
+{
     color: brown;
 }
-.chatbox-file-history-cancel{
+.chatbox-file-history-cancel
+{
     color: red;
 }
 .chat
@@ -551,8 +604,9 @@ btn:hover {
         font-family: 'Roboto', sans-serif;
 
 }
-
-.panel-primary > .panel-heading {
+/*overwriting default colour of pnael-primary bootsrap
+*/
+.panel-primary > .panel-heading { 
     color: #fff;
     background-color: #4885ed;
     border-color: #4885ed;
@@ -560,20 +614,6 @@ btn:hover {
 .panel-primary {
     border-color: #4885ed;
 }
-
-
-/*.panel-default > .panel-heading {
-    color: #fff;
-    background-color: #f4c20d;
-    border-color: #f4c20d;
-}
-.panel-default {
-    border-color: #f4c20d;
-}*/
-
-
-
-
 
 .panel-body
 {
