@@ -1,3 +1,19 @@
+/*Colours for reference
+    Google Green
+Hex: #3cba54
+RGB: 60, 186, 84
+
+    Google Yellow
+Hex: #f4c20d
+RGB: 244, 194, 13
+
+    Google Red
+Hex: #db3236
+RGB: 219, 50, 54
+
+    Google Blue
+Hex: #4885ed
+RGB: 72, 133, 237*/
 /* General Styling */
 * {
     margin: 0;
@@ -5,8 +21,10 @@
 }
 
 body {
-    background-image: url("../images/bg.jpg");
-    background-repeat: no-repeat;
+    background-image: url("../images/bg1.jpg");
+
+/*    background-color: #7EC0EE;
+*/    background-repeat: no-repeat;
     background-size: 100% 100%;
     background-attachment: fixed;
     color: black;
@@ -20,9 +38,21 @@ body {
     padding: 5px;
     text-align: center;
     font-weight: bold;
+    font-family: 'Roboto', sans-serif;
 
 }
 
+/*This is for the heading SenDATA
+*/
+#s1{
+    color:#4885ed ;
+}
+#s2{
+     color: #3cba54;
+}
+#s3{
+    color: #db3236;
+}
 section {
     margin-top: 30px;
     text-align: center;
@@ -40,12 +70,14 @@ canvas{
     z-index: 100;
 }
 .body-wrapper, #info{
-    min-height: 100%;
-    margin:0 0 200px;
-    height: inherit;
+/*    min-height: 100%;
+*/    margin:0 0 200px;
+    height: 100%;
 }
 #request-li:hover{
-    font-size: 1.5em;
+/*    background-color: #f5f5f5;
+*/    font-size: 1.5em;
+    box-shadow: 5px 5px 5px #888888;
 }
 
 .row{
@@ -53,7 +85,11 @@ canvas{
 }
 .main-content {
     display: none; /* Hide until user enters username*/
-}
+    margin-left: 15%;
+    margin-right: 15%;
+    height: 100%;
+    }
+
 
 /* Header */
 .page-header {
@@ -73,12 +109,14 @@ canvas{
 /* Welcome greeting */
 .welcome {
     margin: 0;
-    text-align: center;
+    text-align: left;
 }
 #welcomeLine{
     margin-left: auto;
 }
-
+.page-header{
+font-family: 'Roboto', sans-serif;
+}
 
 /* Search Bar */
 .section-top {
@@ -108,26 +146,23 @@ canvas{
     text-align: center;
 }
 .users-list {
-    border: 1px solid black;
     -webkit-border-radius:10px;
     -moz-border-radius:10px;
-    border-radius:10px;
-    max-height: 300px;
     min-height: 300px;
     overflow-y: auto;
-    margin-left: 5%;
 }
 
 .online-user {
     background-color: inherit;
     color: black;
     font-size: 16px;
-    transition-duration:0.5s;
+    transition-duration:0.2s;
 }
 
 .online-user:hover {
-    background-color: #2196F3;
-    color: black;
+     background-color: inherit;
+     color: black;
+    box-shadow: 5px 5px 5px #888888;
     font-size: 1.5em;
 }
 
@@ -213,9 +248,22 @@ canvas{
     background-color: #262626;
 }
 
+/* Cancel the connection modal */
+#cancel_message .cancel-button {
+    background-color: inherit;
+    margin-bottom: 15px;
+}
+
+#waiting_message .modal-content {
+    background-color: #262626;
+}
 #connection_request .modal-dialog .btn-reply .btn{
     margin-bottom: 5px;
     margin-right: 10px;
+}
+
+#btn-chat{
+    background-color: #f4c20d;
 }
 
 .message{
@@ -261,10 +309,13 @@ canvas{
     vertical-align: middle;
     margin-top: 12%;
 }
+#cancel_message {
+    vertical-align: middle;
+    margin-top: 12%;
+}
 
 /* User Request Sidebar*/
 #user-requests{
-    font-size: larger;
     margin: auto;
     overflow-y: auto;
     padding-left: 20px;
@@ -272,13 +323,13 @@ canvas{
     text-align: center;
 }
 #user-requests .request-list{
-    border: 1px solid black;
+  
     -webkit-border-radius:10px;
     -moz-border-radius:10px;
-    border-radius:10px;
+  
     list-style-type: none;
     min-height:300px;
-    max-height: 300px;
+  
 
 }
 .user_request_username{
@@ -377,9 +428,9 @@ button, input, select, textarea {
 }
 
 .upload-button {
-    background: #49d1e1;
+    background: #4286f4;
     color:white;
-    opacity:0.8;
+    opacity:0.9;
     transition-duration: 0.5s;
 }
  
@@ -394,7 +445,8 @@ button, input, select, textarea {
 
 }
 #file-choose-send {
-     border-radius: 10px;
+    background-color:  #4885ed;
+    border-radius: 10px;
     border: 5px black;
 
 }
@@ -406,11 +458,12 @@ button, input, select, textarea {
 #file-send-button{
     border-radius: 10px;
     border: black;
+    background-color: #3cba54;
 }
 #file-send-button{
-    opacity: 0.8;
+    opacity: 0.9;
     color: white;
-    transition-duration: 0.5s;
+    transition-duration: 0.2s;
 }
 #file-send-button:hover{
     opacity: 1;
@@ -430,7 +483,9 @@ btn:hover {
     padding-left: 10px;
     margin-right: 40%;
 }
-
+#status{
+    color: grey;
+}
 #particles-js{
     width: 100%;
     height: 100%;
@@ -489,12 +544,50 @@ btn:hover {
 .panel .slidedown .glyphicon, .chat .glyphicon
 {
     margin-right: 5px;
+    margin-bottom: auto;
+
 }
+.panel-heading{
+        font-family: 'Roboto', sans-serif;
+
+}
+
+.panel-primary > .panel-heading {
+    color: #fff;
+    background-color: #4885ed;
+    border-color: #4885ed;
+}
+.panel-primary {
+    border-color: #4885ed;
+}
+
+
+/*.panel-default > .panel-heading {
+    color: #fff;
+    background-color: #f4c20d;
+    border-color: #f4c20d;
+}
+.panel-default {
+    border-color: #f4c20d;
+}*/
+
+
+
+
 
 .panel-body
 {
     overflow-y: scroll;
-    height: 250px;
+    min-height: 250px;
+    max-height: 500px;
+    height: auto;
+}
+
+.panel-b
+{
+    min-height: 250px;
+    max-height: 500px;
+    height: auto;
 }
 
 ::-webkit-scrollbar-track

@@ -24,7 +24,9 @@ $(() => {
   const bitrateDiv = document.getElementById('bitrate');
   const $downloadAnchor = $('#download');
   const statusMessage = document.getElementById('status');
-
+  $(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip(); 
+});
   //   const bitrateMax = 0;
   //   const TURN_SERVER_IP = '127.0.0.1';
   let offersForMe = [];
@@ -68,7 +70,6 @@ $(() => {
     $transferPageHeader.html('');
     $downloadAnchor.fadeOut();
     $downloadAnchor.prop('href','');
-    $downloadAnchor.html('');
     // Clear the requests
     $('.request-list').html('');
 
@@ -92,7 +93,7 @@ $(() => {
       // Set data-channel response on the other end(the client who receives the offer)
       $homePage.hide();
       $transferPage.fadeIn();
-      $transferPageHeader.html(`<p>You are now connected to ${socket.partner}. To go back click <a href="#" class="alert-link" id="backLink"> here </a>. </p>`);
+      $transferPageHeader.html(`<p>You are now connected to ${socket.partner}. To disconnect click <a href="#" class="alert-link" id="backLink" data-toggle ="modal" data-target="#cancel_message"> here </a>. </p>`);
     } else {
       //    if request rejected
       btn.parent().parent().remove();
@@ -228,7 +229,7 @@ $(() => {
   });
 
 
-  $(document).on('click', '.user-name a', () => {
+  $(document).on('click', '.cancel-modal', () => {
     //   cancel the for both users
     //console.log('Connection terminated');
     socket.emit('Cancel Connection', ExchangerUsername);
@@ -328,7 +329,7 @@ $(() => {
       $homePage.hide();
       $transferPage.fadeIn();
       const $transferPageHeader = $('.user-name');
-      $transferPageHeader.html(`<p>You are now connected to ${socket.partner}. To go back click <a href="#" class="alert-link" id="backLink"> here </a>. </p>`);
+      $transferPageHeader.html(`<p>You are now connected to ${socket.partner}. To disconnect click <a href="#" class="alert-link" id="backLink" data-toggle ="modal" data-target="#cancel_message"> here </a>. </p>`);
     } else {
       // remove modal after informing partner has said no
       ExchangerUsername = null; // else set ExchangeUsername to None
@@ -373,13 +374,13 @@ $(() => {
   socket.on('file accepted', (data) => { // This is for sender's end. Here funtion gets the username of the user he will now send the file to
     // here's the sendData!
     //console.log('trying to send');
+      fileSendButton.prop('disabled', true);
 
     $progressBar.fadeIn();
     $('#stop-progress').html('Cancel');
     $('#fileProgress').text('Establishing Connection');
 
     sendData(); // start sending :)))
-    //console.log('send completed');
     });
 
   socket.on('send', (hash) => {
@@ -425,7 +426,7 @@ $(() => {
           //console.log("file is here");
           $downloadAnchor.prop('href', url);
           $downloadAnchor.prop('download', file.name);
-          $downloadAnchor.text(`Download ${file.name}`);
+          $('#status').text(`This contains download link for ${file.name}`);
           $('#download').show();
 
           client.destroy();
@@ -448,6 +449,7 @@ $(() => {
       $progressBar.fadeOut();
       const filehistory = `<li class = 'chatbox-file-history-sent'>  You sent ${file.name} to ${ExchangerUsername}.  </li>`;
       $(filehistory).appendTo($chatbox);// delivering file history to chat box of the sender
+      fileSendButton.prop('disabled', false);//Activating the send button on the sender's side
     }
   });
 

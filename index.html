@@ -6,9 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Sendata</title>
-
+    <link rel="icon" type="image/png" href="images/logo.png">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" media="screen" href="css/style.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> <!-- Roboto google font to use put "font-family: 'Roboto', sans-serif;" in css --> 
 
 </head>
 
@@ -18,10 +20,10 @@
     <div class="body-wrapper">
 
         <!-- Header Content -->
-        <header class="container-fluid">
+        <header >
             <div class="page-header">
-                <h1>Sendata
-                    <small>Simple tool for sharing files in an Intranet environment</small>
+                <h1><span id= "s1">Sen</span><span id = "s2">D</span><span id="s3">A</span><span id="s2">T</span><span id="s3">A</span>
+                    <small>Tool for sharing files over Intranet.</small>
                 </h1>
             </div>
         </header>
@@ -54,7 +56,7 @@
         <!--End Login-page-->
 
         <!-- Main Content -->
-        <div class="main-content row">
+        <div class="main-content row" id = "main_content">
             <div class="home-page container_homepage">
 
                 <!--i think some other guy can style this div below better so that search comes to the right of this-->
@@ -81,10 +83,11 @@
                 <!--<br>-->
                 <!-- Search Bar -->
                 <div class="row">
-                    <div class="col-xs-11 col-sm-11 col-md-6" id="user-section">
-                        <h2>Online Users
-                        </h2>
-                        <!-- List of online users -->
+                    <div class="col-xs-11 col-sm-11 col-md-6 col-lg-6" id="user-section">
+                        <div class = "panel panel-default">
+                        <div class = "panel-heading">Online Users
+                            <div class= "pull-right" data-toggle="tooltip" title="These users want to share files with you." data-placement="bottom"><i class="fas fa-info-circle"></i></div>
+                        </div>                        <!-- List of online users -->
                         <div class="users-list" id="listOfUsers">
                             <!--<div class="user">-->
                             <!--<button type="button" class="btn btn-default btn-block online-user" data-toggle="modal" data-target="#waiting_message">-->
@@ -111,9 +114,13 @@
                                 </div>
                             </div>
                         </div>
+                        </div>
                     </div>
-                    <div class="col-xs-11 col-sm-12 col-md-6" id="user-requests">
-                        <h2>User Requests <small>(These users want to share files with you.)</small></h2>
+                    <div class="col-xs-11 col-sm-12 col-md-6 col-lg-6" id="user-requests">
+                        <div class = "panel panel-default">
+                        <div class = "panel-heading" >User Requests
+                            <div class= "pull-right" data-toggle="tooltip" title="These users want to share files with you." data-placement="bottom"><i class="fas fa-info-circle"></i></div>
+                        </div>
                         <ul class="request-list">
                             <!--<li id="request-li">-->
                             <!--user1-->
@@ -124,96 +131,136 @@
                             <!--</li>-->
                         </ul>
                     </div>
+
+                    </div>
                 </div>
             </div>
+
+
+
             <div class="transfer-page">
                 <!-- Username Display -->
+                 <div class="alert alert-default user-name" role="alert">
+                                        To Disconnect click
+                                        <a href="#" class="alert-link" id="backLink" data-toggle ="modal" data-target="#cancel_message">here</a>
+                                    </div>
                 
                 
 
                 <!-- File Selection -->
                 <div class = "row">
-                <div class="file-choose col-lg-8" id = "files-choose-send">
-                    <!--<form action="" method="POST" enctype="multipart/form-data">-->
-                    <div class="alert alert-default user-name" role="alert">
-                    To go back click
-                    <a href="#" class="alert-link" id="backLink">here</a>
-                </div>
-                <br>
-                    <input type="file" name="file-1[]" id="file-1" class="inputfile  btn btn-info" data-multiple-caption="{count}" multiple style="display: none;" />
-                    <label for="file-1" class="upload-button">
-                        <i class="fa fa-upload" aria-hidden="true"></i>
-                        <span class = "upload">&nbsp;Choose files &hellip;</span>
-                    </label>
-                    <h4 id="file-desc">No files selected</h4>
+                    <!-- <div class = "col-lg-2 col-md-2"> -->
+                    </div>
+                    <div class="col-lg-6 col-md-6" >
+                        <div class = "panel panel-default" id = "files-choose-send">
+                            <div class="panel-heading">Share Files...</div>
+                            <div class= "panel-b">
+                            <br>
+                                        <!--<form action="" method="POST" enctype="multipart/form-data">-->
+                            <div>Choose files from your PC/mobile and <b>SEND</b> it to users.</div>
+                            <br>
+                                       
+                                    <!-- Modal for when the user wants to connect with one of the online users -->
+                        <div class="modal fade" id="cancel_message" data-backdrop = "static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        Do you really want to close the connection?
+                                    </div>
+                                    <div class="loader"></div>
+                                    <div class="cancel-button">
+                                        <button type="button" class="btn btn-default cancel-modal" data-dismiss="modal">Yes</button>
+
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
+                                    
+                                        <input type="file" name="file-1[]" id="file-1" class="inputfile  btn btn-info" data-multiple-caption="{count}" multiple style="display: none;" />
+                                        <label for="file-1" class="upload-button">
+                                            <i class="fa fa-upload" aria-hidden="true"></i>
+                                            <span class = "upload">&nbsp;Choose files &hellip;</span>
+                                        </label>
+                                        <h4 id="file-desc">No files selected</h4>
+                                        <input type="submit" value="Send" id="file-send-button" class="btn btn-success">
+                                        <br>
+                                        <!--</form>-->
+                             </div>   
+                        </div>
+                        <div class= "panel panel-default">
+                            <div class="panel-heading">
+                                Status / Info ..
+                            </div>
+                            <br>
+                            <br>
+                        
+
+                             <!-- Transfer Progress Indicator -->
+                         <div class="progress_bar" style="margin:3% 20% 3% 20%;">
+                            <h3 id="fileProgress">
+                                Progress -
+                            </h3>
+                            <p id="fileBeingSent">  </p>
+                            <div class="progress">
+                                <div class="progress-bar" id="file1" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                            </div>
+                          <!--   Reject button is for canceling sending/ recieving .This should work from both sides ... After rejecting we should look for next file to share. -->
+                            <a id = "stop-progress" class ="btn btn-danger"> Reject </a>
+                        <!-- <p> File 2:</p>
+                        <div class="progress">
+                            <div class="progress-bar" id="file2" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 20%;">
+                                20%
+                            </div>
+                        </div> -->
+                            </div>
+                     <div id="bitrate"></div>
+                    <a class="btn btn-info" id="download"> DOWNLOAD </a>
                     <br>
-                    <input type="submit" value="Send" id="file-send-button" class="btn btn-success">
-                    <!--</form>-->
-                    <hr>
+                    <span id="status"></span> 
+                    <br>
+                    <br>
+                        </div>
                 </div>
-                <div class = "col-lg-4" id="sequence">
+                <div class = "col-lg-4 col-md-4" id="sequence">
 <!--                    <li> Here we will have list of transactions history kinda thing </li>
- -->             <div class="container">
-    <div class="row">
-        <div class="col-md-5">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    Chat/File share history
-                    
-                </div>
-                <div id = "typing">  </div>
-                <div class="panel-body">
-                    <ul id = "chats" class="chat">
-                        <!-- messages appear here -->
-                    </ul>
-                </div>
-                <div class="panel-footer">
-                    <div class="input-group">
-                        <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
-                        <span class="input-group-btn">
-                            <button class="btn btn-warning btn-sm" id="btn-chat">
-                                Send</button>
-                        </span>
+ -->            <div class="container">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading" id="ph">
+                                    Chat/File share history
+                                    
+                                </div>
+                                <div id = "typing">  </div>
+                                <div class="panel-body">
+                                    <ul id = "chats" class="chat">
+                                        <!-- messages appear here -->
+                                    </ul>
+                                </div>
+                                <div class="panel-footer">
+                                    <div class="input-group">
+                                        <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-warning btn-sm" id="btn-chat">
+                                                Send</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-                        </div>
                 </div>
-                <!-- Transfer Progress Indicator -->
-                <div class="progress_bar" style="margin:3% 20% 3% 20%;">
-                        <h3 id="fileProgress">
-                            Progress -
-                        </h3>
-                        <p id="fileBeingSent">  </p>
-                        <div class="progress">
-                            <div class="progress-bar" id="file1" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
-                        </div>
-                      <!--   Reject button is for canceling sending/ recieving .This should work from both sides ... After rejecting we should look for next file to share. -->
-                        <a id = "stop-progress" class ="btn btn-danger"> Reject </a>
-                    <!-- <p> File 2:</p>
-                    <div class="progress">
-                        <div class="progress-bar" id="file2" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 20%;">
-                            20%
-                        </div>
-                    </div> -->
-                        </div>
+                </div>
+
                         
                     </div>
-                </div>   
-
-
-                <div id="bitrate"></div>
-                <a class="btn btn-info" id="download"> DOWNLOAD </a>
-                <span id="status"></span>
+        </div>   
                 
-            </div>
-        </div>
+    </div>
+</div>
         <!--End Main Content-->
         
        
@@ -222,8 +269,8 @@
         <section id="footer">
 
             <!-- Club Description (Not sure if necessary) -->
-            <p id="site-desc">Dev Club is a community of tech-minded people in IIT Delhi who experience what real world collaborative software development is and allows everyone to pursue big, useful and exciting projects which are not possible alone. Also, we have a community
-                in which we discuss new ideas regarding development and learn a lot while having fun.</p><br>
+            <!-- <p id="site-desc">Dev Club is a community of tech-minded people in IIT Delhi who experience what real world collaborative software development is and allows everyone to pursue big, useful and exciting projects which are not possible alone. Also, we have a community
+                in which we discuss new ideas regarding development and learn a lot while having fun.</p><br> -->
 
             <!-- Important Links -->
             <div class="footer-nav">
