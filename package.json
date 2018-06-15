@@ -4,7 +4,9 @@
   "description": "Simple tool for sending file in an Intranet environment",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "browserify  ./js/main.js -o ./js/bundle.js",
+    "watch": "watchify ./js/main.js -o ./js/bundle.js"
   },
   "repository": {
     "type": "git",
@@ -14,10 +16,22 @@
   "dependencies": {
     "express": "^4.16.2",
     "grunt": "^1.0.1",
+    "idb-chunk-store": "^0.2.0",
     "socket.io": "^2.0.4",
+    "twilio": "^3.17.1",
+    "socket.io": "^2.1.1",
     "webrtc-adapter": "^6.0.3"
   },
   "engines": {
     "node": ">=6.11.1"
+  },
+  "devDependencies": {
+    "browserify": "^16.2.2",
+    "watchify": "^3.11.0",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.8.2"
   }
 }
