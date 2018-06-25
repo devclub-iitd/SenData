@@ -17,9 +17,8 @@
     "express": "^4.16.2",
     "grunt": "^1.0.1",
     "idb-chunk-store": "^0.2.0",
-    "socket.io": "^2.0.4",
-    "twilio": "^3.17.1",
     "socket.io": "^2.1.1",
+    "twilio": "^3.17.3",
     "webrtc-adapter": "^6.0.3"
   },
   "engines": {
