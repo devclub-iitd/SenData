@@ -551,6 +551,14 @@ btn:hover
 
 /*chat widget here
 */
+.chat_text_user
+{
+    text-align: right; /*for text you send*/
+}
+.chat_text_message
+{
+    text-align: left; /*for message recived*/
+}
 .chatbox-file-history-recieved
 {
     color: green;
