@@ -1,6 +1,4 @@
 $(() => {
-//   const requests = [];
-  // var downloadstatus = TRUE;
 
   const $mainContent = $('.main-content'); // which contains userlist and search functionality
   let username = ''; // variable to store username entered.
@@ -11,35 +9,33 @@ $(() => {
   const $transferPage = $('.transfer-page'); // file transfer page
   const $progressBar = $('.progress_bar'); // prgress bar
   const $chatbox = $('.chat');
-  // const $userRequest = $('#user-requests'); // sidebar to accept or deny a connection
-  const socket = window.io();
-  //   const $testmes = $('#first-message');
+  const socket = window.io();  
   const $alertUsername = $('.alert-username');
   const $transferPageHeader = $('.user-name');
   const $alertUsernameBlank = $('.alert-blankusername');
   const $listOfUsers = $('#listOfUsers');
   const $cancelButton = $('#waiting_message .cancel-button button');
   const fileSendButton = $('#file-send-button');
-  const bitrateDiv = document.getElementById('bitrate');
   const $downloadAnchor = $('#download');
   const statusMessage = document.getElementById('status');
 
-  //   const bitrateMax = 0;
-  //   const TURN_SERVER_IP = '127.0.0.1';
+  const TURN_SERVER_IP = env.IP;
   let offersForMe = [];
+
   const configuration = {
     // Needed for RTCPeerConnection
     iceServers: [
       {
-        urls: 'turn:numb.viagenie.ca',
-        credential: 'muazkh',
-        username: 'webrtc@live.com',
+        urls: "TURN_SERVER_IP:3478",
+        credential: 'test',
+        username: 'test',
       },
     ],
   };
+
   let client;
   let ExchangerUsername; // variable for name of requested username
-  //   let offerComplete = false;
+  
   let fileRec;
   let file;
   let sender = false; // to maintain state of the client(whether he/she is a sender or a receiver)
@@ -60,7 +56,6 @@ $(() => {
     socket.partner = null;
     socket.partnerid = null;
 
-    // console.log('Connection terminated');
     $transferPage.fadeOut();
     $progressBar.fadeOut();
     $homePage.show();
@@ -85,7 +80,7 @@ $(() => {
     if (answer === 'y') {
       socket.partner = requestingUsername;
       socket.partnerid = offersForMe[requestingUsername];
-      // console.log(`${socket.partner} ${socket.partnerid}`);
+      
       //    if request accepted
       ExchangerUsername = requestingUsername;
       // Set data-channel response on the other end(the client who receives the offer)
@@ -101,9 +96,9 @@ $(() => {
       answer,
     });
 
-    // emit an event to the requesting user
   }
 
+  //creates a new webtorrent client
   function getClient() {
     client = new WebTorrent({
       tracker: { rtcConfig: configuration },
@@ -171,7 +166,6 @@ $(() => {
   });
 
   fileSendButton.click(() => {
-    // console.log(`${username} sending message`);
     const input = document.getElementById('file-1');
     if (!input) {
       alert("Um, couldn't find the fileinput element.");
@@ -185,8 +179,6 @@ $(() => {
     }
     [file] = input.files;
 
-    // console.log(`File is ${[file.name, file.size, file.type, file.lastModifiedDate].join(' ')}`);
-
     const fileStatus = `<li class = 'chatbox-file-history-sent'>  Sending  ${file.name} to ${ExchangerUsername}. </li>`;
     $(fileStatus).appendTo($chatbox);
 
@@ -196,10 +188,8 @@ $(() => {
 
     if (file == null) alert('No file selected');
     if (file.size === 0) {
-      bitrateDiv.innerHTML = '';
       statusMessage.textContent = 'File is empty, please select a non-empty file';
       alert('File is empty, please select a non-empty file');
-      // closeDataChannels();
       return;
     }
     sender = true;
@@ -288,7 +278,6 @@ $(() => {
 
 
   socket.on('offer', (data) => {
-    // console.log(`My Username is ${username}`);
 
     offersForMe[data.username] = data.pid;
     // show that username wants to connect to you
@@ -335,55 +324,47 @@ $(() => {
   });
 
   socket.on('file-desc', (fileDesc) => {
-    // console.log('file-desc received');
-    if (!sender) { // to make sure we have not already sent a file offer to the other client
-      // (we will disable the send button on other side to make sure only one person
-      // sends a file at a time, but just to be sure)
-      // console.log(`File is ${[fileDesc.name, fileDesc.size, fileDesc.type, fileDesc.lastModifiedDate].join(' ')}`);
+    if (!sender) {
       fileRec = {
         name: fileDesc.name,
         size: fileDesc.size,
         type: fileDesc.type,
         lastModifiedDate: fileDesc.lastModifiedDate,
       };
-      // console.log(`file offer of ${fileRec.name} accepted`);
+      
       socket.emit('file accepted', {
         target: ExchangerUsername,
         from: username,
         file: fileDesc.name,
-      }); // can put a feature later to ask the user whether
-      // he/she wants to accept the file, and based on that respond as accepted/refused
+      });
+
+      //disable send button so that only one file is sent at time
       fileSendButton.prop('disabled', true);
       $('#file1').attr('aria-valuenow', 0).css('width', '0%');
       $('#fileBeingSent').text(`${fileRec.name}(${Math.round(fileRec.size / 1000)} KB) (receiving..)`);
     } else {
       sender = false; // if both have sent at the same time, cancel both
-      // console.log('file refused');
       socket.emit('file refused', ExchangerUsername);
     }
-    // console.log('end');
   });
 
   socket.on('file refused', () => {
     sender = false;
   });
 
-
   socket.on('file accepted', (data) => { // This is for sender's end. Here funtion gets the username of the user he will now send the file to
     // here's the sendData!
-    // console.log('trying to send');
 
     $progressBar.fadeIn();
     $('#stop-progress').html('Cancel');
     $('#fileProgress').text('Establishing Connection');
 
     sendData(); // start sending :)))
-    // console.log('send completed');
   });
 
-  socket.on('send', (hash) => {
+
+  socket.on('send', (hash) => { //this callback contains the whole sending process
     getClient();
-    // console.log(hash);
 
     const fileStatus = `<li class = 'chatbox-file-history-recieved'>  Receiving  ${fileRec.name} from ${ExchangerUsername}. </li>`;
     $(fileStatus).appendTo($chatbox);
@@ -392,7 +373,7 @@ $(() => {
     $('#stop-progress').html('Cancel');
     $('#fileProgress').text('Establishing Connection');
 
-    client.add(hash, (torrent) => {
+    client.add(hash, (torrent) => { //torrent created
       [file] = torrent.files;
 
       torrent.on('error', (err) => { alert(err); });
@@ -420,7 +401,7 @@ $(() => {
 
         file.getBlobURL((error, url) => {
           if (error) { alert(error); return; }
-          // console.log("file is here");
+
           $downloadAnchor.prop('href', url);
           $downloadAnchor.prop('download', file.name);
           $downloadAnchor.text(`Download ${file.name}`);
@@ -463,7 +444,6 @@ $(() => {
 
   socket.on('PartnerDisconnected', () => {
     // stop transfer or show dialog that partner has been disconnected retry from main page
-    // console.log('Partner disconnected');
     alert('Your partner has disconnected');
     cancelConnection();
   });
@@ -493,7 +473,7 @@ $(() => {
     setTimeout(() => { typing.innerHTML = ''; }, 5000);
   });
 
-  // time Updation
+  // time Updation for chat
   setInterval(() => {
     const time = document.getElementsByClassName('time');
     const l = time.length;

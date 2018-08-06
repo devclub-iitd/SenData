@@ -30,7 +30,7 @@ io.on('connection', (socket) => {
       connectedClients[username] = socket.id;
       loggedClients[username] = socket.id;
       socket.username = username;
-      //console.log(`${username} connected`);
+
       socket.emit('login', 0);
       io.sockets.emit('updateUsersList', Object.keys(connectedClients));
       offerList[username] = [];
@@ -45,8 +45,8 @@ io.on('connection', (socket) => {
     if (socket.partner) {
       if (socket.partner in loggedClients) {
         socket.broadcast.to(loggedClients[socket.partner]).emit('PartnerDisconnected');
-        // console.log("Sent message to other user");
         connectedClients[socket.partner] = socket.partnerid;
+
         io.sockets.emit('updateUsersList', Object.keys(connectedClients));
       }
     } else if (undefined !== socket.username) {
@@ -70,7 +70,6 @@ io.on('connection', (socket) => {
   socket.on('offer', (username) => {
     // remove socket.username form connected_clients
     // then emit list again
-    // console.log("Sending offer to " + username + " from " + socket.username);
     if (offerList[username] !== undefined) {
       offerList[username].push(socket.username);
       const user = connectedClients[username];
@@ -78,17 +77,16 @@ io.on('connection', (socket) => {
       delete connectedClients[socket.username];
       io.sockets.emit('updateUsersList', Object.keys(connectedClients));
       if (waitingClients[username] == null) { // if user is not in waiting list
-        // console.log("Test username " + username);
         socket.broadcast.to(user).emit('offer', {
           username: socket.username,
           pid: socket.id, // the name and id of the user who sent the request
         });
       }
     } else if (loggedClients[username] === undefined) {
-      // imitate answer == 'n'
       socket.broadcast.to(socket.id).emit('answer', {// this broadcasts to the user who is requesting with an immediate message no as there is no such user logged in which he is requesting
         answer: 'n',
       });
+
       delete offerList[username];
       io.sockets.emit('updateUsersList', Object.keys(connectedClients));
       // if answer is no add the username to connected_clients
@@ -101,7 +99,6 @@ io.on('connection', (socket) => {
       delete connectedClients[socket.username];
       io.sockets.emit('updateUsersList', Object.keys(connectedClients));
       if (waitingClients[username] == null) { // if user is not in waiting list
-        // console.log("Test username " + username);
         socket.broadcast.to(user).emit('offer', {
           username: socket.username,
           pid: socket.id,
@@ -112,7 +109,6 @@ io.on('connection', (socket) => {
 
   socket.on('answer', (msg) => {
     const { username, answer } = msg;
-    // console.log("Sending answer  '" + answer + "' to " + username + " from " + socket.username);
     if (answer === 'n') {
       socket.broadcast.to(waitingClients[username]).emit('answer', {
         answer,
@@ -141,8 +137,6 @@ io.on('connection', (socket) => {
             });
             connectedClients[offerList[socket.username][i]] =
             waitingClients[offerList[socket.username][i]];
-            // console.log("Adding " + offer_list[socket.username][i] + " to available clients");
-            // console.log(connected_clients);
             delete waitingClients[offerList[socket.username][i]];
           }
         }
@@ -153,8 +147,6 @@ io.on('connection', (socket) => {
             answer: 'n',
           });
           connectedClients[offerList[username][i]] = waitingClients[offerList[username][i]];
-          // console.log("Adding " + offer_list[username][i] + " to available clients");
-          // console.log(connected_clients);
           delete waitingClients[offerList[username][i]];
         }
       }
@@ -178,9 +170,7 @@ io.on('connection', (socket) => {
     if (offerList[targetUsername] !== undefined) {
       offerList[targetUsername] = removeA(offerList[targetUsername], socket.username);
     }
-    //console.log(`Target Username :${targetUsername}`);
-    // console.log("Offer List :" + offer_list[target_username]);
-
+    
     connectedClients[socket.username] = socket.id;
     loggedClients[socket.username] = socket.id;
 
@@ -194,10 +184,8 @@ io.on('connection', (socket) => {
     const user = loggedClients[username];
     socket.partnerid = loggedClients[msg.username];
 
-    // console.log(username, socket.partnerid);
     if (user != null) {
       socket.partner = username;
-      // console.log("Sending candidate to: ", username);
       socket.broadcast.to(user).emit('candidate', candidate);
     }
   });
@@ -214,7 +202,6 @@ io.on('connection', (socket) => {
     const { fileData } = msg;
     const user = loggedClients[username];
     if (user != null) {
-      //console.log('Sending file-desc to: ', username);
       socket.broadcast.to(user).emit('file-desc', fileData);
     }
   });
@@ -234,15 +221,14 @@ io.on('connection', (socket) => {
     const user = loggedClients[msg.username];
     if (user != null) {
       socket.broadcast.to(user).emit('received-chunks', msg.progress);
-      //  console.log("progress: "+msg.progress);
     }
   });
 
   socket.on('send', (data) => {
-    //console.log(data.user, loggedClients[data.user]);
     socket.broadcast.to(loggedClients[data.user]).emit('send', data.hash);
   });
 
+  //sends progress value to the sender
   socket.on('progress', (data) => {
     socket.broadcast.to(loggedClients[data.user]).emit('progress', data.prog);
   });

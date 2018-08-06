@@ -1,0 +1,55 @@
+version: '3.4'
+services:
+  filesend:
+    build: .
+    ports: 
+      - 7000:7000
+    volumes:
+      - .:/fs
+    image: "devclubiitd/filesend"
+    depends_on: 
+      - turnserver
+    environment:
+      - IP=devclubiitd/turnserver://turnserver:3478
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - "reverseproxy"
+      - "internal"
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+  turnserver:
+    build:
+      context: ./Dockerfile-turn
+    ports:
+      - 3478:3478
+    volumes:
+      - ./turn:/usr/src/turn
+    image: "devclubiitd/turnserver"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - "internal"
+      - "reverseproxy"
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+networks:
+  reverseproxy:
+    external:
+      name: "reverseproxy"
+    internal: true
+  internal:

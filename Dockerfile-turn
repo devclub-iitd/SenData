@@ -1,0 +1,11 @@
+FROM alpine:latest
+
+RUN mkdir /turn
+WORKDIR /turn
+
+USER root
+
+COPY ./turn/turnserver.sh /turn
+CMD /turn/turnserver.sh
+
+EXPOSE 3478
