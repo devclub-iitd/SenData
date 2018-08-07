@@ -26,13 +26,9 @@ services:
         max-size: '12m'
         max-file: '5'
   turnserver:
-    build:
-      context: ./Dockerfile-turn
     ports:
       - 3478:3478
-    volumes:
-      - ./turn:/usr/src/turn
-    image: "devclubiitd/turnserver"
+    image: "zolochevska/turn-server"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000"]
       interval: 1m30s
