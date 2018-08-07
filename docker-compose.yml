@@ -4,15 +4,13 @@ services:
     build: .
     ports: 
       - 7000:7000
-    volumes:
-      - .:/fs
-    image: "devclubiitd/filesend"
+    image: "devclubiitd/filesend:v1.0"
     depends_on: 
       - turnserver
     environment:
       - IP=devclubiitd/turnserver://turnserver:3478
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000"]
+      test: ["CMD", "curl", "-f", "http://localhost:7000"]
       interval: 1m30s
       timeout: 10s
       retries: 3
@@ -28,17 +26,12 @@ services:
   turnserver:
     ports:
       - 3478:3478
+      - 3478:3478/udp
     image: "zolochevska/turn-server"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000"]
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+    command: username password realm
     restart: unless-stopped
     networks:
       - "internal"
-      - "reverseproxy"
     logging:
       options:
         max-size: '12m'
@@ -47,5 +40,4 @@ networks:
   reverseproxy:
     external:
       name: "reverseproxy"
-    internal: true
   internal:
