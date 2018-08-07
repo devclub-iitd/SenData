@@ -1,0 +1,43 @@
+version: '3.4'
+services:
+  filesend:
+    build: .
+    ports: 
+      - 7000:7000
+    image: "devclubiitd/filesend:v1.0"
+    depends_on: 
+      - turnserver
+    environment:
+      - IP=devclubiitd/turnserver://turnserver:3478
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7000"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - "reverseproxy"
+      - "internal"
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+  turnserver:
+    ports:
+      - 3478:3478
+      - 3478:3478/udp
+    image: "zolochevska/turn-server"
+    command: username password realm
+    restart: unless-stopped
+    networks:
+      - "internal"
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+networks:
+  reverseproxy:
+    external:
+      name: "reverseproxy"
+  internal:
