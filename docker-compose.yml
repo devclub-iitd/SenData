@@ -9,6 +9,7 @@ services:
       - turnserver
     environment:
       - IP=devclubiitd/turnserver://turnserver:3478
+      - VIRTUAL_HOST
     env_file:
       - ./.env
     healthcheck:
