@@ -9,8 +9,7 @@ services:
       - turnserver
     environment:
       - IP=devclubiitd/turnserver://turnserver:3478
-    env_file:
-      - ./.env
+      - VIRTUAL_HOST
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:7000"]
       interval: 1m30s
