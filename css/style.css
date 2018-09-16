@@ -655,3 +655,69 @@ btn:hover
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
     background-color: #555;
 }
+
+@media only screen and (max-width: 768px) {
+
+    /* Style for login page */
+    .login-page 
+    {
+        margin: auto;
+        text-align: center;
+        width: 90%;
+    }
+
+    .login-page .login-form label 
+    {
+        font-size: 200%;
+    }
+
+    .login-page .login-form .usernameInput 
+    {
+        border: 1px solid black;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+        font-size: 150%;
+        padding: 15px;
+        width: 100%;
+        color: black;
+        position: relative;
+        margin-top: auto;
+    }
+
+    .login-page .login-form .usernameInput:focus 
+    {
+        border: 1px solid #999;
+        outline-width: 0;
+    }
+
+    .alert-username
+    {
+        display: none;
+    }
+
+    .alert-blankusername
+    {
+        display: none;
+    }
+
+
+    .main-content 
+    {
+        display: none; /* Hide until user enters username*/
+        margin-left: 2%;
+        margin-right: 2%;
+        height: 100%;
+    }
+
+
+}
+
+@media only screen and (max-width: 992px) {
+/* No chats for mobiles :) */
+    #sequence{
+        display: none;
+    }
+
+
+}

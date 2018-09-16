@@ -62,6 +62,7 @@ $(() => {
     offersForMe = [];
     socket.partner = null;
     socket.partnerid = null;
+    $chatbox.text('');
 
     // console.log('Connection terminated');
     $transferPage.fadeOut();

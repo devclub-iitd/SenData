@@ -67,15 +67,14 @@
                     </div>
                     <div class="section-top col-sm-9 col-xs-11 col-md-3">
 
-                        <form class="navbar-form search-bar" >
+                        <!-- <form class="navbar-form search-bar" >
                             <div class="form-group">
                                 <input type="text" id="search-input" autocomplete="off" class="form-control" placeholder="Search for users" name="user" onkeyup="dynamicSearch()">
-                                <!--i wonder what would happen if we turn autocomplete on the above tag? Nothing happens we have to place somnoe AJAX there I think-->
                             </div>
                             <button type="submit" class="btn btn-default" id="user-search-button">
                                 <i class="fa fa-search search-icon" aria-hidden="true"></i>
                             </button>
-                        </form>
+                        </form> -->
 
                         <div id="search-results"></div>
                     </div>
@@ -83,7 +82,7 @@
                 <!--<br>-->
                 <!-- Search Bar -->
                 <div class="row">
-                    <div class="col-xs-11 col-sm-11 col-md-6 col-lg-6" id="user-section">
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" id="user-section">
                         <div class = "panel panel-default">
                         <div class = "panel-heading">Online Users
                             <div class= "pull-right" data-toggle="tooltip" title="These users want to share files with you." data-placement="bottom"><i class="fas fa-info-circle"></i></div>
@@ -116,7 +115,7 @@
                         </div>
                         </div>
                     </div>
-                    <div class="col-xs-11 col-sm-12 col-md-6 col-lg-6" id="user-requests">
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" id="user-requests">
                         <div class = "panel panel-default">
                         <div class = "panel-heading" >User Requests
                             <div class= "pull-right" data-toggle="tooltip" title="These users want to share files with you." data-placement="bottom"><i class="fas fa-info-circle"></i></div>
@@ -217,6 +216,7 @@
                                     </div>
                              <div id="bitrate"></div>
                             <a class="btn btn-info" id="download"> DOWNLOAD </a>
+                            <br>
                             <br>
                             <span id="status"></span> 
                             <br>
