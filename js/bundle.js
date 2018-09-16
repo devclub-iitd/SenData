@@ -71,6 +71,7 @@ $(() => {
     $transferPageHeader.html('');
     $downloadAnchor.fadeOut();
     $downloadAnchor.prop('href','');
+    statusMessage.textContent = '';
     // Clear the requests
     $('.request-list').html('');
 
