@@ -179,58 +179,12 @@ io.on('connection', (socket) => {
     socket.broadcast.to(loggedClients[targetUsername]).emit('cancel', offerList[targetUsername]);
   });
 
-  socket.on('candidate', (msg) => {
-    const { username, candidate } = msg;
-    const user = loggedClients[username];
-    socket.partnerid = loggedClients[msg.username];
-
-    if (user != null) {
-      socket.partner = username;
-      socket.broadcast.to(user).emit('candidate', candidate);
-    }
-  });
-
-  socket.on('session-desc', (msg) => {
+  socket.on('send', (msg) => {
     const username = msg.target;
-    // console.log("Sending session-desc to: ", username);
-    const user = loggedClients[username];
-    socket.broadcast.to(user).emit('session-desc', msg);
-  });
-
-  socket.on('file-desc', (msg) => {
-    const username = msg.target;
-    const { fileData } = msg;
     const user = loggedClients[username];
     if (user != null) {
-      socket.broadcast.to(user).emit('file-desc', fileData);
+      socket.broadcast.to(user).emit('send', msg);
     }
-  });
-
-  socket.on('file accepted', (data) => {
-    const username = data.target;
-    const user = loggedClients[username];
-    if (user != null) socket.broadcast.to(user).emit('file accepted', data);//
-  });
-
-  socket.on('file refused', (username) => {
-    const user = loggedClients[username];
-    if (user != null) socket.broadcast.to(user).emit('file refused');
-  });
-
-  socket.on('received-chunks', (msg) => {
-    const user = loggedClients[msg.username];
-    if (user != null) {
-      socket.broadcast.to(user).emit('received-chunks', msg.progress);
-    }
-  });
-
-  socket.on('send', (data) => {
-    socket.broadcast.to(loggedClients[data.user]).emit('send', data.hash);
-  });
-
-  //sends progress value to the sender
-  socket.on('progress', (data) => {
-    socket.broadcast.to(loggedClients[data.user]).emit('progress', data.prog);
   });
 
   socket.on('reject', (user) => {
@@ -264,8 +218,11 @@ io.on('connection', (socket) => {
   socket.on('typing', (msg) => {
     socket.broadcast.to(msg.socket).emit('typing', msg.username);
   });
+  
+  socket.on('progress', (data) => {
+    socket.broadcast.to(loggedClients[data.partner]).emit('progress',data.progress);
+  });
 });
-
 
 function removeA(arr) {
   let what;

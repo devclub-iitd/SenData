@@ -37,6 +37,17 @@ services:
       options:
         max-size: '12m'
         max-file: '5'
+  tracker:
+    ports:
+      -8000:8000
+    image: "henkel/bittorrent-tracker:latest"
+    networks:
+      - "internal"
+    restart: "unless-stopped"
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
 networks:
   reverseproxy:
     external:
