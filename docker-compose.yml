@@ -8,7 +8,8 @@ services:
     depends_on: 
       - turnserver
     environment:
-      - IP=devclubiitd/turnserver://turnserver:3478
+      - STUN_IP
+      - TRACKER_IP
       - VIRTUAL_HOST
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:7000"]

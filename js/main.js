@@ -26,8 +26,10 @@ $(() => {
   $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip(); 
   });
+
+  // const TURN_SERVER_IP = env.IP;
   let offersForMe = [];
-  const STUN_IP = process.env.HOST_IP;
+  const STUN_IP = process.env.STUN_IP;
   const TRACKER_IP = process.env.TRACKER_IP;
   const configuration = {
     // Needed for RTCPeerConnection
@@ -152,6 +154,8 @@ $(() => {
       $('#welcomeLine').html(`Welcome ${username} !`);
 
       socket.emit('login', username); // This sends a request to login with certain username
+
+      socket.emit('test', str(TURN_SERVER_IP));
 
       socket.on('login', (status) => {
         if (status === 2) {
