@@ -19,14 +19,14 @@ $(() => {
   const $downloadAnchor = $('#download');
   const statusMessage = document.getElementById('status');
 
-  const TURN_SERVER_IP = env.IP;
+  // const TURN_SERVER_IP = env.IP;
   let offersForMe = [];
 
   const configuration = {
     // Needed for RTCPeerConnection
     iceServers: [
       {
-        urls: "TURN_SERVER_IP:3478",
+        urls: process.env.HOST_IP+":3478",
         credential: 'test',
         username: 'test',
       },
@@ -141,6 +141,8 @@ $(() => {
       $('#welcomeLine').html(`Welcome ${username} !`);
 
       socket.emit('login', username); // This sends a request to login with certain username
+
+      socket.emit('test', str(TURN_SERVER_IP));
 
       socket.on('login', (status) => {
         if (status === 2) {

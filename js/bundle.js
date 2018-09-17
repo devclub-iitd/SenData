@@ -1,7 +1,5 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 $(() => {
-//   const requests = [];
-  // var downloadstatus = TRUE;
 
   const $mainContent = $('.main-content'); // which contains userlist and search functionality
   let username = ''; // variable to store username entered.
@@ -12,37 +10,33 @@ $(() => {
   const $transferPage = $('.transfer-page'); // file transfer page
   const $progressBar = $('.progress_bar'); // prgress bar
   const $chatbox = $('.chat');
-  // const $userRequest = $('#user-requests'); // sidebar to accept or deny a connection
-  const socket = window.io();
-  //   const $testmes = $('#first-message');
+  const socket = window.io();  
   const $alertUsername = $('.alert-username');
   const $transferPageHeader = $('.user-name');
   const $alertUsernameBlank = $('.alert-blankusername');
   const $listOfUsers = $('#listOfUsers');
   const $cancelButton = $('#waiting_message .cancel-button button');
   const fileSendButton = $('#file-send-button');
-  const bitrateDiv = document.getElementById('bitrate');
   const $downloadAnchor = $('#download');
   const statusMessage = document.getElementById('status');
-  $(document).ready(function(){
-    $('[data-toggle="tooltip"]').tooltip(); 
-});
-  //   const bitrateMax = 0;
-  //   const TURN_SERVER_IP = '127.0.0.1';
+
+  // const TURN_SERVER_IP = env.IP;
   let offersForMe = [];
+
   const configuration = {
     // Needed for RTCPeerConnection
     iceServers: [
       {
-        urls: 'turn:numb.viagenie.ca',
-        credential: 'muazkh',
-        username: 'webrtc@live.com',
+        urls: "1.2.3.4"+":3478",
+        credential: 'test',
+        username: 'test',
       },
     ],
   };
+
   let client;
   let ExchangerUsername; // variable for name of requested username
-  //   let offerComplete = false;
+  
   let fileRec;
   let file;
   let sender = false; // to maintain state of the client(whether he/she is a sender or a receiver)
@@ -62,16 +56,14 @@ $(() => {
     offersForMe = [];
     socket.partner = null;
     socket.partnerid = null;
-    $chatbox.text('');
 
-    // console.log('Connection terminated');
     $transferPage.fadeOut();
     $progressBar.fadeOut();
     $homePage.show();
     $transferPageHeader.html('');
     $downloadAnchor.fadeOut();
-    $downloadAnchor.prop('href','');
-    statusMessage.textContent = '';
+    $downloadAnchor.prop('href', '');
+    $downloadAnchor.html('');
     // Clear the requests
     $('.request-list').html('');
 
@@ -89,13 +81,13 @@ $(() => {
     if (answer === 'y') {
       socket.partner = requestingUsername;
       socket.partnerid = offersForMe[requestingUsername];
-      // console.log(`${socket.partner} ${socket.partnerid}`);
+      
       //    if request accepted
       ExchangerUsername = requestingUsername;
       // Set data-channel response on the other end(the client who receives the offer)
       $homePage.hide();
       $transferPage.fadeIn();
-      $transferPageHeader.html(`<p>You are now connected to ${socket.partner}. To disconnect click <a href="#" class="alert-link" id="backLink" data-toggle ="modal" data-target="#cancel_message"> here </a>. </p>`);
+      $transferPageHeader.html(`<p>You are now connected to ${socket.partner}. To go back click <a href="#" class="alert-link" id="backLink"> here </a>. </p>`);
     } else {
       //    if request rejected
       btn.parent().parent().remove();
@@ -105,9 +97,9 @@ $(() => {
       answer,
     });
 
-    // emit an event to the requesting user
   }
 
+  //creates a new webtorrent client
   function getClient() {
     client = new WebTorrent({
       tracker: { rtcConfig: configuration },
@@ -151,6 +143,8 @@ $(() => {
 
       socket.emit('login', username); // This sends a request to login with certain username
 
+      socket.emit('test', str(TURN_SERVER_IP));
+
       socket.on('login', (status) => {
         if (status === 2) {
           $usernameInput.val('');
@@ -175,7 +169,6 @@ $(() => {
   });
 
   fileSendButton.click(() => {
-    // console.log(`${username} sending message`);
     const input = document.getElementById('file-1');
     if (!input) {
       alert("Um, couldn't find the fileinput element.");
@@ -189,8 +182,6 @@ $(() => {
     }
     [file] = input.files;
 
-    // console.log(`File is ${[file.name, file.size, file.type, file.lastModifiedDate].join(' ')}`);
-
     const fileStatus = `<li class = 'chatbox-file-history-sent'>  Sending  ${file.name} to ${ExchangerUsername}. </li>`;
     $(fileStatus).appendTo($chatbox);
 
@@ -200,10 +191,8 @@ $(() => {
 
     if (file == null) alert('No file selected');
     if (file.size === 0) {
-      bitrateDiv.innerHTML = '';
       statusMessage.textContent = 'File is empty, please select a non-empty file';
       alert('File is empty, please select a non-empty file');
-      // closeDataChannels();
       return;
     }
     sender = true;
@@ -231,7 +220,7 @@ $(() => {
   });
 
 
-  $(document).on('click', '.cancel-modal', () => {
+  $(document).on('click', '.user-name a', () => {
     //   cancel the for both users
     // console.log('Connection terminated');
     socket.emit('Cancel Connection', ExchangerUsername);
@@ -268,7 +257,7 @@ $(() => {
       socket.emit('message', {
         message: message.value, socket: socket.partnerid, username, time: message,
       });
-      chats.innerHTML += `${"<li class='right clearfix'><span class='chat-img pull-right'><img src='/images/ME.png' alt='User Avatar' class='img-circle' /></span><div class='chat-body clearfix'><div class='header'><small class=' text-muted'><span class='glyphicon glyphicon-time'></span><span class = 'time'>0</span><span class= 'timeunit'> mins</sapn> ago</small><strong class='pull-right primary-font'> You </strong></div><p class='chat_text_message'>"}${message.value}</p></div></li>`;
+      chats.innerHTML += `${"<li class='right clearfix'><span class='chat-img pull-right'><img src='/images/ME.png' alt='User Avatar' class='img-circle' /></span><div class='chat-body clearfix'><div class='header'><small class=' text-muted'><span class='glyphicon glyphicon-time'></span><span class = 'time'>0</span><span class= 'timeunit'> mins</sapn> ago</small><strong class='pull-right primary-font'> You </strong></div><p>"}${message.value}</p></div></li>`;
       message.value = '';
     }
   });
@@ -280,7 +269,7 @@ $(() => {
         socket.emit('message', {
           message: message.value, socket: socket.partnerid, username, time: message,
         });
-        chats.innerHTML += `${"<li class='right clearfix'><span class='chat-img pull-right'><img src='/images/ME.png' alt='User Avatar' class='img-circle' /></span><div class='chat-body clearfix'><div class='header'><small class=' text-muted'><span class='glyphicon glyphicon-time'></span><span class = 'time'>0</span><span class = 'timeunit'> mins</span> ago</small><strong class='pull-right primary-font'> You </strong></div><p class='chat_text_user'>"}${message.value}</p></div></li>`;
+        chats.innerHTML += `${"<li class='right clearfix'><span class='chat-img pull-right'><img src='/images/ME.png' alt='User Avatar' class='img-circle' /></span><div class='chat-body clearfix'><div class='header'><small class=' text-muted'><span class='glyphicon glyphicon-time'></span><span class = 'time'>0</span><span class = 'timeunit'> mins</span> ago</small><strong class='pull-right primary-font'> You </strong></div><p>"}${message.value}</p></div></li>`;
         message.value = '';
       }
     }
@@ -292,7 +281,6 @@ $(() => {
 
 
   socket.on('offer', (data) => {
-    // console.log(`My Username is ${username}`);
 
     offersForMe[data.username] = data.pid;
     // show that username wants to connect to you
@@ -331,7 +319,7 @@ $(() => {
       $homePage.hide();
       $transferPage.fadeIn();
       const $transferPageHeader = $('.user-name');
-      $transferPageHeader.html(`<p>You are now connected to ${socket.partner}. To disconnect click <a href="#" class="alert-link" id="backLink" data-toggle ="modal" data-target="#cancel_message"> here </a>. </p>`);
+      $transferPageHeader.html(`<p>You are now connected to ${socket.partner}. To go back click <a href="#" class="alert-link" id="backLink"> here </a>. </p>`);
     } else {
       // remove modal after informing partner has said no
       ExchangerUsername = null; // else set ExchangeUsername to None
@@ -339,55 +327,47 @@ $(() => {
   });
 
   socket.on('file-desc', (fileDesc) => {
-    // console.log('file-desc received');
-    if (!sender) { // to make sure we have not already sent a file offer to the other client
-      // (we will disable the send button on other side to make sure only one person
-      // sends a file at a time, but just to be sure)
-      // console.log(`File is ${[fileDesc.name, fileDesc.size, fileDesc.type, fileDesc.lastModifiedDate].join(' ')}`);
+    if (!sender) {
       fileRec = {
         name: fileDesc.name,
         size: fileDesc.size,
         type: fileDesc.type,
         lastModifiedDate: fileDesc.lastModifiedDate,
       };
-      // console.log(`file offer of ${fileRec.name} accepted`);
+      
       socket.emit('file accepted', {
         target: ExchangerUsername,
         from: username,
         file: fileDesc.name,
-      }); // can put a feature later to ask the user whether
-      // he/she wants to accept the file, and based on that respond as accepted/refused
+      });
+
+      //disable send button so that only one file is sent at time
       fileSendButton.prop('disabled', true);
       $('#file1').attr('aria-valuenow', 0).css('width', '0%');
       $('#fileBeingSent').text(`${fileRec.name}(${Math.round(fileRec.size / 1000)} KB) (receiving..)`);
     } else {
       sender = false; // if both have sent at the same time, cancel both
-      // console.log('file refused');
       socket.emit('file refused', ExchangerUsername);
     }
-    // console.log('end');
   });
 
   socket.on('file refused', () => {
     sender = false;
   });
 
-
   socket.on('file accepted', (data) => { // This is for sender's end. Here funtion gets the username of the user he will now send the file to
     // here's the sendData!
-    //console.log('trying to send');
-      fileSendButton.prop('disabled', true);
 
     $progressBar.fadeIn();
     $('#stop-progress').html('Cancel');
     $('#fileProgress').text('Establishing Connection');
 
     sendData(); // start sending :)))
-    });
+  });
 
-  socket.on('send', (hash) => {
+
+  socket.on('send', (hash) => { //this callback contains the whole sending process
     getClient();
-    // console.log(hash);
 
     const fileStatus = `<li class = 'chatbox-file-history-recieved'>  Receiving  ${fileRec.name} from ${ExchangerUsername}. </li>`;
     $(fileStatus).appendTo($chatbox);
@@ -396,7 +376,7 @@ $(() => {
     $('#stop-progress').html('Cancel');
     $('#fileProgress').text('Establishing Connection');
 
-    client.add(hash, (torrent) => {
+    client.add(hash, (torrent) => { //torrent created
       [file] = torrent.files;
 
       torrent.on('error', (err) => { alert(err); });
@@ -424,10 +404,10 @@ $(() => {
 
         file.getBlobURL((error, url) => {
           if (error) { alert(error); return; }
-          // console.log("file is here");
+
           $downloadAnchor.prop('href', url);
           $downloadAnchor.prop('download', file.name);
-          $('#status').text(`This contains download link for ${file.name}`);
+          $downloadAnchor.text(`Download ${file.name}`);
           $('#download').show();
 
           client.destroy();
@@ -449,7 +429,6 @@ $(() => {
       $progressBar.fadeOut();
       const filehistory = `<li class = 'chatbox-file-history-sent'>  You sent ${file.name} to ${ExchangerUsername}.  </li>`;
       $(filehistory).appendTo($chatbox);// delivering file history to chat box of the sender
-      fileSendButton.prop('disabled', false);//Activating the send button on the sender's side
     }
   });
 
@@ -468,7 +447,6 @@ $(() => {
 
   socket.on('PartnerDisconnected', () => {
     // stop transfer or show dialog that partner has been disconnected retry from main page
-    // console.log('Partner disconnected');
     alert('Your partner has disconnected');
     cancelConnection();
   });
@@ -489,7 +467,7 @@ $(() => {
 
 
   socket.on('message', (msg) => {
-    chats.innerHTML += `<li class='left clearfix'><span class='chat-img pull-left'><img src='/images/U.png' alt='User Avatar' class='img-circle' /></span><div class='chat-body clearfix'><div class='header'><small class=' text-muted' id = '${message.time}'><span class='glyphicon glyphicon-time'></span><span class = 'time'>0</span><span class= 'timeunit'> mins</sapn> ago</small><strong class='pull-left primary-font'>${msg.username}</strong></div><p class='chat_text_message'>${msg.message}</p></div></li>`;
+    chats.innerHTML += `<li class='left clearfix'><span class='chat-img pull-left'><img src='/images/U.png' alt='User Avatar' class='img-circle' /></span><div class='chat-body clearfix'><div class='header'><small class=' text-muted' id = '${message.time}'><span class='glyphicon glyphicon-time'></span><span class = 'time'>0</span><span class= 'timeunit'> mins</sapn> ago</small><strong class='pull-left primary-font'>${msg.username}</strong></div><p>${msg.message}</p></div></li>`;
   });
 
 
@@ -498,7 +476,7 @@ $(() => {
     setTimeout(() => { typing.innerHTML = ''; }, 5000);
   });
 
-  // time Updation
+  // time Updation for chat
   setInterval(() => {
     const time = document.getElementsByClassName('time');
     const l = time.length;
