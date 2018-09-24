@@ -35,7 +35,7 @@ $(() => {
     // Needed for RTCPeerConnection
     iceServers: [
       {
-        urls: 'stun:'+STUN_IP+':3478',
+        urls: 'stun:'+ STUN_IP +':3478',
       },
     ],
   };
@@ -154,8 +154,6 @@ $(() => {
       $('#welcomeLine').html(`Welcome ${username} !`);
 
       socket.emit('login', username); // This sends a request to login with certain username
-
-      socket.emit('test', str(TURN_SERVER_IP));
 
       socket.on('login', (status) => {
         if (status === 2) {

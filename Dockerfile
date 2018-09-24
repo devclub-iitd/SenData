@@ -1,10 +1,11 @@
-FROM node:9
+FROM node:latest
 
 RUN mkdir /fs
 WORKDIR /fs
+COPY package*.json ./
 
-COPY . .
 RUN npm install
+COPY . .
 
 EXPOSE 7000
-ENTRYPOINT["run.sh"]
+ENTRYPOINT [ "/fs/run.sh" ]

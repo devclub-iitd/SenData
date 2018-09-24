@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "build": "browserify  ./js/main.js -t [ envify --HOST_IP $HOST_IP ] > ./js/bundle.js",
+    "build": "browserify  ./js/main.js -t [ envify --STUN_IP $STUN_IP --TRACKER_IP $TRACKER_IP ] > ./js/bundle.js",
     "watch": "watchify ./js/main.js -o ./js/bundle.js"
   },
   "repository": {
@@ -26,12 +26,11 @@
     "node": ">=6.11.1"
   },
   "devDependencies": {
-    "browserify": "^16.2.2",
-    "watchify": "^3.11.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.12.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-react": "^7.8.2"
+    "eslint-plugin-react": "^7.8.2",
+    "watchify": "^3.11.0"
   }
 }

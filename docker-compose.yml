@@ -8,8 +8,8 @@ services:
     depends_on: 
       - turnserver
     environment:
-      - STUN_IP
-      - TRACKER_IP
+      - STUN_IP=$HOST_IP
+      - TRACKER_IP=$HOST_IP
       - VIRTUAL_HOST
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:7000"]
@@ -19,8 +19,8 @@ services:
       start_period: 40s
     restart: unless-stopped
     networks:
-      - "reverseproxy"
       - "internal"
+      - "reverseproxy"
     logging:
       options:
         max-size: '12m'
@@ -40,7 +40,7 @@ services:
         max-file: '5'
   tracker:
     ports:
-      -8000:8000
+      - 8000:8000
     image: "henkel/bittorrent-tracker:latest"
     networks:
       - "internal"
