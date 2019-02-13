@@ -9,8 +9,8 @@ services:
       - turnserver
     environment:
       - VIRTUAL_HOST
-      - STUN_IP=${VIRTUAL_HOST}
-      - TRACKER_IP=${VIRTUAL_HOST}
+      - STUN_IP=${HOST_IP}
+      - TRACKER_IP=${HOST_IP}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:7000"]
       interval: 1m30s
