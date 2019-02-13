@@ -4,13 +4,13 @@ services:
     build: .
     ports: 
       - 7000:7000
-    image: "devclubiitd/filesend:0.1"
+    image: "${REGISTRY_NAME}devclubiitd/filesend:0.1"
     depends_on: 
       - turnserver
     environment:
-      - STUN_IP=$HOST_IP
-      - TRACKER_IP=$HOST_IP
       - VIRTUAL_HOST
+      - STUN_IP=${VIRTUAL_HOST}
+      - TRACKER_IP=${VIRTUAL_HOST}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:7000"]
       interval: 1m30s
@@ -29,7 +29,7 @@ services:
     ports:
       - 3478:3478
       - 3478:3478/udp
-    image: "zolochevska/turn-server"
+    image: "${REGISTRY_NAME}zolochevska/turn-server"
     command: username password realm
     restart: unless-stopped
     networks:
@@ -41,7 +41,7 @@ services:
   tracker:
     ports:
       - 8000:8000
-    image: "henkel/bittorrent-tracker:latest"
+    image: "${REGISTRY_NAME}henkel/bittorrent-tracker:latest"
     networks:
       - "internal"
     restart: "unless-stopped"
