@@ -71,4 +71,6 @@ typings/
 
 js/bundle.js
 .idea/*
+
 .gitsecret/keys/random_seed
+./src/*

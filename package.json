@@ -4,7 +4,8 @@
   "description": "Simple tool for sending file in an Intranet environment",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node src/server.js",
+    "tsc": "tsc --build ./tsconfig.json",
     "build": "browserify  ./js/main.js -t [ envify --STUN_IP $STUN_IP --TRACKER_IP $TRACKER_IP ] > ./js/bundle.js",
     "watch": "watchify ./js/main.js -o ./js/bundle.js"
   },
@@ -16,19 +17,23 @@
   "dependencies": {
     "browserify": "^16.2.2",
     "envify": "^4.1.0",
-    "express": "^4.16.2",
+    "express": "^4.16.4",
     "grunt": "^1.0.1",
     "idb-chunk-store": "^0.2.0",
     "jquery": "^3.3.1",
     "socket.io": "^2.1.1",
     "thunky": "^1.0.2",
-    "twilio": "^3.17.3",
+    "typescript": "^3.4.5",
     "webrtc-adapter": "^6.0.3"
   },
   "engines": {
     "node": ">=6.11.1"
   },
   "devDependencies": {
+    "@types/body-parser": "^1.17.0",
+    "@types/express": "^4.16.1",
+    "@types/jquery": "^3.3.29",
+    "@types/node": "^12.0.2",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.12.0",
