@@ -5,9 +5,9 @@
     "allowJs": true,
     "strict": true,
     "moduleResolution": "node",
-    "outDir": "./src/"
+    "outDir": "../server/"
   },
   "include": [
-      "./lib/*.ts"
+      "./*.ts"
   ]
 }

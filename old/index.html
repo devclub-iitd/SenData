@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Sendata</title>
+    <link rel="icon" type="image/png" href="images/logo.png">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" media="screen" href="css/style.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> <!-- Roboto google font to use put "font-family: 'Roboto', sans-serif;" in css --> 
+
+</head>
+
+<body>
+<div class="content">
+    <!-- Body-wrapper -->
+    <div class="body-wrapper">
+
+        <!-- Header Content -->
+        <header >
+            <div class="page-header">
+                <h1><span id= "s1">Sen</span><span id = "s2">D</span><span id="s3">A</span><span id="s2">T</span><span id="s3">A</span>
+                    <small>Tool for sharing files over Intranet.</small>
+                </h1>
+            </div>
+        </header>
+        <!-- End Header Content -->
+         <!-- Login-page -->
+        <div class="login-page">
+            <form class="login-form">
+                <div class="form-group">
+                    <!--<label for="username">User Name</label>-->
+                    <input type="text"  class="usernameInput" id="username" placeholder="Enter your username" autocomplete="off">
+                    <br>
+                    <p>Enter any name which will be visible to other users online.</p>
+                    <!--i removed class form-control from above ... it looks less sexy but also displays on Firefox-->
+                </div>
+
+            </form>
+            <div class="alert-username">
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Warning!</strong> Username already exists. Please try another one ...
+                </div>
+            </div>
+            <div class="alert-blankusername">
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Warning!</strong> Better check yourself, you're not looking too good.
+                </div>
+            </div>
+        </div>
+        <!--End Login-page-->
+
+        <!-- Main Content -->
+        <div class="main-content row" id = "main_content">
+            <div class="home-page container_homepage">
+
+                <!--i think some other guy can style this div below better so that search comes to the right of this-->
+
+                <div class="row">
+                    <div class="welcome col-sm-12 col-xs-12 col-md-9">
+                        <h3 id="welcomeLine">Welcome!</h3>
+                    </div>
+                    <div class="section-top col-sm-9 col-xs-11 col-md-3">
+
+                        <!-- <form class="navbar-form search-bar" >
+                            <div class="form-group">
+                                <input type="text" id="search-input" autocomplete="off" class="form-control" placeholder="Search for users" name="user" onkeyup="dynamicSearch()">
+                            </div>
+                            <button type="submit" class="btn btn-default" id="user-search-button">
+                                <i class="fa fa-search search-icon" aria-hidden="true"></i>
+                            </button>
+                        </form> -->
+
+                        <div id="search-results"></div>
+                    </div>
+                </div>
+                <!--<br>-->
+                <!-- Search Bar -->
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" id="user-section">
+                        <div class = "panel panel-default">
+                        <div class = "panel-heading">Online Users
+                            <div class= "pull-right" data-toggle="tooltip" title="These users are currently available for sharing files." data-placement="bottom"><i class="fas fa-info-circle"></i></div>
+                        </div>                        <!-- List of online users -->
+                        <div class="users-list" id="listOfUsers">
+                            <!--<div class="user">-->
+                            <!--<button type="button" class="btn btn-default btn-block online-user" data-toggle="modal" data-target="#waiting_message">-->
+                            <!--Anaconda-->
+                            <!--</button>-->
+                            <!--</div>-->
+                            <!--<div class="user">-->
+                            <!--<button type="button" class="btn btn-default btn-block online-user" data-toggle="modal" data-target="#waiting_message">-->
+                            <!--batgirl-->
+                            <!--</button>-->
+                            <!--</div>-->
+                        </div>
+                        <!-- Modal for when the user wants to connect with one of the online users -->
+                        <div class="modal fade" id="waiting_message" data-backdrop = "static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <!--Waiting for confirmation from username ...-->
+                                    </div>
+                                    <div class="loader"></div>
+                                    <div class="cancel-button">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" id="user-requests">
+                        <div class = "panel panel-default">
+                        <div class = "panel-heading" >User Requests
+                            <div class= "pull-right" data-toggle="tooltip" title="These users want to share files with you." data-placement="bottom"><i class="fas fa-info-circle"></i></div>
+                        </div>
+                        <ul class="request-list">
+                            <!--<li id="request-li">-->
+                            <!--user1-->
+                            <!--<span class="request-btn">-->
+                            <!--<a class="btn btn-success" href="#"><i class="fa fa-check" aria-hidden="true"></i></a>-->
+                            <!--<a class="btn btn-danger" href="#"><i class="fa fa-times" aria-hidden="true"></i></a>-->
+                            <!--</span>-->
+                            <!--</li>-->
+                        </ul>
+                    </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="transfer-page">
+                <!-- Username Display -->
+                 <div class="alert alert-default user-name" role="alert">
+                                        To Disconnect click
+                                        <a href="#" class="alert-link" id="backLink" data-toggle ="modal" data-target="#cancel_message">here</a>
+                                    </div>
+                
+                
+
+                <!-- File Selection -->
+                <div class = "row">
+                    <!-- <div class = "col-lg-2 col-md-2"> -->
+                    </div>
+                    <div class="col-lg-6 col-md-6" >
+                        <div class = "panel panel-default" id = "files-choose-send">
+                            <div class="panel-heading">Share Files...</div>
+                            <div class= "panel-b">
+                            <br>
+                                        <!--<form action="" method="POST" enctype="multipart/form-data">-->
+                            <div>Choose files from your PC/mobile and <b>SEND</b> it to users.</div>
+                            <br>
+                                       
+                                    <!-- Modal for when the user wants to connect with one of the online users -->
+                        <div class="modal fade" id="cancel_message" data-backdrop = "static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        Do you really want to close the connection?
+                                    </div>
+                                    <div class="loader"></div>
+                                    <div class="cancel-button">
+                                        <button type="button" class="btn btn-default cancel-modal" data-dismiss="modal">Yes</button>
+
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
+                                    
+                                        <input type="file" name="file-1[]" id="file-1" class="inputfile  btn btn-info" data-multiple-caption="{count}" multiple style="display: none;" />
+                                        <label for="file-1" class="upload-button">
+                                            <i class="fa fa-upload" aria-hidden="true"></i>
+                                            <span class = "upload">&nbsp;Choose files &hellip;</span>
+                                        </label>
+                                        <h4 id="file-desc">No files selected</h4>
+                                        <input type="submit" value="Send" id="file-send-button" class="btn btn-success">
+                                        <br>
+                                        <!--</form>-->
+                             </div>   
+                        </div>
+                        <div class= "panel panel-default">
+                                <div class="panel-heading">
+                                    Status / Info ..
+                                </div>
+                                <br>
+                                <br>
+                                
+
+                                     <!-- Transfer Progress Indicator -->
+                                 <div class="progress_bar" style="margin:3% 20% 3% 20%;">
+                                    <h3 id="fileProgress">
+                                        Progress -
+                                    </h3>
+                                    <p id="fileBeingSent">  </p>
+                                    <div class="progress">
+                                        <div class="progress-bar" id="file1" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                                    </div>
+                                  <!--   Reject button is for canceling sending/ recieving .This should work from both sides ... After rejecting we should look for next file to share. -->
+                                    <a id = "stop-progress" class ="btn btn-danger"> Reject </a>
+                                <!-- <p> File 2:</p>
+                                <div class="progress">
+                                    <div class="progress-bar" id="file2" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 20%;">
+                                        20%
+                                    </div>
+                                </div> -->
+                                    </div>
+                             <div id="bitrate"></div>
+                            <a class="btn btn-info" id="download"> DOWNLOAD </a>
+                            <br>
+                            <br>
+                            <span id="status"></span> 
+                            <br>
+                            <br>
+                        </div>
+                </div>
+                <div class = "col-lg-4 col-md-4" id="sequence">
+                   <div class="container">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading" id="ph">
+                                        Chat/File share history
+                                        
+                                    </div>
+                                    <div id = "typing">  </div>
+                                    <div class="panel-body">
+                                        <ul id = "chats" class="chat">
+                                            <!-- messages appear here -->
+                                        </ul>
+                                    </div>
+                                    <div class="panel-footer">
+                                        <div class="input-group">
+                                            <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-warning btn-sm" id="btn-chat">
+                                                    Send</button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>   <!--End Main Content-->
+    </div> <!-- End of body-wrapper -->  
+</div><!-- End of content -->
+     
+        
+<!-- Footer -->
+<section id="footer">
+
+    <!-- Club Description (Not sure if necessary) -->
+    <!-- <p id="site-desc">Dev Club is a community of tech-minded people in IIT Delhi who experience what real world collaborative software development is and allows everyone to pursue big, useful and exciting projects which are not possible alone. Also, we have a community
+        in which we discuss new ideas regarding development and learn a lot while having fun.</p><br> -->
+
+    <!-- Important Links -->
+    <div class="footer-nav">
+        <a class="link" id="facebook_link" href="https://www.facebook.com/tech.iitd/"> <img
+                src="images/facebook_logo.png" height=30px width=30px></a>
+        <a class="link" id="github_link" href="https://github.com/devclub-iitd"> <img src="images/github_logo.png"
+                                                                                      height=30px width=30px></a>
+    </div>
+    <br>
+
+    <!-- Copyright Info -->
+    <div class="copyrights">
+        <p>
+            &copy All Rights Reserved 2017 <br> Created by Dev Club, IIT DELHI
+        </p>
+    </div>
+</section>
+<!--End footer-->
+
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/adapter.js"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>-->
+<script src="js/webtorrent.js"></script>
+<script src="js/bundle.js"></script>
+
+
+<script>
+    //WHEN WE COPY PASTE THE SAME FUNCTION IN THE MAIN FILE IT DOESN'T WORK
+    //        alert("Running");
+    function dynamicSearch() {
+        // Declare variables
+        //        alert("inFUn");
+        var input, filter, ul, li, a, i;
+        input = document.getElementById("search-input");
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("listOfUsers");
+        li = ul.getElementsByTagName('button');
+
+        // Loop through all list items, and hide those who don't match the search query
+        for (i = 0; i < li.length; i++) {
+            a = li[i].innerHTML;
+            //            alert(a);
+            if (a.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+            } else {
+                li[i].style.display = "none";
+            }
+        }
+    }
+
+
+
+    // THE ABOVE FUNCTION SHOULD RUN ASYNCHRONYUSLY I THNK BY DEFAULT ALL THE FUNCTION CALLS ARE ASYNC STILL PLEASE CHECK
+</script>
+
+</body>
+
+</html>
