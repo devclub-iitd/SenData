@@ -7,7 +7,8 @@
     "start": "node src/server.js",
     "tsc": "tsc --build ./tsconfig.json",
     "build": "browserify  ./js/main.js -t [ envify --STUN_IP $STUN_IP --TRACKER_IP $TRACKER_IP ] > ./js/bundle.js",
-    "watch": "watchify ./js/main.js -o ./js/bundle.js"
+    "watch": "watchify ./js/main.js -o ./js/bundle.js",
+    "export": "export STUN_IP=\"vm2-internal.devclub.in\"; export TRACKER_IP=\"vm2-internal.devclub.in\""
   },
   "repository": {
     "type": "git",
