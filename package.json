@@ -2,12 +2,12 @@
   "name": "sendata",
   "version": "0.0.1",
   "description": "Simple tool for sending file in an Intranet environment",
-  "main": "server/server.js",
+  "main": "src/server/server.js",
   "scripts": {
-    "start": "node server/server.js",
-    "tsc": "tsc -p ./lib-server && tsc -p ./lib-client",
-    "build": "browserify  ./js/main.js -t [ envify --STUN_IP $STUN_IP --TRACKER_IP $TRACKER_IP ] > ./js/bundle.js",
-    "watch": "watchify ./js/main.js -o ./js/bundle.js"
+    "start": "node src/server/server.js",
+    "tsc": "tsc -p ./lib/server && tsc -p ./lib/client",
+    "build": "browserify  ./src/client/main.js -t [ envify --STUN_IP $STUN_IP --TRACKER_IP $TRACKER_IP ] > ./js/bundle.js",
+    "watch": "watchify ./src/client/main.js -o ./js/bundle.js"
   },
   "repository": {
     "type": "git",
