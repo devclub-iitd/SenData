@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server/server.js",
     "tsc": "tsc -p ./lib-server && tsc -p ./lib-client",
-    "build": "browserify  ./js/main.js -t [ envify --STUN_IP $STUN_IP --TRACKER_IP $TRACKER_IP ] > ./js/bundle.js",
+    "build": "browserify  ./js/main.js -t [ envify purge --STUN_IP $STUN_IP --TRACKER_IP $TRACKER_IP ] > ./js/bundle.js",
     "watch": "watchify ./js/main.js -o ./js/bundle.js",
     "export": "export STUN_IP=\"vm2-internal.devclub.in\"; export TRACKER_IP=\"vm2-internal.devclub.in\""
   },
@@ -35,6 +35,8 @@
     "@types/node": "^12.0.2",
     "@types/socket.io": "^2.1.2",
     "@types/socket.io-client": "^1.4.32",
+    "tslint": "^5.8.0",
+    "typescript": "^2.5.3",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.12.0",
