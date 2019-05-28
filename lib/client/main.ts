@@ -7,12 +7,6 @@ $(() => {
         $('body').text('Server sent bye-bye');
     });
 
-    const STUN_URL = `stun:${process.env.STUN_IP}:3478`;
-    const TRACKER_URL = `ws://${process.env.TRACKER_IP}:8000`;
-    let rtcConfig = {
-        'urls': STUN_URL
-    }
-
     socket.on('connected', () => {
         $('body').append('<br>Connected to another user!');
 
@@ -27,7 +21,7 @@ $(() => {
                 return;
             }
     
-            client.sendFile(files)
+            client.sendFile(files[0])
         })
     })
 

@@ -28,12 +28,13 @@ io.on('connection', (socket: socketIO.Socket) => {
         io.emit('connected')
     }
 
-    socket.on('fileReady', (opts: { magnetURI: string }) => {
-        socket.broadcast.emit('addTorrent', opts);
-    })
+    socket.on('fileReady', (magnetURI: string) => {
+        socket.broadcast.emit('addTorrent', magnetURI);
+    });
 
     socket.on('downloadComplete', () => {
         //TODO
+        socket.broadcast.emit('torrentDone');
     });
 
     socket.on('disconnect', () => {
