@@ -36,42 +36,13 @@ let users: Map<string, User> = new Map();
 // function getUname(socket_id: string): string {
 //     for(let key of users.keys()){
 
-//         let loopval = <User> users.get(key);
-    
-//         if(loopval.socketID === socket_id){
-//             return key;
-//         }
-//     }
+    socket.on('fileReady', (magnetURI: string) => {
+        socket.broadcast.emit('addTorrent', magnetURI);
+    });
 
-//     return "";
-// }    not required for the time being
-
-io.on('connection', (socket: ExtendedSocket) => {
-
-    // login event
-    socket.on('login', (username: string)=>{
-        
-        // if username already exists in the user map
-        if(users.has(username) || username === ''){
-            status = 1;
-        }
-        else{
-            //initialising characteristics for logged user(updatable later)
-            let val: User = <User> {
-                socketID: socket.id,
-                state: "idle",
-                outRequest: "",
-                partner: "",
-                inRequests: {}
-            }
-
-            //mapping logged user to its characteristic values.
-            users.set(username, val);
-
-            // confirming user that its logged in
-            status = 0;
-            socket.emit('login', status);
-        }
+    socket.on('downloadComplete', () => {
+        //TODO
+        socket.broadcast.emit('torrentDone');
     });
 
     //disconnect event
