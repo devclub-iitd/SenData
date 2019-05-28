@@ -12,7 +12,7 @@ export class Client {
         downloadSpeed: string, 
         progress: number //Number b/w 0 and 1
     ) => void;
-    
+
     private uploadProgressUpdater: (
         uploaded: string,
         uploadSpeed: string,
