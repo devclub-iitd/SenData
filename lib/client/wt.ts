@@ -18,7 +18,9 @@ const EventEmitter = require('events').EventEmitter
 *		- downloadSpeed: string
 *		- progress: number (between 0 and 1)
 *	- **downloadComplete**
-*		- url: string (Downloaded file's BlobURL) 
+*		- url: string (Downloaded file's BlobURL)
+*   - **torrentDestroyed** (the torrent that was downloading/seeding was destroyed)
+*   - **clientDestroyed** (WebTorrent client was destroyed, possibly due to some error)
 */
 export class Client extends EventEmitter {
     private socket: SocketIOClient.Socket;
@@ -28,6 +30,10 @@ export class Client extends EventEmitter {
     /* 
     * Assuming use of SocketIO for comm. to server.
     * socket is the socket object of client connected.
+    * 
+    * Uses STUN_URL and TRACKER_URL environment variables
+    * for setting. If not set, falls back to third party
+    * defaults.
     */
     constructor(socket: SocketIOClient.Socket) {
         super();
@@ -64,10 +70,33 @@ export class Client extends EventEmitter {
         this.socket.on('addTorrent', (magnetUri: string) => {
             this.addTorrent(magnetUri);
         });
+
+        // Fatal errors, client is destroyed after encounter
+        this.client.on('error', (err) => {
+            debug(`WebTorrent client encountered an error: ${err}`);
+            this.emit('error', err);
+            this.emit('clientDestroyed');
+        });
+    }
+
+    setTorrentErrorHandlers = (torrent: WebTorrent.Torrent) => {
+        // NOTE: torrents are destroyed when they encounter an error
+        torrent.on('error', (err) => {
+            debug(`Torrent encountered an error: ${err}`);
+            this.emit('error', err);
+            this.emit('torrentDestroyed');
+        });
+
+        // Warnings are not fatal, but useful for debugging
+        torrent.on('warning', (err) => {
+            debug(`Torrent warning: ${err}`);
+        });
     }
 
     sendFile = (file: File) => {
         this.client.seed(file, { announce: this.TRACKER_URLS } ,(torrent) => {
+            this.setTorrentErrorHandlers(torrent);
+
             this.socket.emit('fileReady', torrent.magnetURI);
 
             torrent.on('upload', (bytes) => {
@@ -80,6 +109,7 @@ export class Client extends EventEmitter {
             this.socket.on('torrentDone', (magnetUri: string) => {
                 torrent.destroy(() => {
                     debug('Torrent destroyed, as server sent torrentDone');
+                    this.emit('torrentDestroyed');
                 });
             });
         });
@@ -87,9 +117,7 @@ export class Client extends EventEmitter {
 
     addTorrent = (magnetURI: string) => {
         this.client.add(magnetURI, { announce: this.TRACKER_URLS }, (torrent) => {
-            torrent.on('error', (err) => {
-                debug(`Error with torrent ${torrent.name}: ${err.toString()}`);
-            });
+            this.setTorrentErrorHandlers(torrent);
 
             torrent.on('done', () => {
                 debug('Torrent download complete');
