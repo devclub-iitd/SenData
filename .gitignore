@@ -75,4 +75,4 @@ js/bundle.js
 .gitsecret/keys/random_seed
 js/bundle.js
 src
-server
+./server
