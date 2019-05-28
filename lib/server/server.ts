@@ -192,7 +192,8 @@ io.on('connection', (socket: socketIO.Socket) => {
                 socket.broadcast.to(temp.socketID).emit('answer', 'n');
             }
 
-            
+            user1.inRequests.clear();
+
             for(let key of user2.inRequests){
                 
                 //get socketid of key
@@ -201,8 +202,39 @@ io.on('connection', (socket: socketIO.Socket) => {
                 socket.broadcast.to(temp.socketID).emit('answer', 'n');
             }
 
+            user2.inRequests.clear();
+
+            //remap new properties
+            users.set(user1_name,user1);
+            users.set(user2_name,user2);
             
         }
 
+    });
+
+    //request for cancelling connection by either user
+    socket.on('CancelConnection',(user2_name: string) => {
+
+        //get usernames of both users
+        let user1_name: string = getUname(socket.id);
+        
+        //get properties of both users
+        let user1: User = <User> users.get(user1_name);
+        let user2: User = <User> users.get(user2_name);
+
+        //updating properties
+        user1.state = "idle";
+        user1.partner = "";
+        user2.state = "idle";
+        user2.partner = "";
+
+        //message to user2
+        socket.broadcast.to(user2.socketID).emit('cancel', user1_name);
+
+        //message to all other users
+        socket.broadcast.emit('usersIdle',{
+            user1_name,
+            user2_name
+        });
     });
 });
