@@ -15,6 +15,7 @@ server.listen(env.PORT, () => {
     console.log(`listening on *:${env.PORT}`);
 });
 
+//using username property in typescript
 interface ExtendedSocket extends SocketIO.Socket{
     username: string;
 }
@@ -97,7 +98,7 @@ io.on('connection', (socket: ExtendedSocket) => {
             users.set(checkval.partner, changeval);
 
             //message sent to partner
-            socket.broadcast.to(checkval.partner).emit(`PartnerDisconnected`);
+            socket.broadcast.to(changeval.socketID).emit(`PartnerDisconnected`);
         }
 
         //message to all other users also
