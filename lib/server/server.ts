@@ -4,6 +4,7 @@ import env = require('./env');
 import socketIO = require('socket.io');
 import { userInfo } from 'os';
 import { stringify } from 'querystring';
+import { Socket } from 'dgram';
 
 const app: Express.Application = express();
 const server: http.Server = new http.Server(app);
@@ -13,6 +14,10 @@ let status: number;
 server.listen(env.PORT, () => {
     console.log(`listening on *:${env.PORT}`);
 });
+
+interface ExtendedSocket extends SocketIO.Socket{
+    username: string;
+}
 
 // creating interface for different characteristics of a logged user
 interface User {
@@ -27,20 +32,20 @@ interface User {
 let users: Map<string, User> = new Map();
 
 //function to get username from socketID
-function getUname(socket_id: string): string {
-    for(let key of users.keys()){
+// function getUname(socket_id: string): string {
+//     for(let key of users.keys()){
 
-        let loopval = <User> users.get(key);
+//         let loopval = <User> users.get(key);
     
-        if(loopval.socketID === socket_id){
-            return key;
-        }
-    }
+//         if(loopval.socketID === socket_id){
+//             return key;
+//         }
+//     }
 
-    return "";
-}
+//     return "";
+// }    not required for the time being
 
-io.on('connection', (socket: socketIO.Socket) => {
+io.on('connection', (socket: ExtendedSocket) => {
 
     // login event
     socket.on('login', (username: string)=>{
@@ -72,7 +77,7 @@ io.on('connection', (socket: socketIO.Socket) => {
     socket.on('disconnect', () => {
 
         // disconnected user username
-        let disconnected_user: string = getUname(socket.id);
+        let disconnected_user: string = socket.username;
 
         //getting disconneted user properties
         let checkval: User = <User> users.get(disconnected_user);
@@ -106,7 +111,7 @@ io.on('connection', (socket: socketIO.Socket) => {
     socket.on('offer', (user2_name: string) => {
         
         //get this user's username
-        let user1_name: string = getUname(socket.id);
+        let user1_name: string = socket.username;
 
         //get properties of both users.
         let user1: User = <User> users.get(user1_name);
@@ -144,7 +149,7 @@ io.on('connection', (socket: socketIO.Socket) => {
     }) => {
 
         //get usernames of both users
-        let user2_name: string = getUname(socket.id);
+        let user2_name: string = socket.username;
         let user1_name: string = msg.user1_name;
         
         //get properties of both users
@@ -216,7 +221,7 @@ io.on('connection', (socket: socketIO.Socket) => {
     socket.on('CancelConnection',(user2_name: string) => {
 
         //get usernames of both users
-        let user1_name: string = getUname(socket.id);
+        let user1_name: string = socket.username;
         
         //get properties of both users
         let user1: User = <User> users.get(user1_name);
