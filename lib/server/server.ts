@@ -16,9 +16,6 @@ let numUsers: number = 0;
 let user1: string, user2: string;
 
 io.on('connection', (socket: socketIO.Socket) => {
-    const sessionID = socket.id;
-    const username = socket.;
-
     if(numUsers >= 2) {
         socket.emit('bye-bye');
         socket.disconnect();
