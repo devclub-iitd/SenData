@@ -27,25 +27,28 @@ let users: Map<string, User> = new Map();
 // --------------------------------------------------------------------------------
 
 class Msg {
+    public username: string;
     public messageValue: string;
     public timeStamp: string;
-    constructor(messageValue: string) {
+    constructor(username: string, messageValue: string) {
+        this.username = username;
         this.messageValue = messageValue;
         const currentdate = new Date();
-        this.timeStamp = currentdate.getHours() + ":"
-                        + currentdate.getMinutes() + ":"
+        this.timeStamp = currentdate.getHours() + ':'
+                        + currentdate.getMinutes() + ':'
                         + currentdate.getSeconds();
     }
 }
 
 io.on('connection', (socket: ExtendedSocket) => {
     socket.on('message', (messageValue: string) => {
-        // Creating the new msg using the class Msg
-        const msg = new Msg(messageValue);
-        // Getting the users
+        // Getting the user1
         const username1 = socket.username;
         const user1: User = users.get(username1) as User;
-        if (user1.state === "connected") {
+        if (user1.state === 'connected') {
+            // Creating the new msg using the class Msg
+            const msg = new Msg(username1, messageValue);
+            // Getting the user2 (partner of user1)
             const username2 = user1.partner;
             const user2: User = users.get(username2) as User;
             // Emitting the msg to user1 (sender)
