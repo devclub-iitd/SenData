@@ -1,4 +1,4 @@
-import wt = require('./wt')
+import wt = require('./wt');
 
 $(() => {
     const socket = io();
@@ -26,6 +26,6 @@ $(() => {
     })
 
     socket.on('disconnected', () => {
-        $('body').append('The other user has disconnected!');
+        $('body').text('The other user has disconnected!');
     })
 });
