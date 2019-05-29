@@ -5,7 +5,13 @@
     ],
     "jsRules": {},
     "rules": {
-        "quotemark": [false, "single", "avoid-escape", "avoid-template"]
+        "quotemark": [false, "single", "avoid-escape", "avoid-template"],
+        "no-console": false
     },
-    "rulesDirectory": []
+    "rulesDirectory": [],
+    "linterOptions": {
+        "exclude": [
+            "lib/server/server.ts"
+        ]
+    }
 }
