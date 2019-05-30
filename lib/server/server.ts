@@ -2,8 +2,7 @@ import http = require('http');
 import express = require('./express');
 import env = require('./env');
 import socketIO = require('socket.io');
-import { User } from "../types";
-import { ExtendedSocket } from "../types";
+import { User, ExtendedSocket } from "../types";
 
 const app: Express.Application = express();
 const server: http.Server = new http.Server(app);
@@ -36,9 +35,38 @@ let users: Map<string, User> = new Map();
 // function getUname(socket_id: string): string {
 //     for(let key of users.keys()){
 
-    socket.on('fileReady', (magnetURI: string) => {
-        socket.broadcast.emit('addTorrent', magnetURI);
-    });
+//         let loopval = <User> users.get(key);
+    
+//         if(loopval.socketID === socket_id){
+//             return key;
+//         }
+//     }
+
+//     return "";
+// }    not required for the time being
+
+io.on('connection', (socket: ExtendedSocket) => {
+
+    // login event
+    socket.on('login', (username: string)=>{
+        
+        // if username already exists in the user map
+        if(users.has(username) || username === ''){
+            status = 1;
+        }
+        else{
+            //initialising characteristics for logged user(updatable later)
+            let val: User = <User> {
+                socketID: socket.id,
+                state: "idle",
+                outRequest: "",
+                partner: "",
+                fileSendingState: "idle",
+                inRequests: {}
+            }
+
+            //mapping logged user to its characteristic values.
+            users.set(username, val);
 
     socket.on('downloadComplete', () => {
         //TODO
