@@ -2,7 +2,8 @@ import http = require('http');
 import express = require('./express');
 import env = require('./env');
 import socketIO = require('socket.io');
-import { User } from "../Utils";
+import { User } from "../types";
+import { ExtendedSocket } from "../types";
 
 const app: Express.Application = express();
 const server: http.Server = new http.Server(app);
@@ -14,9 +15,9 @@ server.listen(env.PORT, () => {
 });
 
 //using username property in typescript
-interface ExtendedSocket extends SocketIO.Socket{
-    username: string;
-}
+// interface ExtendedSocket extends SocketIO.Socket{
+//     username: string;
+// }
 
 // creating interface for different characteristics of a logged user
 //interface added to ../Util.ts
