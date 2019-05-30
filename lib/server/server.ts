@@ -3,6 +3,10 @@ import express = require('./express');
 import env = require('./env');
 import socketIO = require('socket.io');
 
+import { userInfo } from 'os';
+import { stringify } from 'querystring';
+import { Socket } from 'dgram';
+
 const app: Express.Application = express();
 const server: http.Server = new http.Server(app);
 const io: socketIO.Server= socketIO(server);
@@ -216,7 +220,7 @@ io.on('connection', (socket: ExtendedSocket) => {
     });
 
     //request for cancelling connection by either user
-    socket.on('CancelConnection',(user2_name: string) => {
+    2
 
         //get usernames of both users
         let user1_name: string = socket.username;

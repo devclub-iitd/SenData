@@ -2,7 +2,6 @@ import wt = require('./wt');
 
 $(() => {
     const socket = io();
-
     socket.on('bye-bye', () => {
         $('body').text('Server sent bye-bye');
     });

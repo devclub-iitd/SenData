@@ -1,0 +1,18 @@
+{
+    "defaultSeverity": "warning",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "jsRules": {},
+    "rules": {
+        "quotemark": [false, "single", "avoid-escape", "avoid-template"],
+        "no-console": false,
+        "interface-name" : false
+    },
+    "rulesDirectory": [],
+    "linterOptions": {
+        "exclude": [
+            "lib/server/server.ts"
+        ]
+    }
+}
