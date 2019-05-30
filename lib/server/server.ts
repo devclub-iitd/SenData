@@ -2,8 +2,7 @@ import http = require('http');
 import express = require('./express');
 import env = require('./env');
 import socketIO = require('socket.io');
-import { User } from "../types";
-import { ExtendedSocket } from "../types";
+import { User, ExtendedSocket } from "../types";
 
 const app: Express.Application = express();
 const server: http.Server = new http.Server(app);
@@ -62,6 +61,7 @@ io.on('connection', (socket: ExtendedSocket) => {
                 state: "idle",
                 outRequest: "",
                 partner: "",
+                fileSendingState: "idle",
                 inRequests: {}
             }
 
