@@ -2,7 +2,7 @@ import http = require('http');
 import express = require('./express');
 import env = require('./env');
 import socketIO = require('socket.io');
-import { User, ExtendedSocket } from "../types";
+import { User, ExtendedSocket, Msg, FileRequest} from "../types";
 
 const app: Express.Application = express();
 const server: http.Server = new http.Server(app);
@@ -46,6 +46,8 @@ let users: Map<string, User> = new Map();
 // }    not required for the time being
 
 io.on('connection', (socket: ExtendedSocket) => {
+
+    // ------------------------ anweshan code --------------------------------
 
     // login event
     socket.on('login', (username: string)=>{
@@ -242,4 +244,67 @@ io.on('connection', (socket: ExtendedSocket) => {
             user2_name
         });
     });
+
+
+
+    // ------------------------ vishal code --------------------------------
+    socket.on('message', (messageValue: string) => {
+        // Getting the user1
+        const username1 = socket.username;
+        const user1: User = users.get(username1) as User;
+        if (user1.state === 'connected') {
+            // Creating the new msg using the class Msg
+            const msg = new Msg(username1, messageValue);
+            // Getting the user2 (partner of user1)
+            const username2 = user1.partner;
+            const user2: User = users.get(username2) as User;
+            // Emitting the msg to user1 (sender)
+            socket.emit('message', msg);
+            // Broadcasting the msg to user2 only
+            socket.broadcast.to(user2.socketID).emit('message', msg);
+        }
+    });
+
+    socket.on('file_send_request', (filerequest: FileRequest) => {
+        // Getting the user1
+        const username1 = socket.username;
+        const user1: User = users.get(username1) as User;
+        if (user1.state === 'connected') {
+            if (user1.fileSendingState === 'idle') {
+                user1.fileSendingState = 'file_request';
+                // Getting the user2 (partner of user1)
+                const username2 = user1.partner;
+                const user2: User = users.get(username2) as User;
+                // Broadcasting the msg to user2 only
+                socket.broadcast.to(user2.socketID).emit('file_send_request', filerequest);
+            }
+        }
+    });
+
+    socket.on('file_request_answer', (accepted: boolean) => {
+        // Getting the user2
+        const username2 = socket.username;
+        const user2: User = users.get(username2) as User;
+        if (user2.state === 'connected') {
+            // Getting the user1 (partner of user2)
+            const username1 = user2.partner;
+            const user1: User = users.get(username1) as User;
+            if (user1.fileSendingState === 'file_request') {
+                if (accepted) {
+                    user1.fileSendingState = 'sending';
+                    user2.fileSendingState = 'receiving';
+                    // Broadcasting the accepted:bool to user1 only
+                    socket.broadcast.to(user1.socketID).emit('file_request_answer', accepted);
+                    // Initiate the file sending process
+                    // ---------------------------------
+                } else {
+                    user1.fileSendingState = 'idle';
+                    user2.fileSendingState = 'idle';
+                    // Broadcasting the accepted:bool to user1 only
+                    socket.broadcast.to(user1.socketID).emit('file_request_answer', accepted);
+                }
+            }
+        }
+    });
+
 });

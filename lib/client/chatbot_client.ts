@@ -25,14 +25,13 @@ socket.on('message', (msg: Msg) => {
 });
 
 socket.on('file_send_request', (filerequest: FileRequest) => {
-    
 });
 
 // setting click listener to sendButton
-if(sendButton !== null) {
+if (sendButton !== null) {
     sendButton.addEventListener('click', () => {
         if (message !== null && message.value !== '') {
             sendMessage(message.value);
-        };
+        }
     });
 }
