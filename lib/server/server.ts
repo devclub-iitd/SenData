@@ -2,6 +2,7 @@ import http = require('http');
 import express = require('./express');
 import env = require('./env');
 import socketIO = require('socket.io');
+import { User, ExtendedSocket } from "../types";
 
 import { userInfo } from 'os';
 import { stringify } from 'querystring';
@@ -17,18 +18,19 @@ server.listen(env.PORT, () => {
 });
 
 //using username property in typescript
-interface ExtendedSocket extends SocketIO.Socket{
-    username: string;
-}
+// interface ExtendedSocket extends SocketIO.Socket{
+//     username: string;
+// }
 
 // creating interface for different characteristics of a logged user
-interface User {
-    socketID: string,
-    state: string,
-    outRequest: string,
-    partner: string,
-    inRequests: Set<string>
-}
+//interface added to ../Util.ts
+// interface User {
+//     socketID: string,
+//     state: string,
+//     outRequest: string,
+//     partner: string,
+//     inRequests: Set<string>
+// }
 
 // declaring a user map containing all users mapped from their soscketids to their characteristics.
 let users: Map<string, User> = new Map();
@@ -63,6 +65,7 @@ io.on('connection', (socket: ExtendedSocket) => {
                 state: "idle",
                 outRequest: "",
                 partner: "",
+                fileSendingState: "idle",
                 inRequests: {}
             }
 
