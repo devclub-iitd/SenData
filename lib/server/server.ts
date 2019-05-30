@@ -2,6 +2,7 @@ import http = require('http');
 import express = require('./express');
 import env = require('./env');
 import socketIO = require('socket.io');
+import { User } from "../Utils";
 
 const app: Express.Application = express();
 const server: http.Server = new http.Server(app);
@@ -18,13 +19,14 @@ interface ExtendedSocket extends SocketIO.Socket{
 }
 
 // creating interface for different characteristics of a logged user
-interface User {
-    socketID: string,
-    state: string,
-    outRequest: string,
-    partner: string,
-    inRequests: Set<string>
-}
+//interface added to ../Util.ts
+// interface User {
+//     socketID: string,
+//     state: string,
+//     outRequest: string,
+//     partner: string,
+//     inRequests: Set<string>
+// }
 
 // declaring a user map containing all users mapped from their soscketids to their characteristics.
 let users: Map<string, User> = new Map();
