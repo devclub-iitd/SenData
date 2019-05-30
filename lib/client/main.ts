@@ -1,3 +1,5 @@
+import wt = require('./wt');
+
 $(() => {
     const socket = io();
     socket.on('bye-bye', () => {
@@ -5,7 +7,21 @@ $(() => {
     });
 
     socket.on('connected', () => {
-        $('body').text('Connected to another user!');
+        $('body').append('<br>Connected to another user!');
+
+        let client = new wt.Client(socket);
+
+        $('button').click( () => {
+            let file_input: HTMLInputElement = document.getElementById('file_submit') as HTMLInputElement
+            let files = file_input.files;
+
+            if(files === null) {
+                window.alert("Select some files");
+                return;
+            }
+    
+            client.sendFile(files[0])
+        })
     })
 
     socket.on('disconnected', () => {
