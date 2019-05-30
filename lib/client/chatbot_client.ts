@@ -15,6 +15,11 @@ class Msg {
     }
 }
 
+interface FileRequest {
+    filename: string;
+    filesize: string;
+}
+
 // Importing chatbox DOM elements from HTML file
 const chats: HTMLElement | null = document.getElementById('chats');
 const message: HTMLInputElement | null = document.getElementById('btn-input') as HTMLInputElement;
@@ -35,6 +40,10 @@ socket.on('message', (msg: Msg) => {
         li.innerHTML = `<span class='chat-img pull-left'><img src='/images/U.png' alt='User Avatar' class='img-circle' /></span><div class='chat-body clearfix'><div class='header'><small class=' text-muted' id = '${msg.timeStamp}'><span class='glyphicon glyphicon-time'></span><span class = 'time'>0</span><span class= 'timeunit'> mins</sapn> ago</small><strong class='pull-left primary-font'>${msg.username}</strong></div><p class='chat_text_message'>${msg.messageValue}</p></div>`;
         chats.appendChild(li);
     }
+});
+
+socket.on('file_send_request', (filerequest: FileRequest) => {
+    
 });
 
 // setting click listener to sendButton

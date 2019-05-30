@@ -6,7 +6,8 @@
     "jsRules": {},
     "rules": {
         "quotemark": [false, "single", "avoid-escape", "avoid-template"],
-        "no-console": false
+        "no-console": false,
+        "interface-name" : false
     },
     "rulesDirectory": [],
     "linterOptions": {

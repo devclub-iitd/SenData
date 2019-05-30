@@ -220,7 +220,7 @@ io.on('connection', (socket: ExtendedSocket) => {
     });
 
     //request for cancelling connection by either user
-    socket.on('CancelConnection',(user2_name: string) => {
+    2
 
         //get usernames of both users
         let user1_name: string = socket.username;
