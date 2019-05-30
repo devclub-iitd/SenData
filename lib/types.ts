@@ -6,3 +6,7 @@ export interface User {
     fileSendingState: string,  //idle, file_request, sending, receiving
     inRequests: Set<string>
 }
+
+export interface ExtendedSocket extends SocketIO.Socket{
+    username: string;
+}
