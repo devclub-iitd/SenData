@@ -1,24 +1,6 @@
-let socket = io();
+import { ExtendedSocket, FileRequest, Msg, User } from "../types";
 
-// note: try to create a common module for client and server containing all the important classes and interfaces
-class Msg {
-    public username: string;
-    public messageValue: string;
-    public timeStamp: string;
-    constructor(username: string, messageValue: string) {
-        this.username = username;
-        this.messageValue = messageValue;
-        const currentdate = new Date();
-        this.timeStamp = currentdate.getHours() + ':'
-                        + currentdate.getMinutes() + ':'
-                        + currentdate.getSeconds();
-    }
-}
-
-interface FileRequest {
-    filename: string;
-    filesize: string;
-}
+const socket = io();
 
 // Importing chatbox DOM elements from HTML file
 const chats: HTMLElement | null = document.getElementById('chats');
