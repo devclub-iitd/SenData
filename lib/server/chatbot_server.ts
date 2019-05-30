@@ -1,5 +1,6 @@
 import http = require('http');
 import socketIO = require('socket.io');
+import { ExtendedSocket, FileRequest, Msg, User } from "../types";
 import express = require('./express');
 
 // --------------------------------------------------------------------------------
@@ -8,43 +9,9 @@ const app: Express.Application = express();
 const server: http.Server = new http.Server(app);
 const io: socketIO.Server = socketIO(server);
 
-// using username property in typescript
-interface ExtendedSocket extends SocketIO.Socket {
-    username: string;
-}
-
-// creating interface for different characteristics of a logged user
-interface User {
-    socketID: string,
-    state: string,
-    outRequest: string,
-    partner: string,
-    inRequests: Set<string>,
-    fileSendingState: string, // 'idle' || 'file_request' || 'sending' || 'receiving'
-}
-
 // declaring a user map containing all users mapped from their soscketids to their characteristics.
 let users: Map<string, User> = new Map();
 // --------------------------------------------------------------------------------
-
-class Msg {
-    public username: string;
-    public messageValue: string;
-    public timeStamp: string;
-    constructor(username: string, messageValue: string) {
-        this.username = username;
-        this.messageValue = messageValue;
-        const currentdate = new Date();
-        this.timeStamp = currentdate.getHours() + ':'
-                        + currentdate.getMinutes() + ':'
-                        + currentdate.getSeconds();
-    }
-}
-
-interface FileRequest {
-    filename: string;
-    filesize: string;
-}
 
 io.on('connection', (socket: ExtendedSocket) => { 
     socket.on('message', (messageValue: string) => {
