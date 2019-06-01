@@ -2,7 +2,7 @@ import http = require('http');
 import express = require('./express');
 import env = require('./env');
 import socketIO = require('socket.io');
-import { User, ExtendedSocket, Msg, FileRequest} from "../types";
+import { User, ExtendedSocket, Msg } from "../types";
 
 const app: Express.Application = express();
 const server: http.Server = new http.Server(app);
@@ -63,7 +63,7 @@ io.on('connection', (socket: ExtendedSocket) => {
                 state: "idle",
                 outRequest: "",
                 partner: "",
-                fileSendingState: "idle",
+                filesSendingState: "idle",
                 inRequests: {}
             }
 
@@ -265,23 +265,31 @@ io.on('connection', (socket: ExtendedSocket) => {
         }
     });
 
-    socket.on('file_send_request', (filerequest: FileRequest) => {
+    socket.on('filelist_send_request', (file_list: FileList) => {
         // Getting the user1
         const username1 = socket.username;
         const user1: User = users.get(username1) as User;
         if (user1.state === 'connected') {
-            if (user1.fileSendingState === 'idle') {
-                user1.fileSendingState = 'file_request';
-                // Getting the user2 (partner of user1)
-                const username2 = user1.partner;
-                const user2: User = users.get(username2) as User;
-                // Broadcasting the msg to user2 only
-                socket.broadcast.to(user2.socketID).emit('file_send_request', filerequest);
+            if (user1.filesSendingState === 'idle') {
+                if (file_list.length > 0) {
+                    // file_list contains atleast 1 file
+                    user1.filesSendingState = 'waiting';
+                    // Getting the user2 (partner of user1)
+                    const username2 = user1.partner;
+                    const user2: User = users.get(username2) as User;
+                    // Broadcasting the msg to user2 only
+                    socket.broadcast.to(user2.socketID).emit('filelist_send_request', file_list);
+                }
+                else {
+                    // file_list contains no file
+                    // Emitting the msg to user1 (sender)
+                    socket.emit('filelist_request_answer', false);
+                }
             }
         }
     });
 
-    socket.on('file_request_answer', (accepted: boolean) => {
+    socket.on('filelist_request_answer', (accepted: boolean) => {
         // Getting the user2
         const username2 = socket.username;
         const user2: User = users.get(username2) as User;
@@ -289,19 +297,19 @@ io.on('connection', (socket: ExtendedSocket) => {
             // Getting the user1 (partner of user2)
             const username1 = user2.partner;
             const user1: User = users.get(username1) as User;
-            if (user1.fileSendingState === 'file_request') {
+            if (user1.filesSendingState === 'waiting') {
                 if (accepted) {
-                    user1.fileSendingState = 'sending';
-                    user2.fileSendingState = 'receiving';
+                    user1.filesSendingState = 'sending';
+                    user2.filesSendingState = 'receiving';
                     // Broadcasting the accepted:bool to user1 only
-                    socket.broadcast.to(user1.socketID).emit('file_request_answer', accepted);
+                    socket.broadcast.to(user1.socketID).emit('filelist_request_answer', accepted);
                     // Initiate the file sending process
                     // ---------------------------------
                 } else {
-                    user1.fileSendingState = 'idle';
-                    user2.fileSendingState = 'idle';
+                    user1.filesSendingState = 'idle';
+                    user2.filesSendingState = 'idle';
                     // Broadcasting the accepted:bool to user1 only
-                    socket.broadcast.to(user1.socketID).emit('file_request_answer', accepted);
+                    socket.broadcast.to(user1.socketID).emit('filelist_request_answer', accepted);
                 }
             }
         }
