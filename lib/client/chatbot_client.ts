@@ -25,6 +25,12 @@ socket.on('message', (msg: Msg) => {
 });
 
 socket.on('file_send_request', (filerequest: FileRequest) => {
+    // Setting click listener to sendButton
+    // Use HTML DOM to get the answer
+    const answer: boolean = true;
+    if (typeof(answer) === "boolean") {
+        socket.emit('file_request_answer', answer);
+    }
 });
 
 // setting click listener to sendButton

@@ -4,7 +4,7 @@ export interface User {
     outRequest: string;
     partner: string;
     inRequests: Set<string>;
-    fileSendingState: string;  // idle || waiting || sending || receiving
+    filesSendingState: string;  // idle || waiting || sending || receiving
 }
 
 export interface ExtendedSocket extends SocketIO.Socket {
@@ -23,9 +23,4 @@ export class Msg {
                         + currentdate.getMinutes() + ':'
                         + currentdate.getSeconds();
     }
-}
-
-export interface FileRequest {
-    filename: string;
-    filesize: string;
 }
