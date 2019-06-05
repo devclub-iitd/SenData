@@ -1,9 +1,9 @@
-import bodyParser = require("body-parser");
-import express = require("express");
-import path = require("path");
+import * as bodyParser from "body-parser";
+import * as express from "express";
+import * as path from "path";
 import PORT from "./env";
 
-function init() {
+export default function init() {
     const app: express.Application = express();
     app.set("port", PORT);
     app.use(bodyParser.urlencoded({
@@ -21,5 +21,3 @@ function init() {
     });
     return app;
 }
-
-export = init;

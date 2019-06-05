@@ -1,14 +1,14 @@
-import debugLib = require("debug");
-import http = require("http");
-import socketIO = require("socket.io");
+import debugLib from "debug";
+import * as http from "http";
+import * as SocketIO from "socket.io";
 import { IExtendedSocket, IUser, Msg } from "../types";
 import env from "./env";
-import express = require("./express");
+import express from "./express";
 
 const debug = debugLib("FileSend:Server");
 const app: Express.Application = express();
-const server: http.Server = new http.Server(app);
-const io: socketIO.Server = socketIO(server);
+const server = new http.Server(app);
+const io: SocketIO.Server = SocketIO(server);
 let status: number;
 
 server.listen(env.PORT, () => {
@@ -190,23 +190,22 @@ io.on("connection", (socket: IExtendedSocket) => {
             user2.state = "connected";
 
             // rejecting all other requests of both users
-            for (const key of user1.inRequests) {
-
-                // get socketid of key
+            user1.inRequests.forEach( (key) => {
+                // get socketId of key
                 const temp: IUser = users.get(key) as IUser;
 
                 socket.broadcast.to(temp.socketID).emit("answer", "n");
-            }
+            });
 
             user1.inRequests.clear();
 
-            for (const key of user2.inRequests) {
+            user1.inRequests.forEach( (key) => {
 
                 // get socketId of key
                 const temp: IUser = users.get(key) as IUser;
 
                 socket.broadcast.to(temp.socketID).emit("answer", "n");
-            }
+            });
 
             user2.inRequests.clear();
 

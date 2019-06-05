@@ -1,6 +1,6 @@
-import debugLib = require("debug");
+import * as debugLib from "debug";
 import { EventEmitter } from "events";
-import WebTorrent = require("webtorrent");
+import * as WebTorrent from "webtorrent";
 import { formatBytes } from "./util";
 
 const debug = debugLib("FileSend-WebTorrent");
@@ -25,7 +25,7 @@ const debug = debugLib("FileSend-WebTorrent");
 *   - **torrentDestroyed** (the torrent that was downloading/seeding was destroyed)
 *   - **clientDestroyed** (WebTorrent client was destroyed, possibly due to some error)
 */
-export class Client extends EventEmitter {
+export default class Client extends EventEmitter {
     private socket: SocketIOClient.Socket;
     private readonly TRACKER_URLS: string[];
     private readonly client: WebTorrent.Instance;
