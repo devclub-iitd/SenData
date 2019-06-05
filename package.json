@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node build/server/server.js",
-    "build": "npm-run-all -n -s build-ts build-browserify",
+    "build": "npm-run-all -s build-ts build-browserify",
     "watch": "npm-run-all -r -p watch-*",
     "watch-node": "nodemon build/server/server.js",
     "build-ts": "tsc",

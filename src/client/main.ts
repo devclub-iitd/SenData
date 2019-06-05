@@ -1,4 +1,4 @@
-import wt = require("./wt");
+import Client from "./wt";
 
 $(() => {
     const socket = io();
@@ -9,7 +9,7 @@ $(() => {
     socket.on("connected", () => {
         $("body").append("<br>Connected to another user!");
 
-        const client = new wt.Client(socket);
+        const client = new Client(socket);
 
         $("button").click( () => {
             const fileInput: HTMLInputElement = document.getElementById("file_submit") as HTMLInputElement;
