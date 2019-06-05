@@ -1,7 +1,9 @@
+import debugLib = require("debug");
+import { EventEmitter } from "events";
 import WebTorrent = require("webtorrent");
-import { formatBytes } from "./util"
-const debug = require("debug")("FileSend-WebTorrent");
-const EventEmitter = require("events").EventEmitter;
+import { formatBytes } from "./util";
+
+const debug = debugLib("FileSend-WebTorrent");
 
 /*
 * A client for sending and receiving files, which internally
@@ -13,7 +15,8 @@ const EventEmitter = require("events").EventEmitter;
 *	- **upload** (Emitted whenever new packets are uploaded, for showing upload stats)
 *		- uploaded: string (formatted as '20 MB' for example)
 *		- uploadSpeed: string (formatted as '4 MB/s' for example)
-*	- **download** (Emitted whenever new packets are downloaded, for showing download stats) (Note: these have same format as above)
+*	- **download** (Emitted whenever new packets are downloaded, for showing
+        download stats) (Note: these have same format as above)
 *		- downloaded: string
 *		- downloadSpeed: string
 *		- progress: number (between 0 and 1)
@@ -37,8 +40,8 @@ export class Client extends EventEmitter {
     */
     constructor(socket: SocketIOClient.Socket) {
         super();
-        let STUN_URL: string,
-            TRACKER_URL: string;
+        let STUN_URL: string;
+        let TRACKER_URL: string;
 
         if (process.env.STUN_URL) {
             STUN_URL = `stun:${process.env.STUN_URL}:3478`;
@@ -99,8 +102,8 @@ export class Client extends EventEmitter {
 
             torrent.on("upload", (bytes) => {
                 this.emit("upload", {
-                    uploaded: formatBytes(torrent.uploaded),
                     uploadSpeed: formatBytes(torrent.uploadSpeed) + "/s",
+                    uploaded: formatBytes(torrent.uploaded),
                 });
             });
 
@@ -123,12 +126,12 @@ export class Client extends EventEmitter {
 
                 torrent.files[0].getBlobURL((err, url) => {
                     if (err) {
-                        console.error(err);
+                        debug(err);
                         this.emit("error", err);
                         return;
                     }
                     if (url === undefined) {
-                        console.error("Got empty File Blob URL");
+                        debug("Got empty File Blob URL");
                         this.emit("error", "Got empty file Blob URL");
                         return;
                     }
@@ -141,8 +144,8 @@ export class Client extends EventEmitter {
 
             torrent.on("download", (bytes) => {
                 this.emit("download", {
-                    downloaded: formatBytes(torrent.downloaded),
                     downloadSpeed: formatBytes(torrent.downloadSpeed) + "/s",
+                    downloaded: formatBytes(torrent.downloaded),
                     progress: torrent.progress,
                 });
             });

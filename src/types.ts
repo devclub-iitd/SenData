@@ -1,4 +1,4 @@
-export interface User {
+export interface IUser {
     socketID: string;
     state: string;
     outRequest: string;
@@ -7,7 +7,7 @@ export interface User {
     filesSendingState: string;  // idle || waiting || sending || receiving
 }
 
-export interface ExtendedSocket extends SocketIO.Socket {
+export interface IExtendedSocket extends SocketIO.Socket {
     username: string;
 }
 
@@ -18,9 +18,9 @@ export class Msg {
     constructor(username: string, messageValue: string) {
         this.username = username;
         this.messageValue = messageValue;
-        const currentdate = new Date();
-        this.timeStamp = currentdate.getHours() + ':'
-                        + currentdate.getMinutes() + ':'
-                        + currentdate.getSeconds();
+        const currentDate = new Date();
+        this.timeStamp = currentDate.getHours() + ":"
+                        + currentDate.getMinutes() + ":"
+                        + currentDate.getSeconds();
     }
 }
