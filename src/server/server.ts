@@ -2,7 +2,7 @@ import debugLib = require("debug");
 import http = require("http");
 import socketIO = require("socket.io");
 import { IExtendedSocket, IUser, Msg } from "../types";
-import env = require("./env");
+import env from "./env";
 import express = require("./express");
 
 const debug = debugLib("FileSend:Server");
