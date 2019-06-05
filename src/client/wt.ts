@@ -1,12 +1,12 @@
-import { formatBytes } from './util'
-import WebTorrent = require('webtorrent')
-const debug = require('debug')('FileSend-WebTorrent')
-const EventEmitter = require('events').EventEmitter
+import WebTorrent = require("webtorrent");
+import { formatBytes } from "./util"
+const debug = require("debug")("FileSend-WebTorrent");
+const EventEmitter = require("events").EventEmitter;
 
 /*
 * A client for sending and receiving files, which internally
-* uses a WebTorrent client. 
-* 
+* uses a WebTorrent client.
+*
 * Events emitted:
 *   - **error**
 *		- err: string | Error
@@ -27,124 +27,122 @@ export class Client extends EventEmitter {
     private readonly TRACKER_URLS: string[];
     private readonly client: WebTorrent.Instance;
 
-    /* 
+    /*
     * Assuming use of SocketIO for comm. to server.
     * socket is the socket object of client connected.
-    * 
+    *
     * Uses STUN_URL and TRACKER_URL environment variables
     * for setting. If not set, falls back to third party
     * defaults.
     */
     constructor(socket: SocketIOClient.Socket) {
         super();
-        let STUN_URL: string, 
+        let STUN_URL: string,
             TRACKER_URL: string;
 
         if (process.env.STUN_URL) {
             STUN_URL = `stun:${process.env.STUN_URL}:3478`;
-        }
-        else {
-            STUN_URL = 'stun:stun.l.google.com:19302';
-            debug(`STUN_URL env variable not set`)
+        } else {
+            STUN_URL = "stun:stun.l.google.com:19302";
+            debug(`STUN_URL env variable not set`);
         }
         debug(`Using ${STUN_URL} as STUN server address`);
 
         if (process.env.TRACKER_URL) {
             TRACKER_URL = `ws://${process.env.TRACKER_URL}:8000`;
-        }
-        else {
+        } else {
             TRACKER_URL = `wss://tracker.btorrent.xyz`;
-            debug('TRACKER_URL env variable not set');
+            debug("TRACKER_URL env variable not set");
         }
         debug(`Using ${TRACKER_URL} as TRACKER address`);
-        
+
         this.client = new WebTorrent({
-            tracker: { 
-                iceServers: [{ urls: STUN_URL }]
-            }
+            tracker: {
+                iceServers: [{ urls: STUN_URL }],
+            },
         });
 
         this.TRACKER_URLS = [ TRACKER_URL ];
 
         this.socket = socket;
-        this.socket.on('addTorrent', (magnetUri: string) => {
+        this.socket.on("addTorrent", (magnetUri: string) => {
             this.addTorrent(magnetUri);
         });
 
         // Fatal errors, client is destroyed after encounter
-        this.client.on('error', (err) => {
+        this.client.on("error", (err) => {
             debug(`WebTorrent client encountered an error: ${err}`);
-            this.emit('error', err);
-            this.emit('clientDestroyed');
+            this.emit("error", err);
+            this.emit("clientDestroyed");
         });
     }
 
-    setTorrentErrorHandlers = (torrent: WebTorrent.Torrent) => {
+    public setTorrentErrorHandlers = (torrent: WebTorrent.Torrent) => {
         // NOTE: torrents are destroyed when they encounter an error
-        torrent.on('error', (err) => {
+        torrent.on("error", (err) => {
             debug(`Torrent encountered an error: ${err}`);
-            this.emit('error', err);
-            this.emit('torrentDestroyed');
+            this.emit("error", err);
+            this.emit("torrentDestroyed");
         });
 
         // Warnings are not fatal, but useful for debugging
-        torrent.on('warning', (err) => {
+        torrent.on("warning", (err) => {
             debug(`Torrent warning: ${err}`);
         });
     }
 
-    sendFile = (file: File) => {
-        this.client.seed(file, { announce: this.TRACKER_URLS } ,(torrent) => {
+    public sendFile = (file: File) => {
+        this.client.seed(file, { announce: this.TRACKER_URLS } , (torrent) => {
             this.setTorrentErrorHandlers(torrent);
 
-            this.socket.emit('fileReady', torrent.magnetURI);
+            this.socket.emit("fileReady", torrent.magnetURI);
 
-            torrent.on('upload', (bytes) => {
-                this.emit('upload', {
+            torrent.on("upload", (bytes) => {
+                this.emit("upload", {
                     uploaded: formatBytes(torrent.uploaded),
-                    uploadSpeed: formatBytes(torrent.uploadSpeed) + '/s',
+                    uploadSpeed: formatBytes(torrent.uploadSpeed) + "/s",
                 });
             });
 
-            this.socket.on('torrentDone', (magnetUri: string) => {
+            this.socket.on("torrentDone", (magnetUri: string) => {
                 torrent.destroy(() => {
-                    debug('Torrent destroyed, as server sent torrentDone');
-                    this.emit('torrentDestroyed');
+                    debug("Torrent destroyed, as server sent torrentDone");
+                    this.emit("torrentDestroyed");
                 });
             });
         });
     }
 
-    addTorrent = (magnetURI: string) => {
+    public addTorrent = (magnetURI: string) => {
         this.client.add(magnetURI, { announce: this.TRACKER_URLS }, (torrent) => {
             this.setTorrentErrorHandlers(torrent);
 
-            torrent.on('done', () => {
-                debug('Torrent download complete');
-                this.socket.emit('downloadComplete');
+            torrent.on("done", () => {
+                debug("Torrent download complete");
+                this.socket.emit("downloadComplete");
 
                 torrent.files[0].getBlobURL((err, url) => {
                     if (err) {
                         console.error(err);
-                        this.emit('error', err);
+                        this.emit("error", err);
                         return;
                     }
                     if (url === undefined) {
                         console.error("Got empty File Blob URL");
-                        this.emit('error', 'Got empty file Blob URL');
+                        this.emit("error", "Got empty file Blob URL");
                         return;
                     }
 
-                    this.emit('downloadComplete', url);
-                })
-                
-                torrent.files[0].appendTo('body'); //INFO: For debugging
+                    this.emit("downloadComplete", url);
+                });
+
+                torrent.files[0].appendTo("body"); // INFO: For debugging
             });
 
-            torrent.on('download', (bytes) => {
-                this.emit('download', { 
+            torrent.on("download", (bytes) => {
+                this.emit("download", {
                     downloaded: formatBytes(torrent.downloaded),
-                    downloadSpeed: formatBytes(torrent.downloadSpeed) + '/s',
+                    downloadSpeed: formatBytes(torrent.downloadSpeed) + "/s",
                     progress: torrent.progress,
                 });
             });

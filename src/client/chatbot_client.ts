@@ -1,4 +1,4 @@
-import { ExtendedSocket, FileRequest, Msg, User } from "../types";
+import { ExtendedSocket, /* FileRequest ,*/ Msg, User } from "../types";
 
 const socket = io();
 
