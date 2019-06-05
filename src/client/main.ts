@@ -12,8 +12,8 @@ $(() => {
         const client = new wt.Client(socket);
 
         $("button").click( () => {
-            let file_input: HTMLInputElement = document.getElementById("file_submit") as HTMLInputElement;
-            const files = file_input.files;
+            const fileInput: HTMLInputElement = document.getElementById("file_submit") as HTMLInputElement;
+            const files = fileInput.files;
 
             if (files === null) {
                 window.alert("Select some files");
