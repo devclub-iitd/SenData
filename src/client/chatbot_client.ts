@@ -21,8 +21,8 @@ socket.on("message", (msg: Msg) => {
         li.className = "left clearfix";
         li.innerHTML =
             `<span class='chat-img pull-left'>
-                <img src='/images/U.png' alt='User Avatar' class='img-circle' /><
-            /span>
+                <img src='/images/U.png' alt='User Avatar' class='img-circle' />
+            </span>
             <div class='chat-body clearfix'>
                 <div class='header'>
                     <small class=' text-muted' id = '${msg.timeStamp}'>
@@ -37,8 +37,8 @@ socket.on("message", (msg: Msg) => {
     }
 });
 
-// NOTE: Commented this out as fileRequest isn't defined --Arpit
-socket.on("fileSendRequest", (/* fileRequest: FileRequest */) => {
+socket.on("fileSendRequest", (fileRequest: FileList) => {
+    // Displat fileRequest to user and ask for yes or no
     // Setting click listener to sendButton
     // Use HTML DOM to get the answer
     const answer: boolean = true;
