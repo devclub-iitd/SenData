@@ -284,7 +284,15 @@ io.on("connection", (socket: IExtendedSocket) => {
         }
     });
 
-    socket.on("fileListRequestAnswer", (accepted: boolean) => {
+    socket.on("fileListRequestAnswer", (acceptedFilesAnswers: boolean[]) => {
+        const atleastOneFileAccepted = (answers: boolean[]) => {
+            answers.forEach((ithFileAnswer) => {
+                if (ithFileAnswer) {
+                    return true;
+                }
+            });
+            return false;
+        };
         // Getting the user2
         const username2 = socket.username;
         const user2: IUser = users.get(username2) as IUser;
@@ -293,18 +301,18 @@ io.on("connection", (socket: IExtendedSocket) => {
             const username1 = user2.partner;
             const user1: IUser = users.get(username1) as IUser;
             if (user1.filesSendingState === "waiting") {
-                if (accepted) {
+                if (atleastOneFileAccepted(acceptedFilesAnswers)) {
                     user1.filesSendingState = "sending";
                     user2.filesSendingState = "receiving";
                     // Broadcasting the accepted:bool to user1 only
-                    socket.broadcast.to(user1.socketID).emit("fileListRequestAnswer", accepted);
+                    socket.broadcast.to(user1.socketID).emit("fileListRequestAnswer", acceptedFilesAnswers);
                     // Initiate the file sending process
                     // ---------------------------------
                 } else {
                     user1.filesSendingState = "idle";
                     user2.filesSendingState = "idle";
                     // Broadcasting the accepted:bool to user1 only
-                    socket.broadcast.to(user1.socketID).emit("fileListRequestAnswer", accepted);
+                    socket.broadcast.to(user1.socketID).emit("fileListRequestAnswer", acceptedFilesAnswers);
                 }
             }
         }
