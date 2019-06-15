@@ -12,20 +12,19 @@ const debug = debugLib("FileSend-WebTorrent");
 * Events emitted:
 *   - **error**
 *		- err: string | Error
-*	- **upload** (Emitted whenever new packets are uploaded, for showing upload stats)
+*	- **uploadProgress** (Emitted at some time intervals, for showing upload stats)
+*       - progress: number (between 0 and 1)
+*       - progressFiles: number[]
+*       - timeRemaining: number (time remaining in milliseconds)
 *		- uploaded: string (formatted as '20 MB' for example)
 *		- uploadSpeed: string (formatted as '4 MB/s' for example)
-*	- **download** (Emitted whenever new packets are downloaded, for showing
+*	- **downloadProgress** (Emitted at a time interval, for showing
         download stats) (Note: these have same format as above)
 *		- downloaded: string
 *		- downloadSpeed: string
 *		- progress: number (between 0 and 1)
 *       - progressFiles: number[]
 *       - timeRemaining: number (time remaining in ms)
-*   - **progressUpdate** (Info got from the client downloading)
-*       - progress: number (between 0 and 1)
-*       - progressFiles: number[]
-*       - timeRemaining: number (time remaining in milliseconds)
 *   - **fileDownloadComplete** (Download of a file now complete)
 *       - index: number (index of file whose download is complete)
 *       - url: string (blobURL of the file downloaded)
@@ -99,8 +98,10 @@ export default class Client extends EventEmitter {
             this.emit("seeding");
             this.socket.emit("fileReady", torrent.magnetURI);
 
-            this.socket.on("progressUpdate", (info: any) => {
-                this.emit("progressUpdate", info);
+            this.socket.on("progressUpdate", (info: { [key: string]: any }) => {
+                info.uploaded = formatBytes(torrent.uploaded);
+                info.uploadSpeed = formatBytes(torrent.uploadSpeed) + "/s";
+                this.emit("uploadProgress", info);
             });
 
             torrent.on("upload", (bytes) => {
@@ -167,7 +168,7 @@ export default class Client extends EventEmitter {
                 progressFiles[i] = file.progress;
             });
 
-            this.emit("download", {
+            this.emit("downloadProgress", {
                 downloadSpeed: formatBytes(torrent.downloadSpeed) + "/s",
                 downloaded: formatBytes(torrent.downloaded),
                 progress: torrent.progress,
@@ -188,13 +189,15 @@ export default class Client extends EventEmitter {
             debug("Torrent beginning to download");
 
             torrent.files.forEach( (file, i) => {
-                file.getBlobURL( (err, url) => {
+                file.getBlob( (err, blob) => {
                     if (err) {
                         debug(`Obtaining file ${file.name}: ${err}`);
-                    } else if (url === undefined) {
+                    } else if (blob === undefined) {
                         debug(`Got undefined url for file ${file.name}`);
                     } else {
+                        const url = URL.createObjectURL(blob);
                         this.emit("fileDownloadComplete", {
+                            blob,
                             index: i,
                             url,
                         });
