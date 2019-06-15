@@ -1,6 +1,19 @@
 import Client from "./wt";
 
+const usernameTextBox: HTMLInputElement = document.getElementById("username") as HTMLInputElement;
+const connectToSocket = () => {
+    const username = usernameTextBox.value;
+    if (username !== "") {
+        const socket = io(window.location.origin, {query: `username=${username}`});
+    } else {
+        window.confirm("Please Enter some username");
+    }
+};
+const startSendingButton: HTMLInputElement = document.getElementById("startSendingButton") as HTMLInputElement;
+startSendingButton.addEventListener("click", connectToSocket);
+
 $(() => {
+    /* 
     const socket = io();
     socket.on("bye-bye", () => {
         $("body").text("Server sent bye-bye");
@@ -27,4 +40,5 @@ $(() => {
     socket.on("disconnected", () => {
         $("body").text("The other user has disconnected!");
     });
+    */
 });

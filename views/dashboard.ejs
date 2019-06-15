@@ -1,0 +1,44 @@
+<main>
+    <div class="row justify-content-center mt-4 mb-4" >
+        <div class="h1"><i class="fas fa-share-alt-square" style="color: #d14f4b"></i> &nbsp;file<b><span style="color: #d14f4b">Send</span></b></div>
+    </div>
+    <div style="width: 100%;">
+        <div style="float:left; width: 50%">
+            <div class="card mx-auto" style="width: 80%;">
+                <div class="card-body card-custom">
+                  <h5 class="card-title text-center">Online Users</h5>
+                  <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">Clickable User</li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center disabled">Busy User<span class="badge badge-primary badge-pill">waiting</span></li>
+                  </ul>
+                </div>
+            </div>
+        </div>
+        <div style="float:right; width: 50%">
+            <div class="card mx-auto" style="width: 80%;">
+                <div class="card-body card-custom">
+                  <h5 class="card-title text-center">Incomming Requests</h5>
+                  <ul class="list-group">
+                        <a class="list-group-item clearfix" onclick="alert('Action1 -> Details');">
+                                Action1
+                                <span class="pull-right">
+                                    <span class="btn btn-xs btn-default" onclick="alert('Action1 -> Play'); event.stopPropagation();">
+                                        <span class="fas fa-camera" aria-hidden="true"></span>
+                                    </span>
+                                </span>
+                            </a>
+                            <a class="list-group-item clearfix" onclick="alert('Action1 -> Details');">
+                                    Action1
+                                    <span class="pull-right">
+                                        <span class="btn btn-xs btn-default" onclick="alert('Action1 -> Play'); event.stopPropagation();">
+                                            <i class="fas fa-check"></i>
+                                        </span>
+                                    </span>
+                                </a>
+                  </ul>
+                </div>
+            </div>
+        </div>
+     </div>
+     <div style="clear:both"></div>
+</main>

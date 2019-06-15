@@ -7,6 +7,14 @@
         <title> FileSend TEST </title>
     </head>
     <body>
+        <div id="send">
+            <input id="file_submit" type="file" multiple>
+            <button id="submit_btn">Send</button>
+            <p id="status"></p>
+        </div>
+
+        <div id="progress"></div>
+
         <script src="/socket.io/socket.io.js"> </script>
         <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 	    <script src="js/adapter.js"> </script>

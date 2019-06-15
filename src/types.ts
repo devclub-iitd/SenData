@@ -1,6 +1,6 @@
 export interface IUser {
     socketID: string;
-    state: string;
+    state: string; // idle || waiting || connected
     outRequest: string;
     partner: string;
     inRequests: Set<string>;

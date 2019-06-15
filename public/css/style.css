@@ -1,0 +1,79 @@
+body{
+    margin: 0px;
+}
+
+main {
+    vertical-align: middle;
+}
+
+.card-custom {
+    border-radius: 1rem;
+    box-shadow: 0 0rem 2rem 0 rgba(0, 0, 0, 0.1);
+}
+
+.form-label-group .input-custom {
+    border-radius: 2rem;
+}
+
+.input-custom {
+    border-radius: 2rem;
+}
+
+.card .btn-custom {
+    line-height: 1.5rem;
+}
+
+.btn-customred {
+    color: #fff;
+    background-color: #d14f4b;
+    border-color: #d14f4b;
+}
+
+.input-group .input-group-prepend .input-group-text{
+    border-bottom-left-radius: 2rem; border-top-left-radius: 2rem;
+}
+
+.navbar-brand .title, .container .title{
+    color: black;
+    text-decoration: none;
+}
+
+.nav-item{
+    margin-right: 10px;
+}
+
+.custom-flex-container{
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.custom-flex-child{
+    width:202px;
+    margin: 10px;
+}
+
+
+
+.custom-flex-child img{
+    width: 200px;
+    height: 200px;
+    background-image: url("http://cdn.walkthroughindia.com/wp-content/uploads/2018/04/ridleybikes.jpg");
+    background-size: cover;
+    background-position: center;
+}
+
+.maxLines2Text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    line-height: 1.5rem;     /* fallback */
+    max-height: 3rem;      /* fallback */
+    -webkit-line-clamp: 2; /* number of lines to show */
+    -webkit-box-orient: vertical;
+}
+
+.comment-box{
+    border-bottom: 1px dotted;
+}
+
