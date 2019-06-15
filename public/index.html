@@ -4,20 +4,113 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title> FileSend TEST </title>
-    </head>
-    <body>
-        <div id="send">
-            <input id="file_submit" type="file" multiple>
-            <button id="submit_btn">Send</button>
-            <p id="status"></p>
-        </div>
-
-        <div id="progress"></div>
-
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+        <title> fileSend</title>
         <script src="/socket.io/socket.io.js"> </script>
         <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 	    <script src="js/adapter.js"> </script>
+    </head>
+    <body>
+        
+        <div class="page1" id="loginPage">
+            <main style="display: grid; min-height: 80vh; align-items: center;">
+                <div class="container">
+                    <div class="row justify-content-center mt-4" >
+                        <div class="h1"><i class="fas fa-share-alt-square" style="color: #d14f4b"></i> &nbsp;file<b><span style="color: #d14f4b">Send</span></b></div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+                            <div class="card card-custom">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">
+                                        Welcome to FileSend
+                                    </h5>
+                                    <div>
+                                        <div class="form-label-group">
+                                            <input type="text" name="username" class="input-custom form-control" id="username"
+                                                   placeholder="Enter Username" required><br>
+                                        </div>
+                                        <button class="btn btn-lg btn-secondary btn-block text-uppercase btn-custom" type="submit"
+                                                value="Start Sending" id="startSendingButton">Start Sending
+                                        </button>
+                                        <br>
+                                        <!-- Need Help ? <a href="/users/register">See</a> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <div class="page2" id="dashboardPage" style="display: none">
+            <main>
+                <div class="row justify-content-center mt-4 mb-4" >
+                    <div class="h1"><i class="fas fa-share-alt-square" style="color: #d14f4b"></i> &nbsp;file<b><span style="color: #d14f4b">Send</span></b></div>
+                </div>
+                <div style="width: 100%;">
+                    <div style="float:left; width: 50%">
+                        <div class="card card-custom mx-auto" style="height: 70vh; width: 80%; overflow-y: scroll;">
+                            <div class="card-body">
+                              <h5 class="card-title text-center">Online Users</h5>
+                              <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">Clickable User</li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center disabled">Busy User<span class="badge badge-primary badge-pill">waiting</span></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">Clickable User</li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center disabled">Busy User<span class="badge badge-primary badge-pill">waiting</span></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">Clickable User</li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center disabled">Busy User<span class="badge badge-primary badge-pill">waiting</span></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">Clickable User</li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center disabled">Busy User<span class="badge badge-primary badge-pill">waiting</span></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">Clickable User</li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center disabled">Busy User<span class="badge badge-primary badge-pill">waiting</span></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">Clickable User</li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center disabled">Busy User<span class="badge badge-primary badge-pill">waiting</span></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">Clickable User</li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center disabled">Busy User<span class="badge badge-primary badge-pill">waiting</span></li>
+            
+                              </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="float:right; width: 50%">
+                        <div class="card card-custom mx-auto" style="height: 70vh; width: 80%; overflow-y: scroll;">
+                            <div class="card-body">
+                              <h5 class="card-title text-center">Incomming Requests</h5>
+                              <ul class="list-group">
+                                    <a class="list-group-item clearfix" onclick="alert('Action1 -> Details');">
+                                            Action1
+                                            <span class="pull-right">
+                                                <span class="btn btn-xs btn-default" onclick="alert('Action1 -> Play'); event.stopPropagation();">
+                                                    <span class="fas fa-camera" aria-hidden="true"></span>
+                                                </span>
+                                            </span>
+                                        </a>
+                                        <a class="list-group-item clearfix" onclick="alert('Action1 -> Details');">
+                                                Action1
+                                                <span class="pull-right">
+                                                    <span class="btn btn-xs btn-default" onclick="alert('Action1 -> Play'); event.stopPropagation();">
+                                                        <i class="fas fa-check"></i>
+                                                    </span>
+                                                </span>
+                                            </a>
+                              </ul>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+                 <div style="clear:both"></div>
+            </main>
+        </div>
+
+        <div class="footer-copyright text-center py-3">
+            <hr>
+            Developed with <i class="fas fa-heart" style="color:#d14f4b;"></i> by<a href="https://devclub.in/"> DevClub IITD</a>
+        </div>
         <script src="js/bundle.js"> </script>
     </body>
 </html>

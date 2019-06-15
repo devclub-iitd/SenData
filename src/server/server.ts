@@ -82,6 +82,7 @@ io.on("connection", (socket: IExtendedSocket) => {
     socket.on("disconnect", () => {
         // disconnected user username
         const disconnectedUser: string = socket.username;
+        console.log("user disconnected" + disconnectedUser);
         // getting disconnected user properties
         const checkVal: IUser = users.get(disconnectedUser) as IUser;
         // if current disconnected user was paired to some user
@@ -97,8 +98,8 @@ io.on("connection", (socket: IExtendedSocket) => {
             // message sent to partner
             socket.broadcast.to(changeVal.socketID).emit(`PartnerDisconnected`);
         }
-        // message to all other users also
-        socket.broadcast.emit("disconnect", disconnectedUser);
+        // message to all connected clients
+        io.emit("disconnect", disconnectedUser);
         // deleted socket (in any case)
         users.delete(disconnectedUser);
     });
@@ -211,38 +212,42 @@ io.on("connection", (socket: IExtendedSocket) => {
     socket.on("message", (messageValue: string) => {
         // Getting the user1
         const username1 = socket.username;
-        const user1: IUser = users.get(username1) as IUser;
-        if (user1.state === "connected") {
-            // Creating the new msg using the class Msg
-            const msg = new Msg(username1, messageValue);
-            // Getting the user2 (partner of user1)
-            const username2 = user1.partner;
-            const user2: IUser = users.get(username2) as IUser;
-            // Emitting the msg to user1 (sender)
-            socket.emit("message", msg);
-            // Broadcasting the msg to user2 only
-            socket.broadcast.to(user2.socketID).emit("message", msg);
+        const user1: IUser | undefined = users.get(username1);
+        if (user1 !== undefined) {
+            if (user1.state === "connected") {
+                // Creating the new msg using the class Msg
+                const msg = new Msg(username1, messageValue);
+                // Getting the user2 (partner of user1)
+                const username2 = user1.partner;
+                const user2: IUser = users.get(username2) as IUser;
+                // Emitting the msg to user1 (sender)
+                socket.emit("message", msg);
+                // Broadcasting the msg to user2 only
+                socket.broadcast.to(user2.socketID).emit("message", msg);
+            }
         }
     });
 
     socket.on("fileListSendRequest", (fileList: FileList) => {
         // Getting the user1
         const username1 = socket.username;
-        const user1: IUser = users.get(username1) as IUser;
-        if (user1.state === "connected") {
-            if (user1.filesSendingState === "idle") {
-                if (fileList.length > 0) {
-                    // file_list contains atleast 1 file
-                    user1.filesSendingState = "waiting";
-                    // Getting the user2 (partner of user1)
-                    const username2 = user1.partner;
-                    const user2: IUser = users.get(username2) as IUser;
-                    // Broadcasting the msg to user2 only
-                    socket.broadcast.to(user2.socketID).emit("fileListSendRequest", fileList);
-                } else {
-                    // file_list contains no file
-                    // Emitting the msg to user1 (sender)
-                    socket.emit("fileListRequestAnswer", false);
+        const user1: IUser | undefined = users.get(username1);
+        if (user1 !== undefined) {
+            if (user1.state === "connected") {
+                if (user1.filesSendingState === "idle") {
+                    if (fileList.length > 0) {
+                        // file_list contains atleast 1 file
+                        user1.filesSendingState = "waiting";
+                        // Getting the user2 (partner of user1)
+                        const username2 = user1.partner;
+                        const user2: IUser = users.get(username2) as IUser;
+                        // Broadcasting the msg to user2 only
+                        socket.broadcast.to(user2.socketID).emit("fileListSendRequest", fileList);
+                    } else {
+                        // file_list contains no file
+                        // Emitting the msg to user1 (sender)
+                        socket.emit("fileListRequestAnswer", false);
+                    }
                 }
             }
         }
@@ -259,24 +264,28 @@ io.on("connection", (socket: IExtendedSocket) => {
         };
         // Getting the user2
         const username2 = socket.username;
-        const user2: IUser = users.get(username2) as IUser;
-        if (user2.state === "connected") {
-            // Getting the user1 (partner of user2)
-            const username1 = user2.partner;
-            const user1: IUser = users.get(username1) as IUser;
-            if (user1.filesSendingState === "waiting") {
-                if (atleastOneFileAccepted(acceptedFilesAnswers)) {
-                    user1.filesSendingState = "sending";
-                    user2.filesSendingState = "receiving";
-                    // Broadcasting the accepted:bool to user1 only
-                    socket.broadcast.to(user1.socketID).emit("fileListRequestAnswer", acceptedFilesAnswers);
-                    // Initiate the file sending process
-                    // ---------------------------------
-                } else {
-                    user1.filesSendingState = "idle";
-                    user2.filesSendingState = "idle";
-                    // Broadcasting the accepted:bool to user1 only
-                    socket.broadcast.to(user1.socketID).emit("fileListRequestAnswer", acceptedFilesAnswers);
+        const user2: IUser|undefined = users.get(username2);
+        if (user2 !== undefined) {
+            if (user2.state === "connected") {
+                // Getting the user1 (partner of user2)
+                const username1 = user2.partner;
+                const user1: IUser | undefined = users.get(username1);
+                if (user1 !== undefined) {
+                    if (user1.filesSendingState === "waiting") {
+                        if (atleastOneFileAccepted(acceptedFilesAnswers)) {
+                            user1.filesSendingState = "sending";
+                            user2.filesSendingState = "receiving";
+                            // Broadcasting the accepted:bool to user1 only
+                            socket.broadcast.to(user1.socketID).emit("fileListRequestAnswer", acceptedFilesAnswers);
+                            // Initiate the file sending process
+                            // ---------------------------------
+                        } else {
+                            user1.filesSendingState = "idle";
+                            user2.filesSendingState = "idle";
+                            // Broadcasting the accepted:bool to user1 only
+                            socket.broadcast.to(user1.socketID).emit("fileListRequestAnswer", acceptedFilesAnswers);
+                        }
+                    }
                 }
             }
         }
