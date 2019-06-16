@@ -14,7 +14,7 @@
     </head>
     <body>
         
-        <div class="page1" id="loginPage">
+        <div class="page1" id="loginPage" style="display: none">
             <main style="display: grid; min-height: 80vh; align-items: center;">
                 <div class="container">
                     <div class="row justify-content-center mt-4" >
@@ -72,6 +72,68 @@
                                 <li class="list-group-item d-flex justify-content-between align-items-center disabled">Busy User<span class="badge badge-primary badge-pill">waiting</span></li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">Clickable User</li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center disabled">Busy User<span class="badge badge-primary badge-pill">waiting</span></li>
+            
+                              </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="float:right; width: 50%">
+                        <div class="card card-custom mx-auto" style="height: 70vh; width: 80%; overflow-y: scroll;">
+                            <div class="card-body">
+                              <h5 class="card-title text-center">Incomming Requests</h5>
+                              <ul class="list-group">
+                                    <a class="list-group-item clearfix" onclick="alert('Action1 -> Details');">
+                                            Action1
+                                            <span class="pull-right">
+                                                <span class="btn btn-xs btn-default" onclick="alert('Action1 -> Play'); event.stopPropagation();">
+                                                    <span class="fas fa-camera" aria-hidden="true"></span>
+                                                </span>
+                                            </span>
+                                        </a>
+                                        <a class="list-group-item clearfix" onclick="alert('Action1 -> Details');">
+                                                Action1
+                                                <span class="pull-right">
+                                                    <span class="btn btn-xs btn-default" onclick="alert('Action1 -> Play'); event.stopPropagation();">
+                                                        <i class="fas fa-check"></i>
+                                                    </span>
+                                                </span>
+                                            </a>
+                              </ul>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+                 <div style="clear:both"></div>
+            </main>
+        </div>
+
+        <div class="page3" id="fileSelectPage">
+            <main>
+                <div class="row justify-content-center mt-4 mb-4" >
+                    <div class="h1"><i class="fas fa-share-alt-square" style="color: #d14f4b"></i> &nbsp;file<b><span style="color: #d14f4b">Send</span></b></div>
+                </div>
+                <div style="width: 100%;">
+                    <div style="float:left; width: 50%">
+                        <div class="card card-custom mx-auto" style="height: 70vh; width: 80%; overflow-y: scroll;">
+                            <div class="card-body">
+                              <h5 class="card-title text-center">Select the Files</h5>
+                              <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-center disabled">File_1.txt<button type="button" name="fileSelectButton" id="" class="btn btn-primary btn-sm btn-block">Select</button>></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center disabled">File_2.txt<button type="button" name="fileSelectButton" id="" class="btn btn-primary btn-sm btn-block">Select</button>></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center disabled">File_3.txt<button type="button" name="fileSelectButton" id="" class="btn btn-primary btn-sm btn-block">Select</button>></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center disabled">File_4.txt<button type="button" name="fileSelectButton" id="" class="btn btn-primary btn-sm btn-block">Select</button>></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center disabled">File_5.txt<button type="button" name="fileSelectButton" id="" class="btn btn-primary btn-sm btn-block">Select</button>></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center disabled">File_6.txt<button type="button" name="fileSelectButton" id="" class="btn btn-primary btn-sm btn-block">Select</button>></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center disabled">File_7.txt<button type="button" name="fileSelectButton" id="" class="btn btn-primary btn-sm btn-block">Select</button>></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center disabled">File_8.txt<button type="button" name="fileSelectButton" id="" class="btn btn-primary btn-sm btn-block">Select</button>></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center disabled">File_9.txt<button type="button" name="fileSelectButton" id="" class="btn btn-primary btn-sm btn-block">Select</button>></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center disabled">File_10.txt<button type="button" name="fileSelectButton" id="" class="btn btn-primary btn-sm btn-block">Select</button>></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center disabled">File_11.txt<button type="button" name="fileSelectButton" id="" class="btn btn-primary btn-sm btn-block">Select</button>></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center disabled">File_12.txt<button type="button" name="fileSelectButton" id="" class="btn btn-primary btn-sm btn-block">Select</button>></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center disabled">File_13.txt<button type="button" name="fileSelectButton" id="" class="btn btn-primary btn-sm btn-block">Select</button>></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center disabled">File_14.txt<button type="button" name="fileSelectButton" id="" class="btn btn-primary btn-sm btn-block">Select</button>></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center disabled">File_15.txt<button type="button" name="fileSelectButton" id="" class="btn btn-primary btn-sm btn-block">Select</button>></li>
+
             
                               </ul>
                             </div>
