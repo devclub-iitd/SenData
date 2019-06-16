@@ -70,7 +70,9 @@ io.on("connection", (socket: IExtendedSocket) => {
             users.set(username, val);
             // confirming user that its logged in
             status = 0;
-            socket.emit("login", status);
+            const userArray: Array<[string, IUser]> = Array.from(users);
+            socket.emit("login", userArray);
+            // @tmibvishal I changed status to usersArray because users should be sent to new client
         }
     };
     // Getting the username passed by client
@@ -82,7 +84,7 @@ io.on("connection", (socket: IExtendedSocket) => {
     socket.on("disconnect", () => {
         // disconnected user username
         const disconnectedUser: string = socket.username;
-        console.log("user disconnected" + disconnectedUser);
+        console.log("user disconnected" + disconnectedUser); // for dev
         // getting disconnected user properties
         const checkVal: IUser = users.get(disconnectedUser) as IUser;
         // if current disconnected user was paired to some user

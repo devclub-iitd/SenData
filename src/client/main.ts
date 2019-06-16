@@ -1,4 +1,6 @@
 import Client from "./wt";
+import { stat } from "fs";
+import { IExtendedSocket, IUser, Msg } from "../types";
 
 const usernameTextBox: HTMLInputElement = document.getElementById("username") as HTMLInputElement;
 const connectToSocket = () => {
@@ -10,17 +12,30 @@ const connectToSocket = () => {
         window.confirm("Please Enter some username");
     }
 };
-const startSendingButton: HTMLInputElement = document.getElementById("startSendingButton") as HTMLInputElement;
-startSendingButton.addEventListener("click", connectToSocket);
+const startSendingButton: HTMLElement | null = document.getElementById("startSendingButton");
+if (startSendingButton !== null) {
+    startSendingButton.addEventListener("click", connectToSocket);
+}
 
 const setSocketConnections = (socket: SocketIOClient.Socket) => {
-    socket.on("login", (status: number) => {
-        if (status === 0) {
+    socket.on("login", (usersArray: Array<[string, IUser]>) => {
+        const users: Map<string, IUser> = new Map(usersArray);
+        if (users) {
             // hiding page 1
             const loginPage: HTMLElement | null = document.getElementById("loginPage");
             const dashboardPage: HTMLElement | null = document.getElementById("dashboardPage");
             if (loginPage !== null && dashboardPage !== null) {
                 loginPage.style.display = "none";
+                const onlineUsersList: Element | null = dashboardPage.firstElementChild.children[1].firstElementChild.firstElementChild.firstElementChild.lastElementChild;
+                users.forEach((value: IUser, key: string) => {
+                    if (onlineUsersList !== null) {
+                        const li = document.createElement("li");
+                        li.className = "list-group-item d-flex justify-content-between"
+                                        + "align-items-center list-group-item-action";
+                        li.innerText = value.socketID;
+                        onlineUsersList.append(li);
+                    }
+                });
                 dashboardPage.style.display = "block";
             }
         }
