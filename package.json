@@ -13,7 +13,7 @@
     "build-browserify": "browserify  ./build/client/main.js -t [ envify purge --STUN_URL $STUN_URL --TRACKER_URL $TRACKER_URL ] -o ./public/js/bundle.js",
     "watch-browserify": "watchify  ./build/client/main.js -t [ envify purge --STUN_URL $STUN_URL --TRACKER_URL $TRACKER_URL ] -o ./public/js/bundle.js",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
-    "export": "export STUN_IP=\"vm2-internal.devclub.in\"; export TRACKER_IP=\"vm2-internal.devclub.in\""
+    "export": "export STUN_URL=\"vm2-internal.devclub.in\"; export TRACKER_URL=\"vm2-internal.devclub.in\""
   },
   "author": "",
   "license": "MIT",
@@ -22,6 +22,8 @@
     "debug": "^4.1.1",
     "express": "^4.17.1",
     "express-ejs-layouts": "^2.3.1",
+    "file-saver": "^2.0.2",
+    "jszip": "^3.2.1",
     "node": "^12.4.0",
     "socket.io": "^2.2.0",
     "webtorrent": "^0.103.2"
@@ -32,7 +34,9 @@
     "@types/debug": "^4.1.4",
     "@types/events": "^3.0.0",
     "@types/express": "^4.17.0",
+    "@types/file-saver": "^2.0.1",
     "@types/jquery": "^3.3.29",
+    "@types/jszip": "^3.1.6",
     "@types/node": "^12.0.8",
     "@types/parse-torrent": "^5.8.3",
     "@types/simple-peer": "^6.1.5",
