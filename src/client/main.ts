@@ -32,7 +32,7 @@ const setSocketConnections = (socket: SocketIOClient.Socket) => {
                         const li = document.createElement("li");
                         li.className = "list-group-item d-flex justify-content-between"
                                         + "align-items-center list-group-item-action";
-                        li.innerText = value.socketID;
+                        li.innerText = key;
                         onlineUsersList.append(li);
                     }
                 });
