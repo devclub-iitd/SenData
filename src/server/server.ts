@@ -86,24 +86,32 @@ io.on("connection", (socket: IExtendedSocket) => {
         const disconnectedUser: string = socket.username;
         console.log("user disconnected" + disconnectedUser); // for dev
         // getting disconnected user properties
-        const checkVal: IUser = users.get(disconnectedUser) as IUser;
-        // if current disconnected user was paired to some user
-        if (checkVal.partner !== "") {
-            // characteristics of partner
-            const changeVal: IUser = users.get(checkVal.partner) as IUser;
-            // update properties of partner
-            changeVal.state = "idle";
-            changeVal.outRequest = "";
-            changeVal.partner = "";
-            // map updated properties of partner
-            users.set(checkVal.partner, changeVal);
-            // message sent to partner
-            socket.broadcast.to(changeVal.socketID).emit(`PartnerDisconnected`);
+        const checkVal: IUser|undefined = users.get(disconnectedUser) as IUser;
+        
+        if(checkVal !== undefined){
+            // if current disconnected user was paired to some user
+            if (checkVal.partner !== "") {
+                // characteristics of partner
+                const changeVal: IUser|undefined = users.get(checkVal.partner) as IUser;
+
+                if(changeVal !== undefined){
+                    // update properties of partner
+                    changeVal.state = "idle";
+                    changeVal.outRequest = "";
+                    changeVal.partner = "";
+                    // map updated properties of partner
+                    users.set(checkVal.partner, changeVal);
+                    // message sent to partner
+                    socket.broadcast.to(changeVal.socketID).emit(`PartnerDisconnected`);
+                }
+                
+            }
+            // message to all connected clients
+            io.emit("disconnect", disconnectedUser);
+            // deleted socket (in any case)
+            users.delete(disconnectedUser);
         }
-        // message to all connected clients
-        io.emit("disconnect", disconnectedUser);
-        // deleted socket (in any case)
-        users.delete(disconnectedUser);
+        
     });
 
     // user1 requests user2 to connect
@@ -111,26 +119,30 @@ io.on("connection", (socket: IExtendedSocket) => {
         // get this user's username
         const user1Name: string = socket.username;
         // get properties of both users.
-        const user1: IUser = users.get(user1Name) as IUser;
-        const user2: IUser = users.get(user2Name) as IUser;
-        if (user2.state === "waiting" || user2.state === "connected") {
-            socket.emit("answer", "n");
-        } else {
-            // updated properties
-            user1.outRequest = user2Name;
-            user1.state = "waiting";
-            user2.inRequests.add(user1Name);
-            // remap new properties
-            users.set(user1Name, user1);
-            users.set(user2Name, user2);
-            // offer event to user2
-            socket.broadcast.to(user2.socketID).emit("offer", user1Name);
-            // broadcast event to all other users
-            socket.broadcast.emit("userRequested", {
-                user1_name: user1Name,
-                user2_name: user2Name,
-            });
+        const user1: IUser|undefined = users.get(user1Name) as IUser;
+        const user2: IUser|undefined = users.get(user2Name) as IUser;
+
+        if(user1 !== undefined && user2 !== undefined){
+            if (user2.state === "waiting" || user2.state === "connected") {
+                socket.emit("answer", "n");
+            } else {
+                // updated properties
+                user1.outRequest = user2Name;
+                user1.state = "waiting";
+                user2.inRequests.add(user1Name);
+                // remap new properties
+                users.set(user1Name, user1);
+                users.set(user2Name, user2);
+                // offer event to user2
+                socket.broadcast.to(user2.socketID).emit("offer", user1Name);
+                // broadcast event to all other users
+                socket.broadcast.emit("userRequested", {
+                    user1_name: user1Name,
+                    user2_name: user2Name,
+                });
+            }
         }
+        
     });
 
     // answer event.. user2 answering user1
@@ -142,50 +154,59 @@ io.on("connection", (socket: IExtendedSocket) => {
         const user2Name: string = socket.username;
         const user1Name: string = msg.user1_name;
         // get properties of both users
-        const user1: IUser = users.get(user1Name) as IUser;
-        const user2: IUser = users.get(user2Name) as IUser;
-        // getting response of user2 to user1 as answer
-        const ans: string = msg.answer;
-        if (ans === "n") {
-            // updating properties of user2
-            // remove user1 from inRequest list of user2
-            user2.inRequests.delete(user1Name);
-            user1.state = "idle";
-            user1.outRequest = "";
-            // remap new properties
-            users.set(user1Name, user1);
-            users.set(user2Name, user2);
-            // emit messages to user1 and all other users.
-            socket.broadcast.to(user1.socketID).emit("answer", ans);
-            socket.broadcast.emit("userRejected", {
-                user1_name: user1Name,
-                user2_name: user2Name,
-            });
-        } else {
-            // updating partner properties of user1 and user2
-            user2.partner = user1Name;
-            user1.partner = user2Name;
-            // updating status of both users to connected
-            user1.state = "connected";
-            user2.state = "connected";
-            // rejecting all other requests of both users
-            user1.inRequests.forEach( (key) => {
-                // get socketId of key
-                const temp: IUser = users.get(key) as IUser;
-                socket.broadcast.to(temp.socketID).emit("answer", "n");
-            });
+        const user1: IUser|undefined = users.get(user1Name) as IUser;
+        const user2: IUser|undefined = users.get(user2Name) as IUser;
 
-            user1.inRequests.clear();
-            user1.inRequests.forEach( (key) => {
-                // get socketId of key
-                const temp: IUser = users.get(key) as IUser;
-                socket.broadcast.to(temp.socketID).emit("answer", "n");
-            });
-            user2.inRequests.clear();
-            // remap new properties
-            users.set(user1Name, user1);
-            users.set(user2Name, user2);
+        if(user1 !== undefined && user2 !== undefined){
+            // getting response of user2 to user1 as answer
+            const ans: string = msg.answer;
+            if (ans === "n") {
+                // updating properties of user2
+                // remove user1 from inRequest list of user2
+                user2.inRequests.delete(user1Name);
+                user1.state = "idle";
+                user1.outRequest = "";
+                // remap new properties
+                users.set(user1Name, user1);
+                users.set(user2Name, user2);
+                // emit messages to user1 and all other users.
+                socket.broadcast.to(user1.socketID).emit("answer", ans);
+                socket.broadcast.emit("userRejected", {
+                    user1_name: user1Name,
+                    user2_name: user2Name,
+                });
+            } else {
+                // updating partner properties of user1 and user2
+                user2.partner = user1Name;
+                user1.partner = user2Name;
+                // updating status of both users to connected
+                user1.state = "connected";
+                user2.state = "connected";
+                // rejecting all other requests of both users
+                user1.inRequests.forEach( (key) => {
+                    // get socketId of key
+                    const temp: IUser|undefined = users.get(key) as IUser;
+                    if(temp !== undefined){
+                        socket.broadcast.to(temp.socketID).emit("answer", "n");
+                    }
+                });
+
+                user1.inRequests.clear();
+                user1.inRequests.forEach( (key) => {
+                    // get socketId of key
+                    const temp: IUser|undefined = users.get(key) as IUser;
+                    if(temp !== undefined){
+                        socket.broadcast.to(temp.socketID).emit("answer", "n");
+                    }
+                    
+                });
+                user2.inRequests.clear();
+                // remap new properties
+                users.set(user1Name, user1);
+                users.set(user2Name, user2);
+            }
         }
+        
     });
 
     // request for cancelling connection by either user
@@ -193,21 +214,25 @@ io.on("connection", (socket: IExtendedSocket) => {
         // get usernames of both users
         const user1Name: string = socket.username;
         // get properties of both users
-        const user1: IUser = users.get(user1Name) as IUser;
+        const user1: IUser|undefined = users.get(user1Name) as IUser;
         const user2Name: string = user1.partner;  // enhancement by @tmibvishal accepted
-        const user2: IUser = users.get(user2Name) as IUser;
-        // updating properties
-        user1.state = "idle";
-        user1.partner = "";
-        user2.state = "idle";
-        user2.partner = "";
-        // message to user2
-        socket.broadcast.to(user2.socketID).emit("cancel", user1Name);
-        // message to all other users
-        socket.broadcast.emit("usersIdle", {
-            user1_name: user1Name,
-            user2_name: user2Name,
-        });
+        const user2: IUser|undefined = users.get(user2Name) as IUser;
+
+        if(user1 !== undefined && user2 !== undefined){
+            // updating properties
+            user1.state = "idle";
+            user1.partner = "";
+            user2.state = "idle";
+            user2.partner = "";
+            // message to user2
+            socket.broadcast.to(user2.socketID).emit("cancel", user1Name);
+            // message to all other users
+            socket.broadcast.emit("usersIdle", {
+                user1_name: user1Name,
+                user2_name: user2Name,
+            });
+        }
+        
     });
 
     // ------------------------ Vishal code --------------------------------
@@ -221,7 +246,7 @@ io.on("connection", (socket: IExtendedSocket) => {
                 const msg = new Msg(username1, messageValue);
                 // Getting the user2 (partner of user1)
                 const username2 = user1.partner;
-                const user2: IUser = users.get(username2) as IUser;
+                const user2: IUser|undefined = users.get(username2) as IUser;
                 // Emitting the msg to user1 (sender)
                 socket.emit("message", msg);
                 // Broadcasting the msg to user2 only
@@ -242,7 +267,7 @@ io.on("connection", (socket: IExtendedSocket) => {
                         user1.filesSendingState = "waiting";
                         // Getting the user2 (partner of user1)
                         const username2 = user1.partner;
-                        const user2: IUser = users.get(username2) as IUser;
+                        const user2: IUser|undefined = users.get(username2) as IUser;
                         // Broadcasting the msg to user2 only
                         socket.broadcast.to(user2.socketID).emit("fileListSendRequest", fileList);
                     } else {
