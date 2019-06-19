@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="./css/style.css">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
         <title> fileSend</title>
         <script src="/socket.io/socket.io.js"> </script>
@@ -136,7 +136,7 @@
                               </ul>
                             </div>
                             <div class="btn-group" role="group" style="width: 90%; margin-left: auto; margin-right: auto;">
-                                <button type="button" name="" id="" class="btn btn-primary btn-md" style="margin-inline-end: 5%;"">Select All</button>
+                                <button type="button" name="" id="" class="btn btn-primary btn-md" style="margin-inline-end: 5%;">Select All</button>
                                 <button type="button" name="" id="" class="btn btn-primary btn-md">Select</button>
                             </div>
                         </div>
@@ -144,25 +144,123 @@
                     <div style="float:right; width: 50%">
                         <div class="card card-custom mx-auto" style="height: 70vh; width: 80%; overflow-y: scroll;">
                             <div class="card-body">
-                              <h5 class="card-title text-center">Incoming Requests</h5>
-                              <ul class="list-group">
-                                    <a class="list-group-item clearfix" onclick="alert('Action1 -> Details');">
-                                            Action1
-                                            <span class="pull-right">
-                                                <span class="btn btn-xs btn-default" onclick="alert('Action1 -> Play'); event.stopPropagation();">
-                                                    <span class="fas fa-camera" aria-hidden="true"></span>
-                                                </span>
-                                            </span>
-                                        </a>
+                                <h5 class="card-title text-center">Chat</h5>
+                                <div class="msgs">
+                                    <div class="in_msg">
+                                        <div class="in_msg_img">
+                                            <img src="https://ptetutorials.com/images/user-profile.png" alt="profile_pic">
+                                        </div>
+                                        <div class="rcvd_msg">
+                                            <p>What's up</p>
+                                            <span class="time_date"> 11:01 AM    |    June 9</span>
+                                        </div>
+                                    </div>
+                                    <div class="out_msg">
+                                        <div class="sent_msg">
+                                            <p>Ceiling</p>
+                                            <span class="time_date"> 11:01 AM    |    June 9</span>
+                                        </div>
+                                    </div>
+                                    <div class="in_msg">
+                                        <div class="in_msg_img">
+                                            <img src="https://ptetutorials.com/images/user-profile.png" alt="profile_pic">
+                                        </div>
+                                        <div class="rcvd_msg">
+                                            <p>What's up</p>
+                                            <span class="time_date"> 11:01 AM    |    June 9</span>
+                                        </div>
+                                    </div>
+                                    <div class="out_msg">
+                                        <div class="sent_msg">
+                                            <p>Ceiling</p>
+                                            <span class="time_date"> 11:01 AM    |    June 9</span>
+                                        </div>
+                                    </div>
+                                    <div class="in_msg">
+                                        <div class="in_msg_img">
+                                            <img src="https://ptetutorials.com/images/user-profile.png" alt="profile_pic">
+                                        </div>
+                                        <div class="rcvd_msg">
+                                            <p>What's up</p>
+                                            <span class="time_date"> 11:01 AM    |    June 9</span>
+                                        </div>
+                                    </div>
+                                    <div class="out_msg">
+                                        <div class="sent_msg">
+                                            <p>Ceiling</p>
+                                            <span class="time_date"> 11:01 AM    |    June 9</span>
+                                        </div>
+                                    </div>
+                                    <div class="in_msg">
+                                        <div class="in_msg_img">
+                                            <img src="https://ptetutorials.com/images/user-profile.png" alt="profile_pic">
+                                        </div>
+                                        <div class="rcvd_msg">
+                                            <p>What's up</p>
+                                            <span class="time_date"> 11:01 AM    |    June 9</span>
+                                        </div>
+                                    </div>
+                                    <div class="out_msg">
+                                        <div class="sent_msg">
+                                            <p>Ceiling</p>
+                                            <span class="time_date"> 11:01 AM    |    June 9</span>
+                                        </div>
+                                    </div>
+                                    <div class="in_msg">
+                                        <div class="in_msg_img">
+                                            <img src="https://ptetutorials.com/images/user-profile.png" alt="profile_pic">
+                                        </div>
+                                        <div class="rcvd_msg">
+                                            <p>What's up</p>
+                                            <span class="time_date"> 11:01 AM    |    June 9</span>
+                                        </div>
+                                    </div>
+                                    <div class="out_msg">
+                                        <div class="sent_msg">
+                                            <p>Ceiling</p>
+                                            <span class="time_date"> 11:01 AM    |    June 9</span>
+                                        </div>
+                                    </div>
+                                    <div class="in_msg">
+                                        <div class="in_msg_img">
+                                            <img src="https://ptetutorials.com/images/user-profile.png" alt="profile_pic">
+                                        </div>
+                                        <div class="rcvd_msg">
+                                            <p>What's up</p>
+                                            <span class="time_date"> 11:01 AM    |    June 9</span>
+                                        </div>
+                                    </div>
+                                    <div class="out_msg" style="margin-bottom: 2em;">
+                                        <div class="sent_msg">
+                                            <p>Ceiling</p>
+                                            <span class="time_date"> 11:01 AM    |    June 9</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="type_msg">
+                                    <div class="input_msg_write">
+                                        <input type="text" class="write_msg" placeholder="Type a message" />
+                                        <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+                                    </div>
+                                </div>
+                                <!-- <ul class="list-group">
                                         <a class="list-group-item clearfix" onclick="alert('Action1 -> Details');">
                                                 Action1
                                                 <span class="pull-right">
                                                     <span class="btn btn-xs btn-default" onclick="alert('Action1 -> Play'); event.stopPropagation();">
-                                                        <i class="fas fa-check"></i>
+                                                        <span class="fas fa-camera" aria-hidden="true"></span>
                                                     </span>
                                                 </span>
                                             </a>
-                              </ul>
+                                            <a class="list-group-item clearfix" onclick="alert('Action1 -> Details');">
+                                                    Action1
+                                                    <span class="pull-right">
+                                                        <span class="btn btn-xs btn-default" onclick="alert('Action1 -> Play'); event.stopPropagation();">
+                                                            <i class="fas fa-check"></i>
+                                                        </span>
+                                                    </span>
+                                                </a>
+                                </ul> -->
                             </div>
                         </div>
                     </div>

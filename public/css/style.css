@@ -80,3 +80,79 @@ main {
 .btn {
     width: 30%;
 }
+
+.in_msg_img img {
+    display: inline-block;
+    width: 6%;
+}
+
+.rcvd_msg {
+    display: inline-block;
+    padding: 0 0 0 10px;
+    vertical-align: top;   
+    max-width: 80%;
+}
+
+.rcvd_msg p {
+    background: #ebebeb none repeat scroll 0 0;
+    border-radius: 8px;
+    color: #646464;
+    font-size: 14px;
+    margin: 0;
+    padding: 5px 10px 5px 12px;
+    width: 100%;
+}
+
+.time_date {
+    color: #747474;
+    display: block;
+    font-size: 12px;
+    margin: 8px 0 0;
+  }
+
+.out_msg {
+    margin-bottom: 2em;
+    margin-right: 1em;
+}  
+
+.sent_msg {
+    float: right;
+    max-width: 80%;
+}
+
+.sent_msg p {
+    background: #05728f none repeat scroll 0 0;
+    border-radius: 8px;
+    font-size: 14px;
+    margin: 0; color:#fff;
+    padding: 5px 10px 5px 12px;
+    width:100%;
+}
+
+.input_msg_write input {
+    background: rgba(0, 0, 0, 0);
+     /* none repeat scroll 0 0; */
+    border: medium none;
+    color: #4c4c4c;
+    font-size: 15px;
+    /* min-height: 48px; */
+    width: 100%;
+}
+
+.type_msg {
+    border-top: 1px solid #c4c4c4;
+}
+
+.msg_send_btn {
+    background: #05728f none repeat scroll 0 0;
+    border: medium none;
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+    font-size: 17px;
+    height: 33px;
+    position: absolute;
+    right: 0;
+    top: 11px;
+    width: 33px;
+}
