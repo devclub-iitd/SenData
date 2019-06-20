@@ -9,17 +9,17 @@ const sendButton: HTMLElement | null = document.getElementById("btn-chat");
 const typing: HTMLElement | null = document.getElementById("typing");
 
 const sendMessage = (messageValue: string) => {
-    if (messageValue !== "") {
-        socket.emit("message", messageValue);
-    }
+  if (messageValue !== "") {
+    socket.emit("message", messageValue);
+  }
 };
 
 socket.on("message", (msg: Msg) => {
-    if (chats !== null) {
-        // chats will be null in case it is not properly loaded in the ts file
-        const li = document.createElement("li");
-        li.className = "left clearfix";
-        li.innerHTML =
+  if (chats !== null) {
+    // chats will be null in case it is not properly loaded in the ts file
+    const li = document.createElement("li");
+    li.className = "left clearfix";
+    li.innerHTML =
             `<span class='chat-img pull-left'>
                 <img src='/images/U.png' alt='User Avatar' class='img-circle' />
             </span>
@@ -33,25 +33,25 @@ socket.on("message", (msg: Msg) => {
                     <strong class='pull-left primary-font'>${msg.username}</strong>
                 </div>
             <p class='chat_text_message'>${msg.messageValue}</p></div>`;
-        chats.appendChild(li);
-    }
+    chats.appendChild(li);
+  }
 });
 
 socket.on("fileSendRequest", (fileRequest: FileList) => {
-    // Displat fileRequest to user and ask for yes or no
-    // Setting click listener to sendButton
-    // Use HTML DOM to get the answer
-    const answer: boolean = true;
-    if (typeof(answer) === "boolean") {
-        socket.emit("fileRequestAnswer", answer);
-    }
+  // Displat fileRequest to user and ask for yes or no
+  // Setting click listener to sendButton
+  // Use HTML DOM to get the answer
+  const answer = true;
+  if (typeof(answer) === "boolean") {
+    socket.emit("fileRequestAnswer", answer);
+  }
 });
 
 // setting click listener to sendButton
 if (sendButton !== null) {
-    sendButton.addEventListener("click", () => {
-        if (message !== null && message.value !== "") {
-            sendMessage(message.value);
-        }
-    });
+  sendButton.addEventListener("click", () => {
+    if (message !== null && message.value !== "") {
+      sendMessage(message.value);
+    }
+  });
 }
