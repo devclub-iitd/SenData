@@ -129,14 +129,23 @@ main {
     width:100%;
 }
 
+.input_msg_write {
+    width: 100%;
+}
+
 .input_msg_write input {
     background: rgba(0, 0, 0, 0);
      /* none repeat scroll 0 0; */
     border: medium none;
     color: #4c4c4c;
-    font-size: 15px;
+    font-size: 1em;
+    margin-left: auto;
+    margin-right: auto;
     /* min-height: 48px; */
-    width: 100%;
+    width: 80%;
+    float: left;
+    padding: 0.75em;
+    margin-bottom: 0.25em;
 }
 
 .type_msg {
@@ -144,15 +153,40 @@ main {
 }
 
 .msg_send_btn {
-    background: #05728f none repeat scroll 0 0;
+    float: right;
+    background: #05728f;
     border: medium none;
-    border-radius: 50%;
-    color: #fff;
+    border-radius: 5px;
+    border-color: #fff;
     cursor: pointer;
-    font-size: 17px;
-    height: 33px;
-    position: absolute;
-    right: 0;
-    top: 11px;
-    width: 33px;
+    font-size: 1em;
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+    padding-right: 0.5em;
+    padding-left: 0.5em;
+    position: relative;
+    top: 0.5em;
+    right: 1em;
+}
+
+.lt_side{
+    width: 100%
+}
+
+.rt_side{
+    width: 100%;
+}
+
+/* @media only screen and (max) */
+
+@media only screen and (min-width: 680px) {
+    .rt_side {
+        float: right;
+        width: 50%;
+    }
+
+    .lt_side {
+        float: left;
+        width: 50%;
+    }
 }
