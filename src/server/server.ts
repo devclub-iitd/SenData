@@ -64,15 +64,18 @@ io.on("connection", (socket: IExtendedSocket) => {
                 outRequest: "",
                 partner: "",
                 socketID: socket.id,
-                state: "idle"
+                state: "idle",
             };
-            // mapping logged user to its characteristic values.
-            users.set(username, val);
             // confirming user that its logged in
             status = 0;
-            const userArray: Array<[string, IUser]> = Array.from(users);
-            socket.emit("login", userArray);
+            // sending users array to logged user without the new user
+            const usersArray: Array<[string, IUser]> = Array.from(users);
+            socket.emit("login", usersArray);
+            // sending the new logged user to all clients except sender
+            socket.broadcast.emit("newUserLogin", {username, val});
             // @tmibvishal I changed status to usersArray because users should be sent to new client
+            // mapping logged user to its characteristic values.
+            users.set(username, val);
         }
     };
     // Getting the username passed by client
@@ -84,17 +87,16 @@ io.on("connection", (socket: IExtendedSocket) => {
     socket.on("disconnect", () => {
         // disconnected user username
         const disconnectedUser: string = socket.username;
-        console.log("user disconnected" + disconnectedUser); // for dev
+        console.log("user disconnected " + disconnectedUser); // for dev
         // getting disconnected user properties
         const checkVal: IUser|undefined = users.get(disconnectedUser) ;
-        
-        if(checkVal !== undefined){
+        if (checkVal !== undefined) {
             // if current disconnected user was paired to some user
             if (checkVal.partner !== "") {
                 // characteristics of partner
                 const changeVal: IUser|undefined = users.get(checkVal.partner) ;
 
-                if(changeVal !== undefined){
+                if (changeVal !== undefined) {
                     // update properties of partner
                     changeVal.state = "idle";
                     changeVal.outRequest = "";
@@ -104,14 +106,13 @@ io.on("connection", (socket: IExtendedSocket) => {
                     // message sent to partner
                     socket.broadcast.to(changeVal.socketID).emit(`PartnerDisconnected`);
                 }
-                
             }
             // message to all connected clients
-            io.emit("disconnect", disconnectedUser);
+            // io.emit("disconnect", disconnectedUser);
+            io.emit("userDisconnected", disconnectedUser);
             // deleted socket (in any case)
             users.delete(disconnectedUser);
         }
-        
     });
 
     // user1 requests user2 to connect

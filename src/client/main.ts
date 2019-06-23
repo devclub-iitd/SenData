@@ -26,7 +26,7 @@ const setSocketConnections = (socket: SocketIOClient.Socket) => {
             const dashboardPage: HTMLElement | null = document.getElementById("dashboardPage");
             if (loginPage !== null && dashboardPage !== null) {
                 loginPage.style.display = "none";
-                const onlineUsersList: Element | null = dashboardPage.firstElementChild.children[1].firstElementChild.firstElementChild.firstElementChild.lastElementChild;
+                const onlineUsersList: Element | null = document.getElementById("onlineUsersList");
                 users.forEach((value: IUser, key: string) => {
                     if (onlineUsersList !== null) {
                         const li = document.createElement("li");
@@ -40,8 +40,42 @@ const setSocketConnections = (socket: SocketIOClient.Socket) => {
             }
         }
     });
+
+    socket.on("newUserLogin", (user: {username: string, val: IUser}) => {
+        if (user) {
+          const onlineUsersList: Element | null = document.getElementById("onlineUsersList");
+          if (onlineUsersList !== null) {
+            const li = document.createElement("li");
+            li.className =
+              "list-group-item d-flex justify-content-between" +
+              "align-items-center list-group-item-action";
+            li.innerText = user.username;
+            onlineUsersList.append(li);
+          }
+        }
+    });
+
+    socket.on("userDisconnected", (username: string) => {
+        if (username) {
+          const onlineUsersList: Element | null = document.getElementById("onlineUsersList");
+          if (onlineUsersList !== null) {
+            let i = 0;
+            const allListElements: HTMLCollection = onlineUsersList.children;
+            for (i = 0; i < allListElements.length; i++) {
+                const listElement = allListElements[i] as HTMLElement;
+                if (listElement !== undefined) {
+                    if (listElement.innerText.split("\n")[0] === username) {
+                        break;
+                    }
+                }
+            }
+            // removing the disconnected user
+            onlineUsersList.removeChild(allListElements[i]);
+          }
+        }
+    });
 };
-/* 
+/*
 const socket = io();
 socket.on("bye-bye", () => {
     $("body").text("Server sent bye-bye");
