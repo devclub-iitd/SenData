@@ -66,9 +66,12 @@ typings/
 # Serverless directories
 .serverless
 
-js/bundle.js
 .idea/*
 
 .gitsecret/keys/random_seed
 public/js/bundle.js
+
+# Compiled from SCSS
+public/css/newstyle.css*
+
 build/
