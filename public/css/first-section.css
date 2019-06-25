@@ -1,0 +1,41 @@
+.main-section:nth-child(1) > main {
+  margin: 0;
+}
+
+.main-section:nth-child(1) div {
+  height: 100%;
+  flex: 1 1 0;
+  overflow: hidden;
+  margin: 0;
+}
+
+.main-section:nth-child(1) > main > :not(.show) {
+  opacity: 0;
+  visibility: collapse;
+}
+
+.show {
+  transition: all 0.6s ease-out;
+}
+
+.main-section:nth-child(1) main {
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+.select-files-send {
+  background-color: blue;
+}
+
+.approve-files {
+  background-color: yellow;
+}
+
+.wait-approval {
+  background-color: green;
+}
+
+.file-progress {
+  background-color: red;
+}

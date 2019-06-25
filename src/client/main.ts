@@ -1,6 +1,5 @@
-import Client from "./wt";
-import { stat } from "fs";
 import { IExtendedSocket, IUser, Msg } from "../types";
+import Client from "./wt";
 
 const usernameTextBox: HTMLInputElement = document.getElementById("username") as HTMLInputElement;
 const connectToSocket = () => {
@@ -103,3 +102,46 @@ socket.on("disconnected", () => {
     $("body").text("The other user has disconnected!");
 });
 */
+
+const manageClickListener = (enable: boolean) => {
+    const sections = document.querySelectorAll("body > main > section");
+    const collapseClass = "my-collapse";
+    sections.forEach((section) => {
+        if (section.firstElementChild == null) {
+            return;
+        }
+
+        const onClick = () => {
+            section.classList.toggle(collapseClass);
+        };
+
+        if (enable) {
+            section.firstElementChild.addEventListener("click", onClick);
+        } else {
+            section.firstElementChild.removeEventListener("click", onClick);
+        }
+    });
+};
+
+/*
+* Shows the ith child of targetNode by adding class show to that element
+* and removing it from others.
+*/
+const showChild = (targetNode: Element, i: number) => {
+    targetNode.querySelectorAll(".show").forEach( (elem) => {
+        elem.classList.remove("show");
+    });
+    const t = targetNode.children[i];
+    if (t) {
+        t.classList.add("show");
+    }
+};
+
+window.onload = () => {
+    const mediaQueryList = window.matchMedia("(max-width: 767px)");
+    const handleSizeChange = (evt: MediaQueryList | MediaQueryListEvent) => {
+        manageClickListener(evt.matches);
+    };
+    mediaQueryList.addListener(handleSizeChange);
+    handleSizeChange(mediaQueryList);
+};
