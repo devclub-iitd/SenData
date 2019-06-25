@@ -66,9 +66,6 @@ typings/
 # Serverless directories
 .serverless
 
-# VSCode
-.vscode/
-
 js/bundle.js
 .idea/*
 
