@@ -30,7 +30,7 @@ server.listen(env.PORT, () => {
 //     inRequests: Set<string>
 // }
 
-// declaring a user map containing all users mapped from their soscketids to their characteristics.
+// declaring a user map containing all users mapped from their socketIDs to their characteristics.
 const users: Map<string, IUser> = new Map();
 
 // function to get username from socketID
@@ -60,7 +60,7 @@ io.on("connection", (socket: IExtendedSocket) => {
             // initialising characteristics for logged user (updatable later)
             const val: IUser = {
                 filesSendingState: "idle",
-                inRequests: new Set ,
+                inRequests: new Set(),
                 outRequest: "",
                 partner: "",
                 socketID: socket.id,
@@ -123,7 +123,7 @@ io.on("connection", (socket: IExtendedSocket) => {
         const user1: IUser|undefined = users.get(user1Name) ;
         const user2: IUser|undefined = users.get(user2Name) ;
 
-        if(user1 !== undefined && user2 !== undefined){
+        if (user1 !== undefined && user2 !== undefined) {
             if (user2.state === "waiting" || user2.state === "connected") {
                 socket.emit("answer", "n");
             } else {
@@ -143,7 +143,6 @@ io.on("connection", (socket: IExtendedSocket) => {
                 });
             }
         }
-        
     });
 
     // answer event.. user2 answering user1
@@ -158,7 +157,7 @@ io.on("connection", (socket: IExtendedSocket) => {
         const user1: IUser|undefined = users.get(user1Name) ;
         const user2: IUser|undefined = users.get(user2Name) ;
 
-        if(user1 !== undefined && user2 !== undefined){
+        if (user1 !== undefined && user2 !== undefined) {
             // getting response of user2 to user1 as answer
             const ans: string = msg.answer;
             if (ans === "n") {
@@ -187,7 +186,7 @@ io.on("connection", (socket: IExtendedSocket) => {
                 user1.inRequests.forEach( (key) => {
                     // get socketId of key
                     const temp: IUser|undefined = users.get(key) ;
-                    if(temp !== undefined){
+                    if (temp !== undefined) {
                         socket.broadcast.to(temp.socketID).emit("answer", "n");
                     }
                 });
@@ -196,10 +195,9 @@ io.on("connection", (socket: IExtendedSocket) => {
                 user1.inRequests.forEach( (key) => {
                     // get socketId of key
                     const temp: IUser|undefined = users.get(key) ;
-                    if(temp !== undefined){
+                    if (temp !== undefined) {
                         socket.broadcast.to(temp.socketID).emit("answer", "n");
                     }
-                    
                 });
                 user2.inRequests.clear();
                 // remap new properties
@@ -207,7 +205,6 @@ io.on("connection", (socket: IExtendedSocket) => {
                 users.set(user2Name, user2);
             }
         }
-        
     });
 
     // request for cancelling connection by either user
@@ -217,11 +214,11 @@ io.on("connection", (socket: IExtendedSocket) => {
         // get properties of both users
         const user1: IUser|undefined = users.get(user1Name) ;
 
-        if(user1 !== undefined){
+        if (user1 !== undefined) {
             const user2Name: string = user1.partner;  // enhancement by @tmibvishal accepted
             const user2: IUser|undefined = users.get(user2Name) ;
 
-            if(user2 !== undefined){
+            if (user2 !== undefined) {
                 // updating properties
                 user1.state = "idle";
                 user1.partner = "";
@@ -236,8 +233,6 @@ io.on("connection", (socket: IExtendedSocket) => {
                 });
             }
         }
-        
-        
     });
 
     // ------------------------ Vishal code --------------------------------
@@ -255,11 +250,11 @@ io.on("connection", (socket: IExtendedSocket) => {
                 // Emitting the msg to user1 (sender)
                 socket.emit("message", msg);
 
-                if(user2 !== undefined){
+                if (user2 !== undefined) {
                     // Broadcasting the msg to user2 only
                     socket.broadcast.to(user2.socketID).emit("message", msg);
                 }
-                
+
             }
         }
     });
@@ -278,11 +273,11 @@ io.on("connection", (socket: IExtendedSocket) => {
                         const username2 = user1.partner;
                         const user2: IUser|undefined = users.get(username2) ;
 
-                        if(user2 !== undefined){
+                        if (user2 !== undefined) {
                             // Broadcasting the msg to user2 only
                             socket.broadcast.to(user2.socketID).emit("fileListSendRequest", fileList);
-                        }   
-                        
+                        }
+
                     } else {
                         // file_list contains no file
                         // Emitting the msg to user1 (sender)
