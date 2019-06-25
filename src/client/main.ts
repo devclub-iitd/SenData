@@ -1,6 +1,8 @@
 import { IExtendedSocket, IUser, Msg } from "../types";
 import Client from "./wt";
 
+/* globals io */
+
 const setSocketConnections = (socket: SocketIOClient.Socket): void => {
   socket.on('login', (usersArray: [string, IUser][]): void => {
     const users: Map<string, IUser> = new Map(usersArray);

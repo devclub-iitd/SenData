@@ -1,5 +1,6 @@
 import { IExtendedSocket, /* FileRequest ,*/ IUser, Msg } from "../types";
 
+/* globals io */
 const socket = io();
 
 // Importing chatBox DOM elements from HTML file
