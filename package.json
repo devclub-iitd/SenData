@@ -12,7 +12,7 @@
     "watch-ts": "tsc -w",
     "build-browserify": "browserify  ./build/client/main.js -t [ envify purge --STUN_URL $STUN_URL --TRACKER_URL $TRACKER_URL ] -o ./public/js/bundle.js",
     "watch-browserify": "watchify  ./build/client/main.js -t [ envify purge --STUN_URL $STUN_URL --TRACKER_URL $TRACKER_URL ] -o ./public/js/bundle.js",
-    "tslint": "tslint -c tslint.json -p tsconfig.json",
+    "lint": "eslint --fix src/**/*.ts",
     "export": "export STUN_URL=\"vm2-internal.devclub.in\"; export TRACKER_URL=\"vm2-internal.devclub.in\""
   },
   "author": "",
