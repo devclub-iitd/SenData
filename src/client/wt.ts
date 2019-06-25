@@ -49,7 +49,7 @@ export default class Client extends EventEmitter {
     * for setting. If not set, falls back to third party
     * defaults.
     */
-  public constructor(socket: SocketIOClient.Socket): void {
+  public constructor(socket: SocketIOClient.Socket){
     super();
     let STUN_URL: string;
     let TRACKER_URL: string;
