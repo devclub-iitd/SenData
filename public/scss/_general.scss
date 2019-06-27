@@ -67,11 +67,9 @@ a:hover {
 .main-section header {
   display: flex;
   justify-content: center;
-  background-color: var(--main-color);
   margin: 0;
   padding: 2px;
   font-size: 1.2rem;
-  color: white;
   font-weight: bold;
   align-items: center;
 }
@@ -148,5 +146,4 @@ a:hover {
 input {
   background-color: inherit;
   color: inherit;
-  font-size: 1.3rem;
 }
