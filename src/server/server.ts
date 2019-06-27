@@ -51,12 +51,10 @@ io.on("connection", (socket: IExtendedSocket): void => {
   // ------------------------ anweshan code --------------------------------
   const loginTheUser = (username: string): void => {
     // adding the username to the socket variable of the user
-    socket.username = username;
+    // socket.username = username;
     debug(username + " connected to server"); // for dev purpose, remove later
     // if username already exists in the user map
-    if (users.has(username) || username === "") {
-      status = 1;
-    } else {
+    if (!users.has(username) && username !== "") {    
       // initialising characteristics for logged user (updatable later)
       const val: IUser = {
         filesSendingState: "idle",
@@ -66,8 +64,8 @@ io.on("connection", (socket: IExtendedSocket): void => {
         socketID: socket.id,
         state: "idle",
       };
-      // confirming user that its logged in
-      status = 0;
+      // // confirming user that its logged in
+      // status = 0;
       // sending users array to logged user without the new user
       const usersArray: [string, IUser][] = Array.from(users);
       socket.emit("login", usersArray);
@@ -79,9 +77,9 @@ io.on("connection", (socket: IExtendedSocket): void => {
     }
   };
     // Getting the username passed by client
-  const username = socket.handshake.query.username;
+  const uname = socket.handshake.query.username;
   // Logging the client into the server
-  loginTheUser(username);
+  loginTheUser(uname);
 
   // disconnect event
   socket.on("disconnect", (): void => {
@@ -326,5 +324,4 @@ io.on("connection", (socket: IExtendedSocket): void => {
       }
     }
   });
-
 });
