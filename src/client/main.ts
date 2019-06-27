@@ -3,6 +3,29 @@ import Client from "./wt";
 
 /* globals io */
 
+/*
+* Shows the ith child of targetNode by adding class show to that element
+* and removing it from others.
+*/
+const showChild = (targetNode: HTMLElement, i: number): void => {
+  targetNode.querySelectorAll(".show").forEach( (elem): void => {
+    elem.classList.remove("show");
+  });
+  const t = targetNode.children[i] as HTMLElement;
+  if (t) {
+
+    // If data-centered is present in child, add class centered to parent
+    // Allows for a centered layout by an attribute of child
+    if(t.dataset.centered !== undefined) {
+      targetNode.classList.add("centered");
+    }
+    else {
+      targetNode.classList.remove("centered");
+    }
+    t.classList.add("show");
+  }
+};
+
 const setSocketConnections = (socket: SocketIOClient.Socket): void => {
   socket.on('login', (usersArray: [string, IUser][]): void => {
     const users: Map<string, IUser> = new Map(usersArray);
@@ -62,7 +85,9 @@ const setSocketConnections = (socket: SocketIOClient.Socket): void => {
   });
 };
 
-const usernameTextBox: HTMLInputElement = document.getElementById("username") as HTMLInputElement;
+
+
+/* const usernameTextBox: HTMLInputElement = document.querySelector('#login-page input[type="text"]') as HTMLInputElement;
 const connectToSocket = (): void => {
   const username = usernameTextBox.value;
   if (username !== "") {
@@ -71,11 +96,26 @@ const connectToSocket = (): void => {
   } else {
     window.confirm("Please Enter some username");
   }
-};
-const startSendingButton: HTMLElement | null = document.getElementById("startSendingButton");
+}; */
+
+const loginForm = document.querySelector("#login-page form") as HTMLFormElement;
+loginForm.onsubmit = (e): void => {
+  e.preventDefault();
+  const usernameTextBox = loginForm.querySelector('input[type="text"]') as HTMLInputElement;
+  const username = usernameTextBox.value;
+  console.log(username);
+  if(username !== "") {
+    const socket: SocketIOClient.Socket = io(window.location.origin, {query: `username=${username}`});
+    setSocketConnections(socket);
+    showChild(document.querySelector("body > main"), 2);
+  } else {
+    window.alert("Enter a username ffs"); //TODO: Fix with a warning shown by text box border
+  }
+}
+/* const startSendingButton: HTMLElement | null = document.querySelector('#login-page input[type="submit"]');
 if (startSendingButton !== null) {
   startSendingButton.addEventListener("click", connectToSocket);
-}
+} */
 /*
 const socket = io();
 socket.on("bye-bye", () => {
@@ -106,7 +146,7 @@ socket.on("disconnected", () => {
 */
 
 const manageClickListener = (enable: boolean): void => {
-  const sections = document.querySelectorAll("body > main > section");
+  const sections = document.querySelectorAll(".page > section");
   const collapseClass = "my-collapse";
   sections.forEach((section): void => {
     if (section.firstElementChild == null) {
@@ -125,20 +165,6 @@ const manageClickListener = (enable: boolean): void => {
   });
 };
 
-/*
-* Shows the ith child of targetNode by adding class show to that element
-* and removing it from others.
-*/
-const showChild = (targetNode: Element, i: number): void => {
-  targetNode.querySelectorAll(".show").forEach( (elem): void => {
-    elem.classList.remove("show");
-  });
-  const t = targetNode.children[i];
-  if (t) {
-    t.classList.add("show");
-  }
-};
-
 window.onload = (): void => {
   const mediaQueryList = window.matchMedia("(max-width: 767px)");
   const handleSizeChange = (evt: MediaQueryList | MediaQueryListEvent): void => {
@@ -146,4 +172,5 @@ window.onload = (): void => {
   };
   mediaQueryList.addListener(handleSizeChange);
   handleSizeChange(mediaQueryList);
+  window.showChild = showChild; /* For debugging */
 };

@@ -3,11 +3,12 @@
 }
 
 html {
- font-family:sans-serif;
- line-height:1.15;
- -webkit-text-size-adjust:100%;
- -webkit-tap-highlight-color:transparent;
+  font-family: sans-serif;
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
   height: 100%;
+  overflow: hidden;
 }
 
 body {
@@ -16,7 +17,6 @@ body {
   flex-direction: column;
   justify-content: space-between;
   margin: 0;
-  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -25,19 +25,35 @@ body {
   background-color: #fff;
   min-height: 100%;
   height: 100%;
-}
 
-body > header, body > footer {
-  display: flex;
-  justify-content: center;
-}
+  > header,
+  > footer {
+    display: flex;
+    justify-content: center;
+    margin-top: auto;
+  }
 
-body > header {
-  padding: 0.5rem;
-}
+  > header {
+    font-size: 2.5rem;
+    padding: 0.5rem;
+  }
 
-body > footer {
-  padding: 0.6rem;
+  > footer {
+    padding: 0.6rem;
+  }
+
+  > main {
+    margin: 5px auto;
+    flex: 1 1 auto;
+    display: flex;
+    height: 70%;
+    width: 80%;
+    overflow: hidden;
+
+    > div {
+      flex: 1;
+    }
+  }
 }
 
 a {
@@ -46,19 +62,6 @@ a {
 
 a:hover {
   color: #e60800;
-}
-
-body > header {
-  font-size: 2.5rem;
-}
-
-body > main {
-  margin: 5px auto;
-  flex: 1 1 auto;
-  display: flex;
-  height: 70%;
-  width: 80%;
-  overflow: hidden;
 }
 
 .main-section header {
@@ -97,45 +100,53 @@ body > main {
   display: none;
 }
 
+.page {
+  display: flex;
+}
+
 @media (max-width: 767px) {
   body > main {
+    width: 95%;
+  }
+
+  .page {
     flex-direction: column;
     height: 100%;
     width: 100%;
   }
-  
+
   .main-section > header {
     cursor: pointer;
     padding-left: 0.25em;
   }
-  
+
   .main-section header i.fas {
     display: inline-block;
     margin-left: auto;
     margin-right: 5px;
   }
-  
-  .main-section, .main-section i.fa-angle-down {
+
+  .main-section,
+  .main-section i.fa-angle-down {
     transition: all 0.5s ease-out;
   }
-  
+
   .my-collapse {
     flex: 0 0 auto;
   }
-  
-  .my-collapse > main{
+
+  .my-collapse > main {
     flex: 0 1 0;
     margin: 0;
   }
-  
+
   .my-collapse i.fa-angle-down {
     transform: rotate(-90deg);
   }
-  
 }
 
 input {
   background-color: inherit;
   color: inherit;
-  font: 1.3rem;
+  font-size: 1.3rem;
 }

@@ -10,95 +10,110 @@
         integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <link rel="stylesheet" href="css/newstyle.css">
     <title> fileSend</title>
-    <!-- <script src="/socket.io/socket.io.js"> </script> -->
+    <script src="/socket.io/socket.io.js"> </script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-    <!-- <script src="js/adapter.js"> </script> -->
+    <script src="js/adapter.js"> </script>
 </head>
 
 <body>
     <header>
         <span>
-            <i class="fas fa-share-alt-square" style="color: #d14f4b;"></i> &nbsp;file<b><span style="color: #d14f4b">Send</span></b>
+            <i class="fas fa-share-alt-square" style="color: #d14f4b;"></i> file<b><span
+                    style="color: #d14f4b">Send</span></b>
         </span>
     </header>
 
-    <main>
-        <section class="main-section">
-            <header>Select files<i class="fas fa-angle-down"></i></header>
-            <main>
-                <div class="select-files-send"></div>
-                <div class="approve-files"></div>
-                <div class="wait-approval"></div>
-                <div class="file-progress"></div>
-            </main>
-        </section>
-
-        <section class="main-section">
-            <header>Chat<i class="fas fa-angle-down"></i></header>
-            <main class="chat">
-                <div>
-                    <section class="chat-messages">
-                        <div class="chat-message sender">
-                            <main>Hello, there</main>
-                            <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
-                        </div>
-                        <div class="chat-message sender">
-                            <main>Kitna bana?</main>
-                            <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
-                        </div>
-                        <div class="chat-message receiver">
-                                <main>Tu bata</main>
-                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
-                        </div>
-                        <div class="chat-message receiver">
-                                <main>Tu bata</main>
-                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
-                        </div>
-                        <div class="chat-message receiver">
-                                <main>Tu bata</main>
-                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
-                        </div>
-                        <div class="chat-message receiver">
-                                <main>Tu bata</main>
-                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
-                        </div>
-                        <div class="chat-message receiver">
-                                <main>Tu bata</main>
-                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
-                        </div>
-                        <div class="chat-message receiver">
-                                <main>Tu bata</main>
-                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
-                        </div>
-                        <div class="chat-message receiver">
-                                <main>Tu bata</main>
-                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
-                        </div>
-                        <div class="chat-message receiver">
-                                <main>Tu bata</main>
-                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
-                        </div>
-                        <div class="chat-message receiver">
-                                <main>Tu bata</main>
-                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
-                        </div>
-                        <div class="chat-message receiver">
-                                <main>Tu bata</main>
-                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
-                        </div>
-                    </section>
-                </div>
+    <main class="show-container centered">
+        <div class="page show" id="login-page" data-centered>
+            <section class="main-section">
+                <span>
+                    FileSend is a service for peer-to-peer file transfers, all through your browser.
+                </span>
                 <form>
+                    <input type="text" placeholder="Enter a username" required>
+                    <input type="submit" value="Start sending">
+                </form>
+            </section>
+        </div>
+        <div class="page" id="users-page"></div>
+        <div class="page" id="connected-page">
+            <section class="main-section">
+                <header>Select files<i class="fas fa-angle-down"></i></header>
+                <main class="show-container">
+                    <div class="select-files-send show"></div>
+                    <div class="approve-files"></div>
+                    <div class="wait-approval"></div>
+                    <div class="file-progress"></div>
+                </main>
+            </section>
+
+            <section class="main-section">
+                <header>Chat<i class="fas fa-angle-down"></i></header>
+                <main class="chat">
+                    <div>
+                        <section class="chat-messages">
+                            <div class="chat-message sender">
+                                <main>Hello, there</main>
+                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
+                            </div>
+                            <div class="chat-message sender">
+                                <main>Kitna bana?</main>
+                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
+                            </div>
+                            <div class="chat-message receiver">
+                                <main>Tu bata</main>
+                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
+                            </div>
+                            <div class="chat-message receiver">
+                                <main>Tu bata</main>
+                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
+                            </div>
+                            <div class="chat-message receiver">
+                                <main>Tu bata</main>
+                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
+                            </div>
+                            <div class="chat-message receiver">
+                                <main>Tu bata</main>
+                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
+                            </div>
+                            <div class="chat-message receiver">
+                                <main>Tu bata</main>
+                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
+                            </div>
+                            <div class="chat-message receiver">
+                                <main>Tu bata</main>
+                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
+                            </div>
+                            <div class="chat-message receiver">
+                                <main>Tu bata</main>
+                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
+                            </div>
+                            <div class="chat-message receiver">
+                                <main>Tu bata</main>
+                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
+                            </div>
+                            <div class="chat-message receiver">
+                                <main>Tu bata</main>
+                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
+                            </div>
+                            <div class="chat-message receiver">
+                                <main>Tu bata</main>
+                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
+                            </div>
+                        </section>
+                    </div>
+                    <form>
                         <input type="text" placeholder="Type your message here">
                         <input type="submit" value="Send">
-                </form>
-            </main>
-        </section>
+                    </form>
+                </main>
+            </section>
+        </div>
     </main>
 
     <footer>
         <span>
-            Developed with <i class="fas fa-heart" style="color:#d14f4b;"></i> by 
+            Developed with <i class="fas fa-heart" style="color:#d14f4b;"></i> by
             <a href="https://devclub.in/">DevClub IITD</a>
         </span>
     </footer>

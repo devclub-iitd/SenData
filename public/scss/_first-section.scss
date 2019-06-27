@@ -9,15 +9,6 @@
   margin: 0;
 }
 
-.main-section:nth-child(1) > main > :not(.show) {
-  opacity: 0;
-  visibility: collapse;
-}
-
-.show {
-  transition: all 0.6s ease-out;
-}
-
 .main-section:nth-child(1) main {
   display: flex;
   flex-direction: row;
