@@ -29,9 +29,9 @@
     "express": "^4.17.1",
     "file-saver": "^2.0.2",
     "jszip": "^3.2.1",
-    "node": "^12.4.0",
+    "node": "^12.5.0",
     "socket.io": "^2.2.0",
-    "webtorrent": "^0.103.4"
+    "webtorrent": "^0.104.0"
   },
   "devDependencies": {
     "@types/bittorrent-protocol": "^2.2.3",
@@ -44,7 +44,7 @@
     "@types/jszip": "^3.1.6",
     "@types/node": "^12.0.10",
     "@types/parse-torrent": "^5.8.3",
-    "@types/simple-peer": "^6.1.5",
+    "@types/simple-peer": "^6.1.6",
     "@types/socket.io": "^2.1.2",
     "@types/socket.io-client": "^1.4.32",
     "@typescript-eslint/eslint-plugin": "^1.11.0",
@@ -55,7 +55,7 @@
     "eslint": "^5.16.0",
     "eslint-config-airbnb-typescript": "^4.0.0",
     "eslint-plugin-import": "^2.18.0",
-    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.14.2",
     "node-sass": "^4.12.0",
     "nodemon": "^1.19.1",
