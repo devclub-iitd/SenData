@@ -1,5 +1,8 @@
+import * as debugLib from "debug";
 import { IExtendedSocket, IUser, Msg } from "../types";
 import Client from "./wt";
+
+const debug = debugLib("FileSend:Main");
 
 /* globals io */
 
@@ -107,7 +110,7 @@ loginForm.onsubmit = (e): void => {
   if(username !== "") {
     const socket: SocketIOClient.Socket = io(window.location.origin, {query: `username=${username}`});
     setSocketConnections(socket);
-    showChild(document.querySelector("body > main"), 2);
+    showChild(document.querySelector("body > main"), 1);
   } else {
     window.alert("Enter a username ffs"); //TODO: Fix with a warning shown by text box border
   }
@@ -145,7 +148,7 @@ socket.on("disconnected", () => {
 });
 */
 
-const manageClickListener = (enable: boolean): void => {
+const manageCollapseClickListener = (enable: boolean): void => {
   const sections = document.querySelectorAll(".page > section");
   const collapseClass = "my-collapse";
   sections.forEach((section): void => {
@@ -165,12 +168,32 @@ const manageClickListener = (enable: boolean): void => {
   });
 };
 
+const manageModalClickListener = (): void => {
+  const modals = document.querySelectorAll(".modal");
+  modals.forEach( (modal): void => {
+    const closeButton = modal.querySelector(".close-btn");
+    if(closeButton === null) {
+      debug("No close button found in modal. Panicking!");
+      return;
+    }
+    closeButton.addEventListener("click", (): void => {
+      modal.classList.toggle("show");
+    });
+    window.addEventListener("click", (event): void => {
+      if (event.target === modal) {
+        modal.classList.toggle("show");
+      }
+    });
+  })
+}
+
 window.onload = (): void => {
   const mediaQueryList = window.matchMedia("(max-width: 767px)");
   const handleSizeChange = (evt: MediaQueryList | MediaQueryListEvent): void => {
-    manageClickListener(evt.matches);
+    manageCollapseClickListener(evt.matches);
   };
   mediaQueryList.addListener(handleSizeChange);
   handleSizeChange(mediaQueryList);
   window.showChild = showChild; /* For debugging */
+  manageModalClickListener();
 };
