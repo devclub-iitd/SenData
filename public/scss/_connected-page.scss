@@ -17,7 +17,7 @@
       }
 
       thead tr {
-        background-color: #0058f95e;
+        background-color: #007cf957;
       }
 
       td,
@@ -34,7 +34,7 @@
       }
 
       tbody tr:nth-child(even) {
-        background-color: #16959921;
+        background-color: #1bd9df1a;
       }
     }
 
@@ -44,14 +44,16 @@
       margin-top: 10px;
       background-color: white;
       color: black;
-      padding: 0.4rem 2rem;
-      border: 3px solid #0058f95e;
+      padding: 0.4rem 1em;
+      border: 3px solid #002afb96;
+      font-size: inherit;
       border-radius: 1rem;
       cursor: pointer;
       transition: all 0.3s ease;
 
       &:hover {
-        background-color: #0058f95e;
+        background-color: #1d41f0;
+        color: white;
       }
     }
   }
