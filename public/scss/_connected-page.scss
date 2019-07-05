@@ -1,0 +1,58 @@
+#connected-page {
+  #approve-files {
+    overflow: auto;
+
+    table {
+      width: 100%;
+
+      &,
+      th,
+      td {
+        border-collapse: collapse;
+      }
+
+      label {
+        display: block;
+        width: 100%;
+      }
+
+      thead tr {
+        background-color: #0058f95e;
+      }
+
+      td,
+      th {
+        padding: 5px;
+
+        &:first-child {
+          padding: 0;
+
+          label {
+            padding: 5px;
+          }
+        }
+      }
+
+      tbody tr:nth-child(even) {
+        background-color: #16959921;
+      }
+    }
+
+    button {
+      margin: auto;
+      display: block;
+      margin-top: 10px;
+      background-color: white;
+      color: black;
+      padding: 0.4rem 2rem;
+      border: 3px solid #0058f95e;
+      border-radius: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: #0058f95e;
+      }
+    }
+  }
+}

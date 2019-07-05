@@ -11,7 +11,7 @@ const debug = debugLib("FileSend:Main");
 * and removing it from others.
 */
 const showChild = (targetNode: HTMLElement, i: number): void => {
-  targetNode.querySelectorAll(".show").forEach( (elem): void => {
+  targetNode.querySelectorAll(".show").forEach((elem): void => {
     elem.classList.remove("show");
   });
   const t = targetNode.children[i] as HTMLElement;
@@ -19,7 +19,7 @@ const showChild = (targetNode: HTMLElement, i: number): void => {
 
     // If data-centered is present in child, add class centered to parent
     // Allows for a centered layout by an attribute of child
-    if(t.dataset.centered !== undefined) {
+    if (t.dataset.centered !== undefined) {
       targetNode.classList.add("centered");
     }
     else {
@@ -43,7 +43,7 @@ const setSocketConnections = (socket: SocketIOClient.Socket): void => {
           if (onlineUsersList !== null) {
             const li = document.createElement("li");
             li.className = "list-group-item d-flex justify-content-between"
-                                        + "align-items-center list-group-item-action";
+              + "align-items-center list-group-item-action";
             li.innerText = key;
             onlineUsersList.append(li);
           }
@@ -53,14 +53,14 @@ const setSocketConnections = (socket: SocketIOClient.Socket): void => {
     }
   });
 
-  socket.on("newUserLogin", (user: {username: string; val: IUser}): void => {
+  socket.on("newUserLogin", (user: { username: string; val: IUser }): void => {
     if (user) {
       const onlineUsersList: Element | null = document.getElementById("onlineUsersList");
       if (onlineUsersList !== null) {
         const li = document.createElement("li");
         li.className =
-              "list-group-item d-flex justify-content-between" +
-              "align-items-center list-group-item-action";
+          "list-group-item d-flex justify-content-between" +
+          "align-items-center list-group-item-action";
         li.innerText = user.username;
         onlineUsersList.append(li);
       }
@@ -107,8 +107,8 @@ loginForm.onsubmit = (e): void => {
   const usernameTextBox = loginForm.querySelector('input[type="text"]') as HTMLInputElement;
   const username = usernameTextBox.value;
   console.log(username);
-  if(username !== "") {
-    const socket: SocketIOClient.Socket = io(window.location.origin, {query: `username=${username}`});
+  if (username !== "") {
+    const socket: SocketIOClient.Socket = io(window.location.origin, { query: `username=${username}` });
     setSocketConnections(socket);
     showChild(document.querySelector("body > main"), 1);
   } else {
@@ -170,9 +170,9 @@ const manageCollapseClickListener = (enable: boolean): void => {
 
 const manageModalClickListener = (): void => {
   const modals = document.querySelectorAll(".modal");
-  modals.forEach( (modal): void => {
+  modals.forEach((modal): void => {
     const closeButton = modal.querySelector(".close-btn");
-    if(closeButton === null) {
+    if (closeButton === null) {
       debug("No close button found in modal. Panicking!");
       return;
     }
@@ -184,7 +184,64 @@ const manageModalClickListener = (): void => {
         modal.classList.toggle("show");
       }
     });
-  })
+  });
+}
+
+const manageCheckboxConnectedPage = (): void => {
+  let selectAllCheckbox = document.querySelector("#connected-page thead input[type=\"checkbox\"]") as HTMLInputElement | null;
+  let fileCheckboxes = document.querySelectorAll("#connected-page tbody input[type=\"checkbox\"]") as NodeListOf<HTMLInputElement>;
+
+  if (selectAllCheckbox === null) {
+    debug("No Select All checkbox found in User connected page");
+    return; // Nothing to do if there's no selectAll checkbox;
+  }
+  
+  let numChecked = 0;
+
+  selectAllCheckbox.addEventListener("change", (): void => {
+    if (selectAllCheckbox === null) {
+      debug("No Select All checkbox found in User connected page");
+      return; // Nothing to do if there's no selectAll checkbox;
+    }
+
+    let checked = selectAllCheckbox.checked;
+
+    if (checked) numChecked = fileCheckboxes.length;
+    else numChecked = 0;
+
+    fileCheckboxes.forEach((checkbox): void => {
+      checkbox.checked = checked;
+    });
+  });
+
+  const setMainCheckbox = (): void => {
+    if (selectAllCheckbox === null) {
+      debug("No Select All checkbox found in User connected page");
+      return; // Nothing to do if there's no selectAll checkbox;
+    }
+
+    if (numChecked === fileCheckboxes.length) {
+      selectAllCheckbox.checked = true;
+      selectAllCheckbox.indeterminate = false;
+    } else if (numChecked === 0) {
+      selectAllCheckbox.checked = false;
+      selectAllCheckbox.indeterminate = false;
+    } else {
+      selectAllCheckbox.indeterminate = true;
+      selectAllCheckbox.checked = false;
+    }
+  }
+
+  fileCheckboxes.forEach((checkbox): void => {
+    if (checkbox.checked) numChecked++;
+    setMainCheckbox();
+
+    checkbox.addEventListener("change", (): void => {
+      if (checkbox.checked) numChecked++;
+      else numChecked--;
+      setMainCheckbox();
+    });
+  });
 }
 
 window.onload = (): void => {
@@ -196,4 +253,5 @@ window.onload = (): void => {
   handleSizeChange(mediaQueryList);
   window.showChild = showChild; /* For debugging */
   manageModalClickListener();
+  manageCheckboxConnectedPage();
 };
