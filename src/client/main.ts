@@ -10,22 +10,23 @@ const debug = debugLib("FileSend:Main");
 * Shows the ith child of targetNode by adding class show to that element
 * and removing it from others.
 */
-const showChild = (targetNode: HTMLElement, i: number): void => {
-  targetNode.querySelectorAll(".show").forEach((elem): void => {
-    elem.classList.remove("show");
-  });
-  const t = targetNode.children[i] as HTMLElement;
-  if (t) {
-
-    // If data-centered is present in child, add class centered to parent
-    // Allows for a centered layout by an attribute of child
-    if (t.dataset.centered !== undefined) {
-      targetNode.classList.add("centered");
+const showChild = (targetNode: HTMLElement | null, i: number): void => {
+  if (targetNode) {
+    targetNode.querySelectorAll(".show").forEach((elem: Element): void => {
+      elem.classList.remove("show");
+    });
+    const t: HTMLElement | null = targetNode.children[i] as HTMLElement | null;
+    if (t) {
+      // If data-centered is present in child, add class centered to parent
+      // Allows for a centered layout by an attribute of child
+      if (t.dataset.centered !== undefined) {
+        targetNode.classList.add("centered");
+      }
+      else {
+        targetNode.classList.remove("centered");
+      }
+      t.classList.add("show");
     }
-    else {
-      targetNode.classList.remove("centered");
-    }
-    t.classList.add("show");
   }
 };
 

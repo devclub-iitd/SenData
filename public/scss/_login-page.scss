@@ -7,9 +7,9 @@
     font-size: 1.4rem;
     justify-content: center;
     flex: 0 1 auto;
-    box-shadow: 0 0 2rem 0 rgba(62, 0, 0, 0.23);
+    box-shadow: 0 0rem 2rem 0 rgba(0, 0, 0, 0.1);
     padding: 1rem;
-    border: unset;
+    border: 1px solid rgba(0,0,0,.125);
     border-radius: 0.8em;
   }
 
@@ -27,29 +27,35 @@
       font-size: inherit;
       margin: 0.3em 0.2em;
       border-radius: 5px;
+      outline: none;
 
       &[type="submit"] {
         border: none;
-        background-color: #797979f2;
+        background-color: #6c757d;
         color: white;
-        padding: 0.2rem 0.5rem;
         cursor: pointer;
+        padding: .5rem 4rem;
 
-        &:focus,
+        &:focus {
+          box-shadow: 0 0 0 0.2rem rgba(130,138,145,.5);
+        }
         &:hover {
-          background-color: #4a3d3d;
+          background-color: #5a6268;
         }
       }
 
       &[type="text"] {
         padding: 0.2rem 0.5rem;
         text-align: center;
-        border: 3px solid #c6bbba91;
+        border: 1px solid #ced4da;
         border-radius: 100px;
+        line-height: 2;
+        font-size: 1rem;
 
-        &:focus,
-        &:hover {
-          border: 3px solid #8a7b7a;
+        &:hover,
+        &:focus{
+          box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+          border-color: #80bdff;
         }
       }
     }
