@@ -51,11 +51,11 @@ io.on("connection", (socket: IExtendedSocket): void => {
   // ------------------------ anweshan code --------------------------------
   const loginTheUser = (username: string): void => {
     // adding the username to the socket variable of the user
-    // socket.username = username;
-    debug(username + " connected to server"); // for dev purpose, remove later
+    socket.username = username;
     // if username already exists in the user map
-    if (!users.has(username) && username !== "") {    
+    if (!users.has(username) && username !== "") {
       // initialising characteristics for logged user (updatable later)
+      console.log(username + " connected to server"); // for dev purpose, remove later
       const val: IUser = {
         filesSendingState: "idle",
         inRequests: new Set(),
@@ -85,7 +85,7 @@ io.on("connection", (socket: IExtendedSocket): void => {
   socket.on("disconnect", (): void => {
     // disconnected user username
     const disconnectedUser: string = socket.username;
-    debug("user disconnected " + disconnectedUser); // for dev
+    console.log("user disconnected " + disconnectedUser); // for dev
     // getting disconnected user properties
     const checkVal: IUser|undefined = users.get(disconnectedUser) ;
     if (checkVal !== undefined) {

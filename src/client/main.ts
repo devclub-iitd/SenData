@@ -1,6 +1,7 @@
 import * as debugLib from "debug";
 import { IExtendedSocket, IUser, Msg } from "../types";
 import Client from "./wt";
+import { link } from "fs";
 
 const debug = debugLib("FileSend:Main");
 
@@ -33,8 +34,20 @@ const showChild = (targetNode: HTMLElement | null, i: number): void => {
 const setSocketConnections = (socket: SocketIOClient.Socket): void => {
   socket.on('login', (usersArray: [string, IUser][]): void => {
     const users: Map<string, IUser> = new Map(usersArray);
-    if (users) {
-      // hiding page 1
+    if (users !== null) {
+      // hiding page 1 and showing page 2
+      showChild(document.querySelector("body > main"), 1);
+      const onlineUsersList: Element | null = document.getElementById("onlineUsersList");
+      if (onlineUsersList !== null) {
+        users.forEach((value: IUser, key: string): void => {
+          const button = document.createElement("button");
+          button.innerText = key;
+          button.className = "user";
+          button.setAttribute("data-user-type", "idle");
+          onlineUsersList.append(button);
+        });
+      }
+      /* for index.html
       const loginPage: HTMLElement | null = document.getElementById("loginPage");
       const dashboardPage: HTMLElement | null = document.getElementById("dashboardPage");
       if (loginPage !== null && dashboardPage !== null) {
@@ -50,7 +63,9 @@ const setSocketConnections = (socket: SocketIOClient.Socket): void => {
           }
         });
         dashboardPage.style.display = "block";
+        
       }
+      */
     }
   });
 
@@ -58,17 +73,17 @@ const setSocketConnections = (socket: SocketIOClient.Socket): void => {
     if (user) {
       const onlineUsersList: Element | null = document.getElementById("onlineUsersList");
       if (onlineUsersList !== null) {
-        const li = document.createElement("li");
-        li.className =
-          "list-group-item d-flex justify-content-between" +
-          "align-items-center list-group-item-action";
-        li.innerText = user.username;
-        onlineUsersList.append(li);
+        const button = document.createElement("button");
+        button.innerText = user.username;
+        button.className = "user";
+        button.setAttribute("data-user-type", "idle");
+        onlineUsersList.append(button);
       }
     }
   });
 
   socket.on("userDisconnected", (username: string): void => {
+    console.log(username);
     if (username) {
       const onlineUsersList: Element | null = document.getElementById("onlineUsersList");
       if (onlineUsersList !== null) {
@@ -111,7 +126,6 @@ loginForm.onsubmit = (e): void => {
   if (username !== "") {
     const socket: SocketIOClient.Socket = io(window.location.origin, { query: `username=${username}` });
     setSocketConnections(socket);
-    showChild(document.querySelector("body > main"), 1);
   } else {
     window.alert("Enter a username ffs"); //TODO: Fix with a warning shown by text box border
   }
