@@ -43,7 +43,7 @@ const setSocketConnections = (socket: SocketIOClient.Socket): void => {
           const button = document.createElement("button");
           button.innerText = key;
           button.className = "user";
-          button.setAttribute("data-user-type", "idle");
+          button.setAttribute("data-user-type", value.state);
           onlineUsersList.append(button);
         });
       }
@@ -76,14 +76,14 @@ const setSocketConnections = (socket: SocketIOClient.Socket): void => {
         const button = document.createElement("button");
         button.innerText = user.username;
         button.className = "user";
-        button.setAttribute("data-user-type", "idle");
+        button.setAttribute("data-user-type", user.val.state);
         onlineUsersList.append(button);
       }
     }
   });
 
   socket.on("userDisconnected", (username: string): void => {
-    console.log(username);
+    console.log(username + " disconnected"); // for dev purpose
     if (username) {
       const onlineUsersList: Element | null = document.getElementById("onlineUsersList");
       if (onlineUsersList !== null) {
@@ -102,6 +102,53 @@ const setSocketConnections = (socket: SocketIOClient.Socket): void => {
       }
     }
   });
+
+  socket.on("offer", (user1Name: string): void => {
+    console.log(user1Name + " sends an offer"); // for dev purpose
+    if (user1Name) {
+      const onlineUsersList: Element | null = document.getElementById("onlineUsersList");
+      if (onlineUsersList !== null) {
+        let i = 0;
+        const allListElements: HTMLCollection = onlineUsersList.children;
+        for (i = 0; i < allListElements.length; i++) {
+          const listElement = allListElements[i] as HTMLElement;
+          if (listElement !== undefined) {
+            if (listElement.innerText.split("\n")[0] === user1Name) {
+              break;
+            }
+          }
+        }
+        // changing the state of ith user
+        const button = onlineUsersList.children[i];
+        button.setAttribute("data-user-type", "Wants to connect");
+        
+      }
+    }
+  });
+
+  socket.on("userRequested", (usersInvolved: {user1_name: string; user2_name: string}): void => {
+    console.log(usersInvolved.user1_name + " sends an offer to " + usersInvolved.user2_name); // for dev purpose  
+    if (usersInvolved) {
+      const onlineUsersList: Element | null = document.getElementById("onlineUsersList");
+      if (onlineUsersList !== null) {
+        let i = 0;
+        const allListElements: HTMLCollection = onlineUsersList.children;
+        for (i = 0; i < allListElements.length; i++) {
+          const listElement = allListElements[i] as HTMLElement;
+          if (listElement !== undefined) {
+            if (listElement.innerText.split("\n")[0] === usersInvolved.user1_name) {
+              break;
+            }
+          }
+        }
+        // changing the state of ith user
+        const button = onlineUsersList.children[i];
+        button.setAttribute("data-user-type", "waiting");
+        
+      }
+    }
+  });
+
 };
 
 

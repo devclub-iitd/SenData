@@ -118,8 +118,8 @@ io.on("connection", (socket: IExtendedSocket): void => {
     // get this user's username
     const user1Name: string = socket.username;
     // get properties of both users.
-    const user1: IUser|undefined = users.get(user1Name) ;
-    const user2: IUser|undefined = users.get(user2Name) ;
+    const user1: IUser | undefined = users.get(user1Name) ;
+    const user2: IUser | undefined = users.get(user2Name) ;
 
     if (user1 !== undefined && user2 !== undefined) {
       if (user2.state === "waiting" || user2.state === "connected") {
