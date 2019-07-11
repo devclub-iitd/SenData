@@ -48,7 +48,9 @@
         text-align: left;
       }
 
-      &[data-user-type="idle"],  &[data-user-type="busy"],  &[data-user-type="Wants to connect"] {
+      &[data-user-type="idle"],
+      &[data-user-type="busy"],
+      &[data-user-type="Wants to connect"] {
         outline: none;
       }
 
@@ -59,7 +61,7 @@
 
       &[data-user-type="busy"] {
         color: #575757;
-        
+
         &::after {
           background-color: #df1818;
           color: white;
