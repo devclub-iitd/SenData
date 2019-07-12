@@ -32,6 +32,22 @@ const showChild = (targetNode: HTMLElement | null, i: number): void => {
 };
 
 const setSocketConnections = (socket: SocketIOClient.Socket): void => {
+  // if send offer to a user
+  // socket.emit('offer', user2name);
+   
+  const connectToUser = (element): void => {
+    let txt;
+    console.log(element)
+    if (confirm("Press a button!")) {
+      txt = "You pressed OK!";
+    } else {
+      txt = "You pressed Cancel!";
+    }
+    console.log(txt)
+  }
+
+  window.connectToUser = connectToUser
+  
   socket.on('login', (usersArray: [string, IUser][]): void => {
     const users: Map<string, IUser> = new Map(usersArray);
     if (users !== null) {
