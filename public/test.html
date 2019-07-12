@@ -24,7 +24,7 @@
     </header>
 
     <main class="show-container centered">
-        <div class="page show" id="login-page" data-centered>
+        <div class="page" id="login-page" data-centered>
             <section class="main-section">
                 <span>
                     FileSend is a service for peer-to-peer file transfers, all through your browser.
@@ -46,15 +46,75 @@
                 </main>
             </section>
         </div>
-        <div class="page" id="connected-page">
+        <div class="page show" id="connected-page">
             <section class="main-section">
                 <!-- TODO: Change this heading dynamically based on which div has show class -->
                 <header><span>Select files</span><i class="fas fa-angle-down"></i></header>
                 <main class="show-container">
-                    <div id="select-files-send" data-heading="Select files to send">
-
+                    <div id="select-files-send"  data-heading="Select files to send" style="width: 100%;">
+                        <button style="display: block;" onclick="document.getElementById('getFile').click()">Browse files</button>
+                        <input type="file" id="getFile" style="display: none;">
+                        <!-- list of selected files -->
+                        <table style="margin-top: 1em;">
+                            <thead>
+                                <th>
+                                    <label>
+                                        <!-- <input type="checkbox" name="" id=""> -->
+                                        Name
+                                    </label>
+                                </th>
+                                <th>Size</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <label>
+                                            <!-- <input type="checkbox" name="" id=""> -->
+                                            File1.extension
+                                        </label>
+                                    </td>
+                                    <td>
+                                        5 KB
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>
+                                            <!-- <input type="checkbox" name="" id=""> -->
+                                            File2.extension
+                                        </label>
+                                    </td>
+                                    <td>
+                                        5 MB
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>
+                                            <!-- <input type="checkbox" name="" id=""> -->
+                                            File3.extension
+                                        </label>
+                                    </td>
+                                    <td>
+                                        50 MB
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>
+                                            <!-- <input type="checkbox" name="" id=""> -->
+                                            File4.extension
+                                        </label>
+                                    </td>
+                                    <td>
+                                        69 KB
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button>Send</button>
                     </div>
-                    <div id="approve-files" class="show" data-heading="Select files to receive">
+                    <div id="approve-files"  data-heading="Select files to receive">
                         <table>
                             <thead>
                                 <th>
@@ -122,7 +182,78 @@
                         </p>
                     </div>
                     <div id="processing-files" data-heading="Processing"></div>
-                    <div id="file-progress" data-heading="File Transfer Info"></div>
+                    <div id="file-progress" class="show" data-heading="File Transfer Info">
+                        <table>
+                            <thead>
+                                <th>
+                                    <label>
+                                        <!-- <input type="checkbox" name="" id=""> -->
+                                        Name
+                                    </label>
+                                </th>
+                                <th>Progress</th>
+                                <th>Size</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <label>
+                                            <!-- <input type="checkbox" name="" id=""> -->
+                                            File1.extension
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <progress value="95" max="100">
+                                    </td>
+                                    <td>
+                                        5 KB
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>
+                                            <!-- <input type="checkbox" name="" id=""> -->
+                                            File2.extension
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <progress value="35" max="100">
+                                    </td>
+                                    <td>
+                                        5 MB
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>
+                                            <!-- <input type="checkbox" name="" id=""> -->
+                                            File3.extension
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <progress value="15" max="100">
+                                    </td>
+                                    <td>
+                                        50 MB
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>
+                                            <!-- <input type="checkbox" name="" id=""> -->
+                                            File4.extension
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <progress value="75" max="100">
+                                    </td>
+                                    <td>
+                                        69 KB
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </main>
             </section>
 

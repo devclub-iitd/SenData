@@ -1,7 +1,7 @@
 import * as debugLib from "debug";
+import { link } from "fs";
 import { IExtendedSocket, IUser, Msg } from "../types";
 import Client from "./wt";
-import { link } from "fs";
 
 const debug = debugLib("FileSend:Main");
 
@@ -329,7 +329,7 @@ window.onload = (): void => {
   };
   mediaQueryList.addListener(handleSizeChange);
   handleSizeChange(mediaQueryList);
-  window.showChild = showChild; /* For debugging */
+  // window.showChild = showChild; /* For debugging */
   manageModalClickListener();
   manageCheckboxConnectedPage();
 };

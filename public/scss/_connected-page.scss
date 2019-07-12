@@ -1,4 +1,11 @@
 #connected-page {
+  .main-section:first-child > main {
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+  }
+
   #approve-files {
     overflow: auto;
 
@@ -55,6 +62,37 @@
         background-color: #1d41f0;
         color: white;
       }
+    }
+  }
+
+  #wait-approval,
+  #processing-files {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+
+    > *:first-child {
+      margin-top: auto;
+    }
+
+    > *:last-child {
+      margin-bottom: auto;
+    }
+
+    p {
+      margin: 5px 10px;
+      text-align: center;
+      font-size: 1.2rem;
+
+      @media (max-width: 767px) {
+        font-size: 1rem;
+      }
+    }
+
+    .spinner {
+      margin: auto;
+      margin-bottom: 20px;
+      color: var(--main-color);
     }
   }
 }

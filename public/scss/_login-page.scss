@@ -7,9 +7,9 @@
     font-size: 1.4rem;
     justify-content: center;
     flex: 0 1 auto;
-    box-shadow: 0 0rem 2rem 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 2rem 0 rgba(0, 0, 0, 0.1);
     padding: 1rem;
-    border: 1px solid rgba(0,0,0,.125);
+    border: 1px solid rgba(0, 0, 0, 0.125);
     border-radius: 0.8em;
   }
 
@@ -34,27 +34,26 @@
         background-color: #6c757d;
         color: white;
         cursor: pointer;
-        padding: .5rem 4rem;
+        padding: 0.2rem 0.5rem;
 
         &:focus {
-          box-shadow: 0 0 0 0.2rem rgba(130,138,145,.5);
+          box-shadow: 0 0 0 0.2rem rgba(130, 138, 145, 0.5);
         }
+
         &:hover {
           background-color: #5a6268;
         }
       }
 
       &[type="text"] {
-        padding: 0.2rem 0.5rem;
+        padding: 0.4rem 0.5rem;
         text-align: center;
         border: 1px solid #ced4da;
         border-radius: 100px;
-        line-height: 2;
-        font-size: 1rem;
 
         &:hover,
-        &:focus{
-          box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        &:focus {
+          box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
           border-color: #80bdff;
         }
       }
