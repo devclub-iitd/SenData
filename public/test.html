@@ -52,27 +52,21 @@
                 <!-- TODO: Change this heading dynamically based on which div has show class -->
                 <header><span>Select files</span><i class="fas fa-angle-down"></i></header>
                 <main class="show-container">
-                    <div id="select-files-send"  data-heading="Select files to send" style="width: 100%;">
-                        <button style="display: block;" onclick="document.getElementById('getFile').click()">Browse files</button>
-                        <input type="file" id="getFile" style="display: none;">
+                    <div id="select-files-send" data-heading="Select files to send" style="width: 100%;">
+                        <input type="file" id="getFile" style="display: none;" multiple>
+                        <label for="getFile">Browse files</label>
                         <!-- list of selected files -->
                         <table style="margin-top: 1em;">
                             <thead>
                                 <th>
-                                    <label>
-                                        <!-- <input type="checkbox" name="" id=""> -->
-                                        Name
-                                    </label>
+                                    Name
                                 </th>
                                 <th>Size</th>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>
-                                        <label>
-                                            <!-- <input type="checkbox" name="" id=""> -->
-                                            File1.extension
-                                        </label>
+                                        File1.extension
                                     </td>
                                     <td>
                                         5 KB
@@ -80,10 +74,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <label>
-                                            <!-- <input type="checkbox" name="" id=""> -->
-                                            File2.extension
-                                        </label>
+                                        File2.extension
                                     </td>
                                     <td>
                                         5 MB
@@ -91,10 +82,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <label>
-                                            <!-- <input type="checkbox" name="" id=""> -->
-                                            File3.extension
-                                        </label>
+                                        File3.extension
                                     </td>
                                     <td>
                                         50 MB
@@ -102,10 +90,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <label>
-                                            <!-- <input type="checkbox" name="" id=""> -->
-                                            File4.extension
-                                        </label>
+                                        File4.extension
                                     </td>
                                     <td>
                                         69 KB
@@ -115,7 +100,7 @@
                         </table>
                         <button>Send</button>
                     </div>
-                    <div id="approve-files"  data-heading="Select files to receive">
+                    <div id="approve-files" data-heading="Select files to receive">
                         <table>
                             <thead>
                                 <th>

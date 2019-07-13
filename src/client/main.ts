@@ -2,6 +2,7 @@ import * as debugLib from "debug";
 import { link } from "fs";
 import { IExtendedSocket, IUser, Msg } from "../types";
 import Client from "./wt";
+import { formatBytes } from "./util";
 
 const debug = debugLib("FileSend:Main");
 
@@ -16,17 +17,26 @@ const showChild = (targetNode: HTMLElement | null, i: number): void => {
     targetNode.querySelectorAll(".show").forEach((elem: Element): void => {
       elem.classList.remove("show");
     });
-    const t: HTMLElement | null = targetNode.children[i] as HTMLElement | null;
-    if (t) {
+    const childShow = targetNode.children[i] as HTMLElement | null;
+    if (childShow) {
       // If data-centered is present in child, add class centered to parent
       // Allows for a centered layout by an attribute of child
-      if (t.dataset.centered !== undefined) {
+      if (childShow.dataset.centered !== undefined) {
         targetNode.classList.add("centered");
       }
       else {
         targetNode.classList.remove("centered");
       }
-      t.classList.add("show");
+      childShow.classList.add("show");
+
+      // If the child has data-heading attribute, assuming that the previous
+      // sibling of targetNode is a header in which there is a span where we
+      // have to place the heading
+      if(childShow.dataset.heading) {
+        const header = targetNode.previousElementSibling as HTMLElement;
+        const span = header.querySelector("span") as HTMLElement;
+        span.textContent = childShow.dataset.heading;
+      }
     }
   }
 };
@@ -34,7 +44,7 @@ const showChild = (targetNode: HTMLElement | null, i: number): void => {
 const setSocketConnections = (socket: SocketIOClient.Socket): void => {
   // if send offer to a user
   // socket.emit('offer', user2name);
-   
+
   const connectToUser = (element: HTMLElement): void => {
     let txt = "";
     let dataUserType = element.getAttribute("data-user-type");
@@ -68,13 +78,13 @@ const setSocketConnections = (socket: SocketIOClient.Socket): void => {
         }
         socket.emit("answer", msg);
       }
-    }  
+    }
     console.log(txt)
   }
 
   // making connectToUser available globally so that we can have button.onclick listener in the test.html itself
   window.connectToUser = connectToUser
-  
+
   socket.on('login', (usersArray: [string, IUser][]): void => {
     const users: Map<string, IUser> = new Map(usersArray);
     if (users !== null) {
@@ -148,7 +158,7 @@ const setSocketConnections = (socket: SocketIOClient.Socket): void => {
     }
   });
 
-  socket.on("changeDataUserType", (userAndData: {username: string; newDataType: string}): void => {
+  socket.on("changeDataUserType", (userAndData: { username: string; newDataType: string }): void => {
     const username = userAndData.username;
     const newDataType = userAndData.newDataType;
     if (username && (newDataType == "idle" || newDataType == "busy" || newDataType == "Wants to connect")) {
@@ -290,7 +300,7 @@ const manageCheckboxConnectedPage = (): void => {
     debug("No Select All checkbox found in User connected page");
     return; // Nothing to do if there's no selectAll checkbox;
   }
-  
+
   let numChecked = 0;
 
   selectAllCheckbox.addEventListener("change", (): void => {
@@ -339,6 +349,69 @@ const manageCheckboxConnectedPage = (): void => {
   });
 }
 
+/*
+  Relies on #getFile to be <input type="file"> and to be immediately followed
+  by label, table and then a button.
+*/
+const manageFileInput = (): void => {
+  const inputElem = document.querySelector("#getFile") as HTMLInputElement
+  const label = inputElem.nextElementSibling as HTMLLabelElement;
+  const table = label.nextElementSibling as HTMLTableElement;
+  const sendButton = table.nextElementSibling as HTMLButtonElement;
+
+  const showTableFiles = (show: boolean): void => {
+    if (show) {
+      table.style.display = "initial";
+      sendButton.style.display = "initial";
+    }
+    else {
+      table.style.display = "none";
+      sendButton.style.display = "none";
+    }
+  }
+
+  const updateTable = (): void => {
+    const files = inputElem.files
+    if (!files || files.length === 0) {
+      showTableFiles(false);
+    } else {
+      showTableFiles(true);
+      const tbody = table.tBodies[0];
+      tbody.innerHTML = ""; // Since only one tbody is there.
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        let row = document.createElement("tr");
+        let fileNameCell = document.createElement("td");
+        let sizeCell = document.createElement("td");
+
+        fileNameCell.innerHTML = file.name;
+        sizeCell.innerHTML = formatBytes(file.size);
+        row.append(fileNameCell, sizeCell);
+
+        tbody.appendChild(row);
+      }
+    }
+  }
+
+  updateTable();
+  inputElem.addEventListener("change", (): void => {
+    updateTable();
+  });
+
+  sendButton.addEventListener("click", (): void => {
+    if (socket === undefined) {
+      return;
+    }
+
+    socket.emit("fileListSendRequest", inputElem.files);
+    
+    const container = document.querySelector("#connected-page show-container") as HTMLElement | null;
+    if (container) {
+      showChild(container, 2); //wait-approval page
+    }
+  });
+}
+
 window.onload = (): void => {
   const mediaQueryList = window.matchMedia("(max-width: 767px)");
   const handleSizeChange = (evt: MediaQueryList | MediaQueryListEvent): void => {
@@ -346,7 +419,8 @@ window.onload = (): void => {
   };
   mediaQueryList.addListener(handleSizeChange);
   handleSizeChange(mediaQueryList);
-  // window.showChild = showChild; /* For debugging */
+  window.showChild = showChild; /* For debugging */
   manageModalClickListener();
   manageCheckboxConnectedPage();
+  manageFileInput();
 };
