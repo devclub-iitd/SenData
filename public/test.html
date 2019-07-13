@@ -24,7 +24,7 @@
     </header>
 
     <main class="show-container centered">
-        <div class="page" id="login-page" data-centered>
+        <div class="page show" id="login-page" data-centered>
             <section class="main-section">
                 <span>
                     FileSend is a service for peer-to-peer file transfers, all through your browser.
@@ -39,14 +39,15 @@
             <section class="main-section">
                 <header>Connect to another user<i class="fas fa-angle-down"></i></header>
                 <main id="onlineUsersList">
-                    <button class="user" data-user-type="idle" onlick="connectToUser(this)">User 1</button>
-                    <button class="user" data-user-type="busy" onlick="connectToUser(this)">User 2</button>
-                    <button class="user" data-user-type="Wants to connect" onlick="connectToUser(this)">User 3</button>
-                    <button class="user" data-user-type="waiting" onlick="connectToUser(this)">User 2</button>
+                    <!-- some sample buttons
+                    <button class="user" data-user-type="idle" onclick="connectToUser(this)">User 1</button>
+                    <button class="user" data-user-type="busy" onclick="connectToUser(this)">User 2</button>
+                    <button class="user" data-user-type="Wants to connect" onclick="connectToUser(this)">User 3</button>
+                    -->
                 </main>
             </section>
         </div>
-        <div class="page show" id="connected-page">
+        <div class="page" id="connected-page">
             <section class="main-section">
                 <!-- TODO: Change this heading dynamically based on which div has show class -->
                 <header><span>Select files</span><i class="fas fa-angle-down"></i></header>

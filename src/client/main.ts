@@ -35,17 +35,44 @@ const setSocketConnections = (socket: SocketIOClient.Socket): void => {
   // if send offer to a user
   // socket.emit('offer', user2name);
    
-  const connectToUser = (element): void => {
-    let txt;
-    console.log(element)
-    if (confirm("Press a button!")) {
-      txt = "You pressed OK!";
-    } else {
-      txt = "You pressed Cancel!";
+  const connectToUser = (element: HTMLElement): void => {
+    let txt = "";
+    let dataUserType = element.getAttribute("data-user-type");
+    if (dataUserType == "idle") {
+      const user2name = element.innerText;
+      // Show send request alert
+      if (confirm("Do you want to send request to " + user2name)) {
+        txt = "You pressed OK!";
+        socket.emit('offer', user2name);
+      } else {
+        txt = "You pressed Cancel!";
+      }
     }
+    else if (dataUserType == "Wants to connect") {
+      const user1name: string = element.innerText;
+      // Show accept request alert
+      if (confirm("Do you want to accept request of " + user1name)) {
+        txt = "You pressed OK!";
+        const answer = "y"
+        const msg = {
+          user1_name: user1name,
+          answer
+        }
+        socket.emit("answer", msg);
+      } else {
+        txt = "You pressed Cancel!";
+        const answer = "n"
+        const msg = {
+          user1_name: user1name,
+          answer
+        }
+        socket.emit("answer", msg);
+      }
+    }  
     console.log(txt)
   }
 
+  // making connectToUser available globally so that we can have button.onclick listener in the test.html itself
   window.connectToUser = connectToUser
   
   socket.on('login', (usersArray: [string, IUser][]): void => {
@@ -60,6 +87,7 @@ const setSocketConnections = (socket: SocketIOClient.Socket): void => {
           button.innerText = key;
           button.className = "user";
           button.setAttribute("data-user-type", value.state);
+          button.setAttribute("onclick", "connectToUser(this)");
           onlineUsersList.append(button);
         });
       }
@@ -93,6 +121,7 @@ const setSocketConnections = (socket: SocketIOClient.Socket): void => {
         button.innerText = user.username;
         button.className = "user";
         button.setAttribute("data-user-type", user.val.state);
+        button.setAttribute("onclick", "connectToUser(this)");
         onlineUsersList.append(button);
       }
     }
@@ -119,9 +148,10 @@ const setSocketConnections = (socket: SocketIOClient.Socket): void => {
     }
   });
 
-  socket.on("offer", (user1Name: string): void => {
-    console.log(user1Name + " sends an offer"); // for dev purpose
-    if (user1Name) {
+  socket.on("changeDataUserType", (userAndData: {username: string; newDataType: string}): void => {
+    const username = userAndData.username;
+    const newDataType = userAndData.newDataType;
+    if (username && (newDataType == "idle" || newDataType == "busy" || newDataType == "Wants to connect")) {
       const onlineUsersList: Element | null = document.getElementById("onlineUsersList");
       if (onlineUsersList !== null) {
         let i = 0;
@@ -129,39 +159,26 @@ const setSocketConnections = (socket: SocketIOClient.Socket): void => {
         for (i = 0; i < allListElements.length; i++) {
           const listElement = allListElements[i] as HTMLElement;
           if (listElement !== undefined) {
-            if (listElement.innerText.split("\n")[0] === user1Name) {
+            if (listElement.innerText.split("\n")[0] === username) {
               break;
             }
           }
         }
         // changing the state of ith user
-        const button = onlineUsersList.children[i];
-        button.setAttribute("data-user-type", "Wants to connect");
-        
+        let button = onlineUsersList.children[i];
+        button.setAttribute("data-user-type", newDataType);
       }
     }
-  });
-
-  socket.on("userRequested", (usersInvolved: {user1_name: string; user2_name: string}): void => {
-    console.log(usersInvolved.user1_name + " sends an offer to " + usersInvolved.user2_name); // for dev purpose  
-    if (usersInvolved) {
-      const onlineUsersList: Element | null = document.getElementById("onlineUsersList");
-      if (onlineUsersList !== null) {
-        let i = 0;
-        const allListElements: HTMLCollection = onlineUsersList.children;
-        for (i = 0; i < allListElements.length; i++) {
-          const listElement = allListElements[i] as HTMLElement;
-          if (listElement !== undefined) {
-            if (listElement.innerText.split("\n")[0] === usersInvolved.user1_name) {
-              break;
-            }
-          }
-        }
-        // changing the state of ith user
-        const button = onlineUsersList.children[i];
-        button.setAttribute("data-user-type", "waiting");
-        
-      }
+  })
+  socket.on("answer", (ans: string): void => {
+    console.log("answer: user2 has replied with" + ans); // for dev purpose  
+    if (ans === "n") {
+      window.alert("Your request has been rejected");
+    }
+    else if (ans === "y") {
+      // show page3 from here
+      // 2 users are been connected
+      window.alert("Your request has been accepted");
     }
   });
 

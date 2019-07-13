@@ -133,11 +133,9 @@ io.on("connection", (socket: IExtendedSocket): void => {
         users.set(user1Name, user1);
         users.set(user2Name, user2);
         // offer event to user2
-        socket.broadcast.to(user2.socketID).emit("offer", user1Name);
-        // broadcast event to all other users
-        socket.broadcast.emit("userRequested", {
-          user1_name: user1Name,
-          user2_name: user2Name,
+        socket.broadcast.to(user2.socketID).emit("changeDataUserType", {
+          username: user1Name,
+          newDataType: "Wants to connect",
         });
       }
     }
@@ -148,6 +146,10 @@ io.on("connection", (socket: IExtendedSocket): void => {
     user1_name: string;
     answer: string;
   }): void => {
+    console.log(msg);
+    console.log(msg.user1_name);
+    console.log(msg.answer);
+
     // get usernames of both users
     const user2Name: string = socket.username;
     const user1Name: string = msg.user1_name;
@@ -169,11 +171,13 @@ io.on("connection", (socket: IExtendedSocket): void => {
         users.set(user2Name, user2);
         // emit messages to user1 and all other users.
         socket.broadcast.to(user1.socketID).emit("answer", ans);
-        socket.broadcast.emit("userRejected", {
-          user1_name: user1Name,
-          user2_name: user2Name,
+        socket.broadcast.emit("changeDataUserType", {
+          username: user1Name,
+          newDataType: "idle",
         });
-      } else {
+      } else if (ans === "y") {
+        console.log("popo");
+        
         // updating partner properties of user1 and user2
         user2.partner = user1Name;
         user1.partner = user2Name;
@@ -186,21 +190,43 @@ io.on("connection", (socket: IExtendedSocket): void => {
           const temp: IUser|undefined = users.get(key) ;
           if (temp !== undefined) {
             socket.broadcast.to(temp.socketID).emit("answer", "n");
+            socket.broadcast.emit("changeDataUserType", {
+              username: key,
+              newDataType: "idle",
+            });
           }
         });
 
         user1.inRequests.clear();
-        user1.inRequests.forEach( (key): void => {
+        user2.inRequests.forEach( (key): void => {
           // get socketId of key
           const temp: IUser|undefined = users.get(key) ;
-          if (temp !== undefined) {
+          if (temp !== undefined && temp !== user1) {
+            // sending no to all the inrequest users of user2 except user1
             socket.broadcast.to(temp.socketID).emit("answer", "n");
+            socket.broadcast.emit("changeDataUserType", {
+              username: key,
+              newDataType: "idle",
+            });
           }
         });
         user2.inRequests.clear();
         // remap new properties
         users.set(user1Name, user1);
         users.set(user2Name, user2);
+
+        // users are been connected by now
+        socket.broadcast.to(user1.socketID).emit("answer", ans);
+        // sending to all users that user1 is busy
+        socket.broadcast.emit("changeDataUserType", {
+          username: user1Name,
+          newDataType: "busy",
+        });
+        // sending to all users that user2 is busy
+        socket.broadcast.emit("changeDataUserType", {
+          username: user2Name,
+          newDataType: "busy",
+        });
       }
     }
   });
