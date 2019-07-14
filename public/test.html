@@ -23,8 +23,8 @@
         </span>
     </header>
 
-    <main class="show-container centered">
-        <div class="page show" id="login-page" data-centered>
+    <main class="show-container">
+        <div class="page" id="login-page" data-centered>
             <section class="main-section">
                 <span>
                     FileSend is a service for peer-to-peer file transfers, all through your browser.
@@ -47,12 +47,12 @@
                 </main>
             </section>
         </div>
-        <div class="page" id="connected-page">
+        <div class="page show" id="connected-page">
             <section class="main-section">
                 <!-- TODO: Change this heading dynamically based on which div has show class -->
                 <header><span>Select files</span><i class="fas fa-angle-down"></i></header>
                 <main class="show-container">
-                    <div id="select-files-send" data-heading="Select files to send" style="width: 100%;">
+                    <div id="select-files-send" class="show" data-heading="Select files to send" style="width: 100%;">
                         <input type="file" id="getFile" style="display: none;" multiple>
                         <label for="getFile">Browse files</label>
                         <!-- list of selected files -->
@@ -64,38 +64,6 @@
                                 <th>Size</th>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        File1.extension
-                                    </td>
-                                    <td>
-                                        5 KB
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        File2.extension
-                                    </td>
-                                    <td>
-                                        5 MB
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        File3.extension
-                                    </td>
-                                    <td>
-                                        50 MB
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        File4.extension
-                                    </td>
-                                    <td>
-                                        69 KB
-                                    </td>
-                                </tr>
                             </tbody>
                         </table>
                         <button>Send</button>
@@ -161,14 +129,19 @@
                         <button>Start transfer</button>
                     </div>
                     <div id="wait-approval" data-heading="Waiting for response">
+                        <p>A request has been sent to <span class="user2-name">user2</span>
+                        so that they select which files they want to receive.</p>
+                        <p>P.S. Taking too long? Ask <span class="user2-name">user2</span>
+                        using the chat functionality</p>
+                    </div>
+                    <div id="processing-files" data-heading="Processing">
                         <div class="spinner"></div>
                         <p>
                             Please wait while we process the files you want to transfer.
                             Larger files take longer to process.
                         </p>
                     </div>
-                    <div id="processing-files" data-heading="Processing"></div>
-                    <div id="file-progress" class="show" data-heading="File Transfer Info">
+                    <div id="file-progress" data-heading="File Transfer Info">
                         <table>
                             <thead>
                                 <th>
@@ -318,13 +291,13 @@
     <div class="modal">
         <div class="content">
             <header>
-                <h1>Connection to <span class="username">{{user2}}</span> </h1>
+                <h1>Connection to <span class="user2-name">{{user2}}</span> </h1>
                 <button class="close-btn">&times;</button>
             </header>
             <main class="show-container">
                 <div class="page show">
                     <div>
-                        Do you want to send a connection request to <span class="username">{{user2}}</span> ?
+                        Do you want to send a connection request to <span class="user2-name">{{user2}}</span> ?
                     </div>
                     <div class="button-group">
                         <button data-btn-type="yes">Yes</button>
@@ -333,7 +306,7 @@
                 </div>
                 <div class="page">
                     <div class="spinner"></div>
-                    <div>Waiting for request approval from <span class="username">{{user2}}</span></div>
+                    <div>Waiting for request approval from <span class="user2-name">{{user2}}</span></div>
                     <button>Cancel</button>
                 </div>
             </main>
@@ -343,13 +316,13 @@
     <div class="modal">
         <div class="content">
             <header>
-                <h1>Connection request from <span class="username">{{user2}}</span> </h1>
+                <h1>Connection request from <span class="user2-name">{{user2}}</span> </h1>
                 <button class="close-btn">&times;</button>
             </header>
             <main class="show-container">
                 <div class="page show">
                     <div>
-                        Do you want to connect to <span class="username">{{user2}}</span> ?
+                        Do you want to connect to <span class="user2-name">{{user2}}</span> ?
                     </div>
                     <div class="button-group">
                         <button data-btn-type="yes">Yes</button>
@@ -363,11 +336,11 @@
     <div class="modal">
         <div class="content">
             <header>
-                <h1><span class="username">{{user2}}</span> is busy </h1>
+                <h1><span class="user2-name">{{user2}}</span> is busy </h1>
                 <button class="close-btn">&times;</button>
             </header>
             <main>
-                <span class="username">{{user2}}</span> is connected to another user right now and request
+                <span class="user2-name">{{user2}}</span> is connected to another user right now and request
                 cannot be initiated to them.
             </main>
         </div>

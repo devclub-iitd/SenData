@@ -2,7 +2,6 @@
   .main-section:first-child > main {
     margin: 0;
     display: flex;
-    flex-direction: row;
     overflow: hidden;
   }
 
@@ -70,6 +69,7 @@
     display: flex;
     flex-direction: column;
     overflow: auto;
+    margin: auto;
 
     > *:first-child {
       margin-top: auto;
