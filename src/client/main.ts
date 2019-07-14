@@ -98,6 +98,8 @@ const setSocketConnections = (): void => {
 
   socket.on('login', (usersArray: [string, IUser][]): void => {
     const users: Map<string, IUser> = new Map(usersArray);
+    console.log("list sent by server");
+    console.log(users);
     if (users !== null) {
       // hiding page 1 and showing page 2
       showChild(document.querySelector("body > main"), 1);
@@ -112,29 +114,12 @@ const setSocketConnections = (): void => {
           onlineUsersList.append(button);
         });
       }
-      /* for index.html
-      const loginPage: HTMLElement | null = document.getElementById("loginPage");
-      const dashboardPage: HTMLElement | null = document.getElementById("dashboardPage");
-      if (loginPage !== null && dashboardPage !== null) {
-        loginPage.style.display = "none";
-        const onlineUsersList: Element | null = document.getElementById("onlineUsersList");
-        users.forEach((value: IUser, key: string): void => {
-          if (onlineUsersList !== null) {
-            const li = document.createElement("li");
-            li.className = "list-group-item d-flex justify-content-between"
-              + "align-items-center list-group-item-action";
-            li.innerText = key;
-            onlineUsersList.append(li);
-          }
-        });
-        dashboardPage.style.display = "block";
-        
-      }
-      */
     }
   });
 
   socket.on("newUserLogin", (user: { username: string; val: IUser }): void => {
+    console.log("newUserLogin:");
+    console.log(user.username);
     if (user) {
       const onlineUsersList: Element | null = document.getElementById("onlineUsersList");
       if (onlineUsersList !== null) {
@@ -190,7 +175,8 @@ const setSocketConnections = (): void => {
         button.setAttribute("data-user-type", newDataType);
       }
     }
-  })
+  });
+
   socket.on("answer", (ans: string): void => {
     console.log("answer: user2 has replied with" + ans); // for dev purpose  
     if (ans === "n") {
@@ -212,8 +198,17 @@ loginForm.onsubmit = (e): void => {
   const username = usernameTextBox.value;
   console.log(username);
   if (username !== "") {
-    socket = io(window.location.origin, { query: `username=${username}` });
-    setSocketConnections();
+    socket = io(window.location.origin, { query: `username=${username}`});
+    socket.on("isSuccessfulLogin", (isSuccess: boolean): void => {
+      if (isSuccess) {
+        setSocketConnections();
+      }
+      else {
+        window.alert("A user with this username is alreay live on the server");
+        socket = undefined;
+      }
+    });
+    
   } else {
     window.alert("Enter a username ffs"); //TODO: Fix with a warning shown by text box border
   }

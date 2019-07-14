@@ -64,8 +64,8 @@ io.on("connection", (socket: IExtendedSocket): void => {
         socketID: socket.id,
         state: "idle",
       };
-      // // confirming user that its logged in
-      // status = 0;
+      // confirming user that its logged in
+      socket.emit("isSuccessfulLogin", true);
       // sending users array to logged user without the new user
       const usersArray: [string, IUser][] = Array.from(users);
       socket.emit("login", usersArray);
@@ -74,9 +74,12 @@ io.on("connection", (socket: IExtendedSocket): void => {
       // @tmibvishal I changed status to usersArray because users should be sent to new client
       // mapping logged user to its characteristic values.
       users.set(username, val);
+    } else {
+      // rejecting user that its logged in
+      socket.emit("isSuccessfulLogin", false);
     }
   };
-    // Getting the username passed by client
+  // Getting the username passed by client
   const uname = socket.handshake.query.username;
   // Logging the client into the server
   loginTheUser(uname);

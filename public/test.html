@@ -52,10 +52,10 @@
                 <!-- TODO: Change this heading dynamically based on which div has show class -->
                 <header><span>Select files</span><i class="fas fa-angle-down"></i></header>
                 <main class="show-container">
-                    <div id="select-files-send" class="show" data-heading="Select files to send" style="width: 100%;">
-                        <input type="file" id="getFile" style="display: none;" multiple>
-                        <label for="getFile">Browse files</label>
+                    <div id="select-files-send" class="show" data-heading="Select files to send" style="padding: 5px; width: 100%;">
+                        <input type="file" id="getFile" value="Browse files" multiple>
                         <!-- list of selected files -->
+                    
                         <table style="margin-top: 1em;">
                             <thead>
                                 <th>
@@ -67,6 +67,36 @@
                             </tbody>
                         </table>
                         <button>Send</button>
+                    </div>
+                    <div class="list-group show">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>File_1.txt</strong></br>
+                                        <span style="color :#7c7c7c"><strong>Size: </strong>4kb |</span>
+                                        <span style="color :#7c7c7c"><strong>Type: </strong>Text File</span>
+                                    </div>
+                                    <input type="checkbox">
+
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>File_2.pdf</strong></br>
+                                            <span style="color :#7c7c7c"><strong>Size: </strong>10kb |</span>
+                                            <span style="color :#7c7c7c"><strong>Type: </strong>Document</span>
+                                        </div>
+                                        <input type="checkbox">
+    
+                                    </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>File_3.txt</strong></br>
+                                            <span style="color :#7c7c7c"><strong>Size: </strong>4kb |</span>
+                                            <span style="color :#7c7c7c"><strong>Type: </strong>Text File</span>
+                                        </div>
+                                        <input type="checkbox">
+    
+                                    </li>
+                                
                     </div>
                     <div id="approve-files" data-heading="Select files to receive">
                         <table>
