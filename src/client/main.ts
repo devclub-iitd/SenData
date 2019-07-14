@@ -1,5 +1,4 @@
 import * as debugLib from "debug";
-import { link } from "fs";
 import { IExtendedSocket, IUser, Msg } from "../types";
 import Client from "./wt";
 import { formatBytes } from "./util";
@@ -7,6 +6,8 @@ import { formatBytes } from "./util";
 const debug = debugLib("FileSend:Main");
 
 /* globals io */
+
+let socket: SocketIOClient.Socket | undefined; // The socket this client uses to connect
 
 /*
 * Shows the ith child of targetNode by adding class show to that element
@@ -32,7 +33,7 @@ const showChild = (targetNode: HTMLElement | null, i: number): void => {
       // If the child has data-heading attribute, assuming that the previous
       // sibling of targetNode is a header in which there is a span where we
       // have to place the heading
-      if(childShow.dataset.heading) {
+      if (childShow.dataset.heading) {
         const header = targetNode.previousElementSibling as HTMLElement;
         const span = header.querySelector("span") as HTMLElement;
         span.textContent = childShow.dataset.heading;
@@ -41,11 +42,21 @@ const showChild = (targetNode: HTMLElement | null, i: number): void => {
   }
 };
 
-const setSocketConnections = (socket: SocketIOClient.Socket): void => {
+const setSocketConnections = (): void => {
   // if send offer to a user
   // socket.emit('offer', user2name);
 
+  // If socket is undefined, do nothing
+  if (socket === undefined) {
+    return;
+  }
+
   const connectToUser = (element: HTMLElement): void => {
+    // If socket is undefined, do nothing
+    if (socket === undefined) {
+      return;
+    }
+
     let txt = "";
     let dataUserType = element.getAttribute("data-user-type");
     if (dataUserType == "idle") {
@@ -79,7 +90,7 @@ const setSocketConnections = (socket: SocketIOClient.Socket): void => {
         socket.emit("answer", msg);
       }
     }
-    console.log(txt)
+    console.log(txt);
   }
 
   // making connectToUser available globally so that we can have button.onclick listener in the test.html itself
@@ -194,19 +205,6 @@ const setSocketConnections = (socket: SocketIOClient.Socket): void => {
 
 };
 
-
-
-/* const usernameTextBox: HTMLInputElement = document.querySelector('#login-page input[type="text"]') as HTMLInputElement;
-const connectToSocket = (): void => {
-  const username = usernameTextBox.value;
-  if (username !== "") {
-    const socket: SocketIOClient.Socket = io(window.location.origin, {query: `username=${username}`});
-    setSocketConnections(socket);
-  } else {
-    window.confirm("Please Enter some username");
-  }
-}; */
-
 const loginForm = document.querySelector("#login-page form") as HTMLFormElement;
 loginForm.onsubmit = (e): void => {
   e.preventDefault();
@@ -214,44 +212,12 @@ loginForm.onsubmit = (e): void => {
   const username = usernameTextBox.value;
   console.log(username);
   if (username !== "") {
-    const socket: SocketIOClient.Socket = io(window.location.origin, { query: `username=${username}` });
-    setSocketConnections(socket);
+    socket = io(window.location.origin, { query: `username=${username}` });
+    setSocketConnections();
   } else {
     window.alert("Enter a username ffs"); //TODO: Fix with a warning shown by text box border
   }
 }
-/* const startSendingButton: HTMLElement | null = document.querySelector('#login-page input[type="submit"]');
-if (startSendingButton !== null) {
-  startSendingButton.addEventListener("click", connectToSocket);
-} */
-/*
-const socket = io();
-socket.on("bye-bye", () => {
-    $("body").text("Server sent bye-bye");
-});
-
-socket.on("connected", () => {
-    $("body").append("<br>Connected to another user!");
-
-    const client = new Client(socket);
-
-    $("button").click( () => {
-        const fileInput: HTMLInputElement = document.getElementById("file_submit") as HTMLInputElement;
-        const files = fileInput.files;
-
-        if (files === null) {
-            window.alert("Select some files");
-            return;
-        }
-
-        client.sendFile(files[0]);
-    });
-});
-
-socket.on("disconnected", () => {
-    $("body").text("The other user has disconnected!");
-});
-*/
 
 const manageCollapseClickListener = (enable: boolean): void => {
   const sections = document.querySelectorAll(".page > section");
