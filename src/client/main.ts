@@ -93,8 +93,16 @@ const setSocketConnections = (): void => {
     console.log(txt);
   }
 
-  // making connectToUser available globally so that we can have button.onclick listener in the test.html itself
-  window.connectToUser = connectToUser
+  const getUserButton = (username: string, userType: string): HTMLButtonElement => {
+    const button = document.createElement("button");
+    button.innerText = username;
+    button.className = "user";
+    button.setAttribute("data-user-type", userType);
+    button.addEventListener("click", (): void => {
+      connectToUser(button);
+    })
+    return button;
+  }
 
   socket.on('login', (usersArray: [string, IUser][]): void => {
     const users: Map<string, IUser> = new Map(usersArray);
@@ -106,11 +114,7 @@ const setSocketConnections = (): void => {
       const onlineUsersList: Element | null = document.getElementById("onlineUsersList");
       if (onlineUsersList !== null) {
         users.forEach((value: IUser, key: string): void => {
-          const button = document.createElement("button");
-          button.innerText = key;
-          button.className = "user";
-          button.setAttribute("data-user-type", value.state);
-          button.setAttribute("onclick", "connectToUser(this)");
+          const button = getUserButton(key, value.state);
           onlineUsersList.append(button);
         });
       }
@@ -123,11 +127,7 @@ const setSocketConnections = (): void => {
     if (user) {
       const onlineUsersList: Element | null = document.getElementById("onlineUsersList");
       if (onlineUsersList !== null) {
-        const button = document.createElement("button");
-        button.innerText = user.username;
-        button.className = "user";
-        button.setAttribute("data-user-type", user.val.state);
-        button.setAttribute("onclick", "connectToUser(this)");
+        const button = getUserButton(user.username, user.val.state);
         onlineUsersList.append(button);
       }
     }
@@ -198,7 +198,7 @@ loginForm.onsubmit = (e): void => {
   const username = usernameTextBox.value;
   console.log(username);
   if (username !== "") {
-    socket = io(window.location.origin, { query: `username=${username}`});
+    socket = io(window.location.origin, { query: `username=${username}` });
     socket.on("isSuccessfulLogin", (isSuccess: boolean): void => {
       if (isSuccess) {
         setSocketConnections();
@@ -208,7 +208,7 @@ loginForm.onsubmit = (e): void => {
         socket = undefined;
       }
     });
-    
+
   } else {
     window.alert("Enter a username ffs"); //TODO: Fix with a warning shown by text box border
   }
@@ -365,7 +365,7 @@ const manageFileInput = (): void => {
     }
 
     socket.emit("fileListSendRequest", inputElem.files);
-    
+
     const container = document.querySelector("#connected-page show-container") as HTMLElement | null;
     if (container) {
       showChild(container, 2); //wait-approval page
