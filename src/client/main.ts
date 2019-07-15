@@ -204,13 +204,13 @@ loginForm.onsubmit = (e): void => {
         setSocketConnections();
       }
       else {
-        window.alert("A user with this username is alreay live on the server");
+        window.alert("A user with this username is already live on the server");
         socket = undefined;
       }
     });
 
   } else {
-    window.alert("Enter a username ffs"); //TODO: Fix with a warning shown by text box border
+    window.alert("Please enter a username"); //TODO: Fix with a warning shown by text box border
   }
 }
 
