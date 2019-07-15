@@ -53,7 +53,8 @@
                 <header><span>Select files</span><i class="fas fa-angle-down"></i></header>
                 <main class="show-container">
                     <div id="select-files-send" class="show" data-heading="Select files to send" style="padding: 5px; width: 100%;">
-                        <input type="file" id="getFile" value="Browse files" multiple>
+                        <input type="file" id="getFile" style="display: none;" multiple>
+                        <label for="getFile">Browse files</label>
                         <!-- list of selected files -->
                     
                         <table style="margin-top: 1em;">
@@ -288,7 +289,7 @@
     </footer>
 
     <!-- Modals (have to be in the outermost scope to be fullscreen) -->
-    <div class="modal">
+    <div class="modal" id="modal-initiate-connection">
         <div class="content">
             <header>
                 <h1>Connection to <span class="user2-name">{{user2}}</span> </h1>
@@ -313,7 +314,7 @@
         </div>
     </div>
 
-    <div class="modal">
+    <div class="modal" id="modal-approve-request">
         <div class="content">
             <header>
                 <h1>Connection request from <span class="user2-name">{{user2}}</span> </h1>
@@ -333,7 +334,7 @@
         </div>
     </div>
 
-    <div class="modal">
+    <div class="modal" id="modal-user-busy">
         <div class="content">
             <header>
                 <h1><span class="user2-name">{{user2}}</span> is busy </h1>
