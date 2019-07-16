@@ -314,6 +314,20 @@
         </div>
     </div>
 
+    <div class="modal" id="modal-connection-rejected">
+        <div class="content">
+            <header>
+                <h1>Connection to <span class="user2-name">{{user2}}</span> rejected</h1>
+                <button class="close-btn">&times;</button>
+            </header>
+            <main class="show-container">
+                <div class="page show">
+                    <p>Your connection request was rejected by <span class="user2-name">{{user2}}</span></p>
+                </div>
+            </main>
+        </div>
+    </div>
+
     <div class="modal" id="modal-approve-request">
         <div class="content">
             <header>
@@ -340,9 +354,13 @@
                 <h1><span class="user2-name">{{user2}}</span> is busy </h1>
                 <button class="close-btn">&times;</button>
             </header>
-            <main>
-                <span class="user2-name">{{user2}}</span> is connected to another user right now and request
-                cannot be initiated to them.
+            <main class="show-container">
+                <div class="page show">
+                    <p>
+                        <span class="user2-name">{{user2}}</span> is connected to another user right now and request
+                        cannot be initiated to them.
+                    </p>
+                </div>
             </main>
         </div>
     </div>

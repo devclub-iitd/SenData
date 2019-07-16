@@ -27,3 +27,36 @@ export function formatTime(time: number): string {
   if (sec !== 0) { text += `${sec} s `; }
   return text;
 }
+
+/*
+* Shows the ith child of targetNode by adding class show to that element
+* and removing it from others.
+*/
+export function showChild(targetNode: HTMLElement | null, i: number): void {
+  if (targetNode) {
+    targetNode.querySelectorAll(".show").forEach((elem: Element): void => {
+      elem.classList.remove("show");
+    });
+    const childShow = targetNode.children[i] as HTMLElement | null;
+    if (childShow) {
+      // If data-centered is present in child, add class centered to parent
+      // Allows for a centered layout by an attribute of child
+      if (childShow.dataset.centered !== undefined) {
+        targetNode.classList.add("centered");
+      }
+      else {
+        targetNode.classList.remove("centered");
+      }
+      childShow.classList.add("show");
+
+      // If the child has data-heading attribute, assuming that the previous
+      // sibling of targetNode is a header in which there is a span where we
+      // have to place the heading
+      if (childShow.dataset.heading) {
+        const header = targetNode.previousElementSibling as HTMLElement;
+        const span = header.querySelector("span") as HTMLElement;
+        span.textContent = childShow.dataset.heading;
+      }
+    }
+  }
+}
