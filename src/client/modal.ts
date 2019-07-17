@@ -59,6 +59,7 @@ class Modal extends EventEmitter {
           showContainer.children[0].classList.contains("show") ||
           confirm("Do you want to cancel the connection request to " + this.user2Name + "?")
         ) {
+          this.emit("cancelConnection");
           hideModal();
         }
       }
