@@ -185,10 +185,6 @@ io.on("connection", (socket: IExtendedSocket): void => {
     user1_name: string;
     answer: string;
   }): void => {
-    console.log(msg);
-    console.log(msg.user1_name);
-    console.log(msg.answer);
-
     // get usernames of both users
     const user2Name: string = socket.username;
     const user1Name: string = msg.user1_name;
@@ -215,8 +211,6 @@ io.on("connection", (socket: IExtendedSocket): void => {
           newDataType: "idle",
         });
       } else if (ans === "y") {
-        console.log("popo");
-        
         // updating partner properties of user1 and user2
         user2.partner = user1Name;
         user1.partner = user2Name;
@@ -235,7 +229,6 @@ io.on("connection", (socket: IExtendedSocket): void => {
             });
           }
         });
-
         user1.inRequests.clear();
         user2.inRequests.forEach( (key): void => {
           // get socketId of key
@@ -253,7 +246,6 @@ io.on("connection", (socket: IExtendedSocket): void => {
         // remap new properties
         users.set(user1Name, user1);
         users.set(user2Name, user2);
-
         // users are been connected by now
         socket.broadcast.to(user1.socketID).emit("answer", ans);
         // sending to all users that user1 is busy
@@ -311,11 +303,11 @@ io.on("connection", (socket: IExtendedSocket): void => {
         const username2 = user1.partner;
         const user2: IUser|undefined = users.get(username2) ;
         // Emitting the msg to user1 (sender)
-        socket.emit("message", msg);
+        socket.emit("messageSentSuccess", msg);
 
         if (user2 !== undefined) {
           // Broadcasting the msg to user2 only
-          socket.broadcast.to(user2.socketID).emit("message", msg);
+          socket.broadcast.to(user2.socketID).emit("messageIncomming", msg);
         }
 
       }
