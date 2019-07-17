@@ -135,6 +135,11 @@ io.on("connection", (socket: IExtendedSocket): void => {
         // remap new properties
         users.set(user1Name, user1);
         users.set(user2Name, user2);
+        // offer request to all the other users (including user2 which will be overwritten by the next emit)
+        socket.broadcast.emit("changeDataUserType", {
+          username: user1Name,
+          newDataType: "busy",
+        });
         // offer event to user2
         socket.broadcast.to(user2.socketID).emit("changeDataUserType", {
           username: user1Name,
