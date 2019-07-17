@@ -149,6 +149,37 @@ io.on("connection", (socket: IExtendedSocket): void => {
     }
   });
 
+
+  // user1 requests user2 to ignore offer
+  socket.on("cancelOffer", (): void => {
+    // get this user's username
+    const user1Name: string = socket.username;
+    // get properties of user1.
+    const user1: IUser | undefined = users.get(user1Name) ;
+    
+    if (user1 !== undefined) {
+      const user2Name: string = user1.outRequest;
+      // get properties of user2.
+      const user2: IUser | undefined = users.get(user2Name) ;
+      if (user2 !== undefined) {
+        if (user1.state === "waiting" && user2.inRequests.has(user1Name)) {
+          // updated properties
+          user1.outRequest = "";
+          user1.state = "idle";
+          user2.inRequests.delete(user1Name);
+          // remap new properties
+          users.set(user1Name, user1);
+          users.set(user2Name, user2);
+          // offer request to all the other users (including user2)
+          socket.broadcast.emit("changeDataUserType", {
+            username: user1Name,
+            newDataType: "idle",
+          });
+        }
+      }
+    }
+  });
+
   // answer event.. user2 answering user1
   socket.on("answer", (msg: {
     user1_name: string;
