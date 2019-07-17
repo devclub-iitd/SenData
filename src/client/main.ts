@@ -1,46 +1,14 @@
 import * as debugLib from "debug";
+import modalHandler from "./modal";
 import { IExtendedSocket, IUser, Msg } from "../types";
 import Client from "./wt";
-import { formatBytes } from "./util";
+import { formatBytes, showChild } from "./util";
 
 const debug = debugLib("FileSend:Main");
 
 /* globals io */
 
 let socket: SocketIOClient.Socket | undefined; // The socket this client uses to connect
-
-/*
-* Shows the ith child of targetNode by adding class show to that element
-* and removing it from others.
-*/
-const showChild = (targetNode: HTMLElement | null, i: number): void => {
-  if (targetNode) {
-    targetNode.querySelectorAll(".show").forEach((elem: Element): void => {
-      elem.classList.remove("show");
-    });
-    const childShow = targetNode.children[i] as HTMLElement | null;
-    if (childShow) {
-      // If data-centered is present in child, add class centered to parent
-      // Allows for a centered layout by an attribute of child
-      if (childShow.dataset.centered !== undefined) {
-        targetNode.classList.add("centered");
-      }
-      else {
-        targetNode.classList.remove("centered");
-      }
-      childShow.classList.add("show");
-
-      // If the child has data-heading attribute, assuming that the previous
-      // sibling of targetNode is a header in which there is a span where we
-      // have to place the heading
-      if (childShow.dataset.heading) {
-        const header = targetNode.previousElementSibling as HTMLElement;
-        const span = header.querySelector("span") as HTMLElement;
-        span.textContent = childShow.dataset.heading;
-      }
-    }
-  }
-};
 
 const setSocketConnections = (): void => {
   // if send offer to a user
@@ -57,44 +25,86 @@ const setSocketConnections = (): void => {
       return;
     }
 
-    let txt = "";
     let dataUserType = element.getAttribute("data-user-type");
     if (dataUserType == "idle") {
-      const user2name = element.innerText;
+      const user2Name = element.innerText;
+      modalHandler.setUser2Name(user2Name);
+      modalHandler.show("initiate-connection");
       // Show send request alert
-      if (confirm("Do you want to send request to " + user2name)) {
-        txt = "You pressed OK!";
-        socket.emit('offer', user2name);
-      } else {
-        txt = "You pressed Cancel!";
-      }
+
+      modalHandler.once("connect", (): void => {
+        if (socket) {
+          socket.emit('offer', user2Name);
+          socket.on("answer", (ans: string): void => {
+            console.log("answer: user2 has replied with" + ans); // for dev purpose  
+            if (ans === "n") {
+              modalHandler.hide();
+              modalHandler.show("connection-rejected");
+            }
+            else if (ans === "y") {
+              modalHandler.hide();
+              const showContainer = document.querySelector("body > .show-container") as HTMLElement;
+              showChild(showContainer, 2);
+            }
+          });
+        } else {
+          debug("Socket variable undefined");
+        }
+      });
+
+      modalHandler.once("cancelConnection", (): void => {
+        if (socket) {
+          socket.emit("cancelOffer");
+        } else {
+          debug("Socket variable undefined");
+        }
+      });
     }
     else if (dataUserType == "Wants to connect") {
-      const user1name: string = element.innerText;
+      const user1Name: string = element.innerText;
+      modalHandler.setUser2Name(user1Name);
+      modalHandler.show("approve-request");
       // Show accept request alert
-      if (confirm("Do you want to accept request of " + user1name)) {
-        txt = "You pressed OK!";
-        const answer = "y"
+      modalHandler.once("connect", (): void => {
         const msg = {
-          user1_name: user1name,
-          answer
+          user1_name: user1Name,
+          answer: "y"
+        };
+
+        if (socket) {
+          socket.emit("answer", msg);
+          const showContainer = document.querySelector("body > .show-container") as HTMLElement;
+          showChild(showContainer, 2);
+        } else {
+          debug("Socket variable undefined");
         }
-        socket.emit("answer", msg);
-      } else {
-        txt = "You pressed Cancel!";
-        const answer = "n"
+      });
+      modalHandler.once("rejectRequest", (): void => {
         const msg = {
-          user1_name: user1name,
-          answer
+          user1_name: user1Name,
+          answer: "n"
+        };
+        element.dataset.userType = "idle";
+
+        if (socket) {
+          socket.emit("answer", msg);
+        } else {
+          debug("Socket variable undefined");
         }
-        socket.emit("answer", msg);
-      }
+      });
     }
-    console.log(txt);
   }
 
-  // making connectToUser available globally so that we can have button.onclick listener in the test.html itself
-  window.connectToUser = connectToUser
+  const getUserButton = (username: string, userType: string): HTMLButtonElement => {
+    const button = document.createElement("button");
+    button.innerText = username;
+    button.className = "user";
+    button.setAttribute("data-user-type", userType);
+    button.addEventListener("click", (): void => {
+      connectToUser(button);
+    })
+    return button;
+  }
 
   socket.on('login', (usersArray: [string, IUser][]): void => {
     const users: Map<string, IUser> = new Map(usersArray);
@@ -106,11 +116,7 @@ const setSocketConnections = (): void => {
       const onlineUsersList: Element | null = document.getElementById("onlineUsersList");
       if (onlineUsersList !== null) {
         users.forEach((value: IUser, key: string): void => {
-          const button = document.createElement("button");
-          button.innerText = key;
-          button.className = "user";
-          button.setAttribute("data-user-type", value.state);
-          button.setAttribute("onclick", "connectToUser(this)");
+          const button = getUserButton(key, value.state);
           onlineUsersList.append(button);
         });
       }
@@ -123,11 +129,7 @@ const setSocketConnections = (): void => {
     if (user) {
       const onlineUsersList: Element | null = document.getElementById("onlineUsersList");
       if (onlineUsersList !== null) {
-        const button = document.createElement("button");
-        button.innerText = user.username;
-        button.className = "user";
-        button.setAttribute("data-user-type", user.val.state);
-        button.setAttribute("onclick", "connectToUser(this)");
+        const button = getUserButton(user.username, user.val.state);
         onlineUsersList.append(button);
       }
     }
@@ -141,15 +143,11 @@ const setSocketConnections = (): void => {
         let i = 0;
         const allListElements: HTMLCollection = onlineUsersList.children;
         for (i = 0; i < allListElements.length; i++) {
-          const listElement = allListElements[i] as HTMLElement;
-          if (listElement !== undefined) {
-            if (listElement.innerText.split("\n")[0] === username) {
-              break;
-            }
+          if (allListElements[i].innerHTML === username) {
+            onlineUsersList.removeChild(allListElements[i]);
+            break;
           }
         }
-        // removing the disconnected user
-        onlineUsersList.removeChild(allListElements[i]);
       }
     }
   });
@@ -176,19 +174,6 @@ const setSocketConnections = (): void => {
       }
     }
   });
-
-  socket.on("answer", (ans: string): void => {
-    console.log("answer: user2 has replied with" + ans); // for dev purpose  
-    if (ans === "n") {
-      window.alert("Your request has been rejected");
-    }
-    else if (ans === "y") {
-      // show page3 from here
-      // 2 users are been connected
-      window.alert("Your request has been accepted");
-    }
-  });
-
 };
 
 const loginForm = document.querySelector("#login-page form") as HTMLFormElement;
@@ -198,19 +183,19 @@ loginForm.onsubmit = (e): void => {
   const username = usernameTextBox.value;
   console.log(username);
   if (username !== "") {
-    socket = io(window.location.origin, { query: `username=${username}`});
+    socket = io(window.location.origin, { query: `username=${username}` });
     socket.on("isSuccessfulLogin", (isSuccess: boolean): void => {
       if (isSuccess) {
         setSocketConnections();
       }
       else {
-        window.alert("A user with this username is alreay live on the server");
+        window.alert("A user with this username is already live on the server");
         socket = undefined;
       }
     });
-    
+
   } else {
-    window.alert("Enter a username ffs"); //TODO: Fix with a warning shown by text box border
+    window.alert("Please enter a username"); //TODO: Fix with a warning shown by text box border
   }
 }
 
@@ -233,25 +218,6 @@ const manageCollapseClickListener = (enable: boolean): void => {
     }
   });
 };
-
-const manageModalClickListener = (): void => {
-  const modals = document.querySelectorAll(".modal");
-  modals.forEach((modal): void => {
-    const closeButton = modal.querySelector(".close-btn");
-    if (closeButton === null) {
-      debug("No close button found in modal. Panicking!");
-      return;
-    }
-    closeButton.addEventListener("click", (): void => {
-      modal.classList.toggle("show");
-    });
-    window.addEventListener("click", (event): void => {
-      if (event.target === modal) {
-        modal.classList.toggle("show");
-      }
-    });
-  });
-}
 
 const manageCheckboxConnectedPage = (): void => {
   let selectAllCheckbox = document.querySelector("#connected-page thead input[type=\"checkbox\"]") as HTMLInputElement | null;
@@ -365,7 +331,7 @@ const manageFileInput = (): void => {
     }
 
     socket.emit("fileListSendRequest", inputElem.files);
-    
+
     const container = document.querySelector("#connected-page show-container") as HTMLElement | null;
     if (container) {
       showChild(container, 2); //wait-approval page
@@ -373,7 +339,7 @@ const manageFileInput = (): void => {
   });
 }
 
-window.onload = (): void => {
+window.addEventListener("load", (): void => {
   const mediaQueryList = window.matchMedia("(max-width: 767px)");
   const handleSizeChange = (evt: MediaQueryList | MediaQueryListEvent): void => {
     manageCollapseClickListener(evt.matches);
@@ -381,7 +347,6 @@ window.onload = (): void => {
   mediaQueryList.addListener(handleSizeChange);
   handleSizeChange(mediaQueryList);
   window.showChild = showChild; /* For debugging */
-  manageModalClickListener();
   manageCheckboxConnectedPage();
   manageFileInput();
-};
+});

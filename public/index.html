@@ -5,298 +5,367 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="./css/style.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-    <title>fileSend</title>
-    <script src="/socket.io/socket.io.js"> </script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/newstyle.css">
+    <title> fileSend</title>
+    <!-- <script src="/socket.io/socket.io.js"> </script> -->
+    <!-- <script src="https://code.jquery.com/jquery-1.11.1.js"></script> -->
     <script src="js/adapter.js"> </script>
 </head>
 
 <body>
+    <header>
+        <span>
+            <i class="fas fa-share-alt-square" style="color: #d14f4b;"></i> file<b><span
+                    style="color: #d14f4b">Send</span></b>
+        </span>
+    </header>
 
-    <div class="page1" id="loginPage" style="display: none">
-        <main style="display: grid; min-height: 80vh; align-items: center;">
-            <div class="container">
-                <div class="row justify-content-center mt-4">
-                    <div class="h1"><i class="fas fa-share-alt-square" style="color: #d14f4b"></i> &nbsp;file<b><span
-                                style="color: #d14f4b">Send</span></b></div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-                        <div class="card card-custom">
-                            <div class="card-body">
-                                <h5 class="card-title text-center">
-                                    Welcome to FileSend
-                                </h5>
-                                <div>
-                                    <div class="form-label-group">
-                                        <input type="text" name="username" class="input-custom form-control"
-                                            id="username" placeholder="Enter Username" required><br>
-                                    </div>
-                                    <button class="btn btn-lg btn-secondary text-uppercase btn-custom"
-                                        style="width: 100%" type="submit" value="Start Sending"
-                                        id="startSendingButton">Start Sending
-                                    </button>
-                                    <br>
-                                    <!-- Need Help ? <a href="/users/register">See</a> -->
-                                </div>
+    <main class="show-container centered">
+        <div class="page show" id="login-page" data-centered>
+            <section class="main-section">
+                <span>
+                    FileSend is a service for peer-to-peer file transfers, all through your browser.
+                </span>
+                <form>
+                    <input type="text" placeholder="Enter a Username" required>
+                    <input type="submit" value="Start Sending">
+                </form>
+            </section>
+        </div>
+        <div class="page" id="users-page">
+            <section class="main-section">
+                <header>Connect to another user<i class="fas fa-angle-down"></i></header>
+                <main id="onlineUsersList">
+                    <!-- some sample buttons
+                    <button class="user" data-user-type="idle" onclick="connectToUser(this)">User 1</button>
+                    <button class="user" data-user-type="busy" onclick="connectToUser(this)">User 2</button>
+                    <button class="user" data-user-type="Wants to connect" onclick="connectToUser(this)">User 3</button>
+                    -->
+                </main>
+            </section>
+        </div>
+        <div class="page" id="connected-page">
+            <section class="main-section">
+                <!-- TODO: Change this heading dynamically based on which div has show class -->
+                <header><span>Select files</span><i class="fas fa-angle-down"></i></header>
+                <main class="show-container">
+                    <div id="select-files-send" class="show" data-heading="Select files to send" style="padding: 5px; width: 100%;">
+                        <input type="file" id="getFile" style="display: none;" multiple>
+                        <label for="getFile">Browse files</label>
+                        <!-- list of selected files -->
+                    
+                        <table style="margin-top: 1em;">
+                            <thead>
+                                <th>
+                                    Name
+                                </th>
+                                <th>Size</th>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                        <button>Send</button>
+                    </div>
+                    <div id="approve-files" data-heading="Select files to receive">
+                        <table>
+                            <thead>
+                                <th>
+                                    <label>
+                                        <input type="checkbox" name="" id="">
+                                        Name
+                                    </label>
+                                </th>
+                                <th>Size</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <label>
+                                            <input type="checkbox" name="" id="">
+                                            File1.extension
+                                        </label>
+                                    </td>
+                                    <td>
+                                        5 KB
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>
+                                            <input type="checkbox" name="" id="">
+                                            File2.extension
+                                        </label>
+                                    </td>
+                                    <td>
+                                        5 MB
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>
+                                            <input type="checkbox" name="" id="">
+                                            File3.extension
+                                        </label>
+                                    </td>
+                                    <td>
+                                        50 MB
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>
+                                            <input type="checkbox" name="" id="">
+                                            File4.extension
+                                        </label>
+                                    </td>
+                                    <td>
+                                        69 KB
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button>Start transfer</button>
+                    </div>
+                    <div id="wait-approval" data-heading="Waiting for response">
+                        <p>A request has been sent to <span class="user2-name">user2</span>
+                        so that they select which files they want to receive.</p>
+                        <p>P.S. Taking too long? Ask <span class="user2-name">user2</span>
+                        using the chat functionality</p>
+                    </div>
+                    <div id="processing-files" data-heading="Processing">
+                        <div class="spinner"></div>
+                        <p>
+                            Please wait while we process the files you want to transfer.
+                            Larger files take longer to process.
+                        </p>
+                    </div>
+                    <div id="file-progress" data-heading="File Transfer Info">
+                        <table>
+                            <thead>
+                                <th>
+                                    <label>
+                                        <!-- <input type="checkbox" name="" id=""> -->
+                                        Name
+                                    </label>
+                                </th>
+                                <th>Progress</th>
+                                <th>Size</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <label>
+                                            <!-- <input type="checkbox" name="" id=""> -->
+                                            File1.extension
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <progress value="95" max="100">
+                                    </td>
+                                    <td>
+                                        5 KB
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>
+                                            <!-- <input type="checkbox" name="" id=""> -->
+                                            File2.extension
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <progress value="35" max="100">
+                                    </td>
+                                    <td>
+                                        5 MB
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>
+                                            <!-- <input type="checkbox" name="" id=""> -->
+                                            File3.extension
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <progress value="15" max="100">
+                                    </td>
+                                    <td>
+                                        50 MB
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>
+                                            <!-- <input type="checkbox" name="" id=""> -->
+                                            File4.extension
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <progress value="75" max="100">
+                                    </td>
+                                    <td>
+                                        69 KB
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </main>
+            </section>
+
+            <section class="main-section">
+                <header>Chat<i class="fas fa-angle-down"></i></header>
+                <main class="chat">
+                    <div>
+                        <section class="chat-messages">
+                            <div class="chat-message sender">
+                                <main>Hello, there</main>
+                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
                             </div>
-                        </div>
+                            <div class="chat-message sender">
+                                <main>Kitna bana?</main>
+                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
+                            </div>
+                            <div class="chat-message receiver">
+                                <main>Tu bata</main>
+                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
+                            </div>
+                            <div class="chat-message receiver">
+                                <main>Tu bata</main>
+                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
+                            </div>
+                            <div class="chat-message receiver">
+                                <main>Tu bata</main>
+                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
+                            </div>
+                            <div class="chat-message receiver">
+                                <main>Tu bata</main>
+                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
+                            </div>
+                            <div class="chat-message receiver">
+                                <main>Tu bata</main>
+                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
+                            </div>
+                            <div class="chat-message receiver">
+                                <main>Tu bata</main>
+                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
+                            </div>
+                            <div class="chat-message receiver">
+                                <main>Tu bata</main>
+                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
+                            </div>
+                            <div class="chat-message receiver">
+                                <main>Tu bata</main>
+                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
+                            </div>
+                            <div class="chat-message receiver">
+                                <main>Tu bata</main>
+                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
+                            </div>
+                            <div class="chat-message receiver">
+                                <main>Tu bata</main>
+                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
+                            </div>
+                        </section>
+                    </div>
+                    <form>
+                        <input type="text" placeholder="Type your message here">
+                        <input type="submit" value="Send">
+                    </form>
+                </main>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <span>
+            Developed with <i class="fas fa-heart" style="color:#d14f4b;"></i> by
+            <a href="https://devclub.in/">DevClub IITD</a>
+        </span>
+    </footer>
+
+    <!-- Modals (have to be in the outermost scope to be fullscreen) -->
+    <div class="modal" id="modal-initiate-connection">
+        <div class="content">
+            <header>
+                <h1>Connection to <span class="user2-name">{{user2}}</span> </h1>
+                <button class="close-btn">&times;</button>
+            </header>
+            <main class="show-container">
+                <div class="page show">
+                    <div>
+                        Do you want to send a connection request to <span class="user2-name">{{user2}}</span> ?
+                    </div>
+                    <div class="button-group">
+                        <button data-btn-type="yes">Yes</button>
+                        <button data-btn-type="no">No</button>
                     </div>
                 </div>
-            </div>
-        </main>
+                <div class="page">
+                    <div class="spinner"></div>
+                    <div>Waiting for request approval from <span class="user2-name">{{user2}}</span></div>
+                    <button>Cancel</button>
+                </div>
+            </main>
+        </div>
     </div>
 
-    <div class="page2" id="dashboardPage" style="display: none">
-        <main>
-
-            <div class="row justify-content-center mt-4 mb-4">
-                <div class="h1"><i class="fas fa-share-alt-square" style="color: #d14f4b"></i> &nbsp;file<b><span
-                            style="color: #d14f4b">Send</span></b></div>
-            </div>
-            <div class="container">
-                <div class="row">
-                    <div class="col-0 col-md-2">
-
-                    </div>
-                    <div class="col-12 col-md-8">
-                        <div>
-                            <!--
-                                        <div style="width: 80%;" class="mx-auto alert alert-warning alert-dismissible fade show" role="alert">
-                                                <strong>Arpit Saxena</strong> wants to send you files
-                                                <hr>
-                                                <button type="button" class="btn btn-sm btn-success">Accept</button>
-                                                <button type="button" class="btn btn-sm btn-danger">Cancel</button>
-                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                  <span aria-hidden="true">&times;</span>
-                                                </button>
-                                        </div>
-                                        -->
-
-                            <div class="mx-auto">
-                                <div class="card card-custom mx-auto"
-                                    style="height: 70vh; width: 80%; overflow-y: scroll;">
-                                    <div class="card-body">
-                                        <h5 class="card-title text-center">Online Users</h5>
-                                        <ul class="list-group" id="onlineUsersList">
-                                            <a href="#"
-                                                class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">Clickable
-                                                User</a>
-                                            <li
-                                                class="list-group-item d-flex justify-content-between align-items-center disabled">
-                                                Busy User<span class="badge badge-primary badge-pill">waiting</span>
-                                            </li>
-                                            <li
-                                                class="list-group-item d-flex justify-content-between align-items-center disabled">
-                                                Busy User<span class="badge badge-danger badge-pill">connected</span>
-                                            </li>
-                                            <a href="#" data-toggle="modal" data-target="#exampleModal"
-                                                class="list-group-item d-flex justify-content-between align-items-center list-group-item-success list-group-item-action">request
-                                                sending user<span class="badge badge-success badge-pill">Incoming
-                                                    Request</span></a>
-
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-0 col-md-2">
-
-                    </div>
-
-                
-
-
+    <div class="modal" id="modal-connection-rejected">
+        <div class="content">
+            <header>
+                <h1>Connection to <span class="user2-name">{{user2}}</span> rejected</h1>
+                <button class="close-btn">&times;</button>
+            </header>
+            <main class="show-container">
+                <div class="page show">
+                    <p>Your connection request was rejected by <span class="user2-name">{{user2}}</span></p>
                 </div>
-            </div>
-
-
-
-        </main>
+            </main>
+        </div>
     </div>
 
-    <div class="page3" id="fileSelectPage" style="display: block">
-        <main>
-            <div class="row justify-content-center mt-4 mb-4">
-                <div class="h1"><i class="fas fa-share-alt-square" style="color: #d14f4b"></i> &nbsp;file<b><span
-                            style="color: #d14f4b">Send</span></b></div>
-            </div>
-            <div style="width: 100%;">
-                <div class="lt_side">
-                    <div class="card card-custom mx-auto" style="height: 70vh; width: 80%;">
-                        <h5 class="card-title text-center" style="margin-top: 0.75em;">Select the Files</h5>
-                        <div class="card-body" style="overflow-y: scroll;">
-                            <ul class="list-group">
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <strong>File_1.txt</strong></br>
-                                        <span style="color :#7c7c7c"><strong>Size: </strong>4kb |</span>
-                                        <span style="color :#7c7c7c"><strong>Type: </strong>Text File</span>
-                                    </div>
-                                    <input type="checkbox">
-
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    File_2.txt<input type="checkbox"></li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    File_3.txt<input type="checkbox"></li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    File_4.txt<input type="checkbox"></li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    File_5.txt<input type="checkbox"></li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    File_6.txt<input type="checkbox"></li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    File_7.txt<input type="checkbox"></li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    File_8.txt<input type="checkbox"></li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    File_9.txt<input type="checkbox"></li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    File_10.txt<input type="checkbox"></li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    File_11.txt<input type="checkbox"></li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    File_12.txt<input type="checkbox"></li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    File_13.txt<input type="checkbox"></li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    File_14.txt<input type="checkbox"></li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    File_15.txt<input type="checkbox"></li>
-                            </ul>
-                        </div>
-                        <div class="btn-group" role="group"
-                            style="width: 90%; margin-left: auto; margin-right: auto; margin-top: 0.75em; margin-bottom: 0.75em;">
-                            <button type="button" name="" id="" class="btn btn-primary btn-md btn-select"
-                                style="margin-inline-end: 5%;">Select All</button>
-                            <button type="button" name="" id=""
-                                class="btn btn-primary btn-md btn-select">Select</button>
-                        </div>
+    <div class="modal" id="modal-approve-request">
+        <div class="content">
+            <header>
+                <h1>Connection request from <span class="user2-name">{{user2}}</span> </h1>
+                <button class="close-btn">&times;</button>
+            </header>
+            <main class="show-container">
+                <div class="page show">
+                    <div>
+                        Do you want to connect to <span class="user2-name">{{user2}}</span> ?
+                    </div>
+                    <div class="button-group">
+                        <button data-btn-type="yes">Yes</button>
+                        <button data-btn-type="no">No</button>
                     </div>
                 </div>
-                <div class="rt_side">
-                    <div class="card card-custom mx-auto" style="height: 70vh; width: 80%;">
-                        <h5 class="card-title text-center" style="margin-top: 0.75em;">Chat</h5>
-                        <div class="card-body" style="overflow-y: scroll;">
-                            <div class="msgs">
-                                <div class="in_msg">
-                                    <div class="in_msg_img">
-                                        <img src="https://ptetutorials.com/images/user-profile.png" alt="profile_pic">
-                                    </div>
-                                    <div class="rcvd_msg">
-                                        <p>What's up</p>
-                                        <span class="time_date"> 11:01 AM | June 9</span>
-                                    </div>
-                                </div>
-                                <div class="out_msg">
-                                    <div class="sent_msg">
-                                        <p>Ceiling</p>
-                                        <span class="time_date"> 11:01 AM | June 9</span>
-                                    </div>
-                                </div>
-                                <div class="in_msg">
-                                    <div class="in_msg_img">
-                                        <img src="https://ptetutorials.com/images/user-profile.png" alt="profile_pic">
-                                    </div>
-                                    <div class="rcvd_msg">
-                                        <p>What's up</p>
-                                        <span class="time_date"> 11:01 AM | June 9</span>
-                                    </div>
-                                </div>
-                                <div class="out_msg">
-                                    <div class="sent_msg">
-                                        <p>Ceiling</p>
-                                        <span class="time_date"> 11:01 AM | June 9</span>
-                                    </div>
-                                </div>
-                                <div class="in_msg">
-                                    <div class="in_msg_img">
-                                        <img src="https://ptetutorials.com/images/user-profile.png" alt="profile_pic">
-                                    </div>
-                                    <div class="rcvd_msg">
-                                        <p>What's up</p>
-                                        <span class="time_date"> 11:01 AM | June 9</span>
-                                    </div>
-                                </div>
-                                <div class="out_msg">
-                                    <div class="sent_msg">
-                                        <p>Ceiling</p>
-                                        <span class="time_date"> 11:01 AM | June 9</span>
-                                    </div>
-                                </div>
-                                <div class="in_msg">
-                                    <div class="in_msg_img">
-                                        <img src="https://ptetutorials.com/images/user-profile.png" alt="profile_pic">
-                                    </div>
-                                    <div class="rcvd_msg">
-                                        <p>What's up</p>
-                                        <span class="time_date"> 11:01 AM | June 9</span>
-                                    </div>
-                                </div>
-                                <div class="out_msg">
-                                    <div class="sent_msg">
-                                        <p>Ceiling</p>
-                                        <span class="time_date"> 11:01 AM | June 9</span>
-                                    </div>
-                                </div>
-                                <div class="in_msg">
-                                    <div class="in_msg_img">
-                                        <img src="https://ptetutorials.com/images/user-profile.png" alt="profile_pic">
-                                    </div>
-                                    <div class="rcvd_msg">
-                                        <p>What's up</p>
-                                        <span class="time_date"> 11:01 AM | June 9</span>
-                                    </div>
-                                </div>
-                                <div class="out_msg">
-                                    <div class="sent_msg">
-                                        <p>Ceiling</p>
-                                        <span class="time_date"> 11:01 AM | June 9</span>
-                                    </div>
-                                </div>
-                                <div class="in_msg">
-                                    <div class="in_msg_img">
-                                        <img src="https://ptetutorials.com/images/user-profile.png" alt="profile_pic">
-                                    </div>
-                                    <div class="rcvd_msg">
-                                        <p>What's up</p>
-                                        <span class="time_date"> 11:01 AM | June 9</span>
-                                    </div>
-                                </div>
-                                <div class="out_msg" style="margin-bottom: 2em;">
-                                    <div class="sent_msg">
-                                        <p>Ceiling</p>
-                                        <span class="time_date"> 11:01 AM | June 9</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="type_msg">
-                            <div class="input_msg_write">
-                                <input type="text" class="write_msg" placeholder="Type a message" />
-                                <button class="msg_send_btn" type="button">Send</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div style="clear:both"></div>
-        </main>
+            </main>
+        </div>
     </div>
 
-    <div class="footer-copyright text-center py-3">
-        <hr>
-        Developed with <i class="fas fa-heart" style="color:#d14f4b;"></i> by<a href="https://devclub.in/"> DevClub
-            IITD</a>
+    <div class="modal" id="modal-user-busy">
+        <div class="content">
+            <header>
+                <h1><span class="user2-name">{{user2}}</span> is busy </h1>
+                <button class="close-btn">&times;</button>
+            </header>
+            <main class="show-container">
+                <div class="page show">
+                    <p>
+                        <span class="user2-name">{{user2}}</span> is connected to another user right now and request
+                        cannot be initiated to them.
+                    </p>
+                </div>
+            </main>
+        </div>
     </div>
-    <script src="js/bundle.js"> </script>
+
+    <script src="js/bundle.js"></script>
 </body>
 
 </html>
