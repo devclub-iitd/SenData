@@ -1,10 +1,10 @@
 import * as debugLib from "debug";
-import { domainToASCII } from "url";
+import * as JSZip from 'jszip';
+import { saveAs } from "file-saver";
 import modalHandler from "./modal";
 import { IExtendedSocket, IUser, Msg } from "../types";
 import WebTorrentClient from "./wt";
 import { formatBytes, showChild, formatTime } from "./util";
-import modal from "./modal";
 
 const debug = debugLib("FileSend:Main");
 
@@ -14,7 +14,7 @@ let socket: SocketIOClient.Socket | undefined; // The socket this client uses to
 
 const showProgressUpdates = (client: WebTorrentClient): void => {
   const showContainer = document.querySelector("#connected-page .show-container") as HTMLElement;
-  const progressTBody = document.querySelector('#file-progress tbody') as HTMLElement;
+  const progressTBody = document.querySelector('#file-progress-table tbody') as HTMLElement;
   progressTBody.innerHTML = "";
 
   showChild(showContainer, 4); // file-progress
@@ -32,9 +32,9 @@ const showProgressUpdates = (client: WebTorrentClient): void => {
     const cell1 = document.createElement("td");
     cell1.innerText = file.name;
     const cell2 = document.createElement("td");
-    cell2.appendChild(progressElements[i]);
+    cell2.innerText = file.size;    
     const cell3 = document.createElement("td");
-    cell3.innerText = file.size;
+    cell3.appendChild(progressElements[i]);
     row.append(cell1, cell2, cell3);
     progressTBody.appendChild(row);
   });
@@ -74,6 +74,49 @@ const showProgressUpdates = (client: WebTorrentClient): void => {
     transferred.innerText = info.uploaded;
     transferSpeed.innerText = info.uploadSpeed;
     timeRemaining.innerText = formatTime(info.timeRemaining);
+  });
+
+  const zip = new JSZip();
+  const zipFolder = zip.folder("download");
+  client.on("fileDownloadComplete", (file: {
+    blob: Blob;
+    index: number;
+    url: string;
+  }): void => {
+    if (file.index < 0 || file.index >= progressElements.length) {
+      debug(`Index ${file.index} file downloaded whereas there are only ${progressElements.length} files`);
+      return;
+    }
+
+    let downloadElement = document.createElement("a");
+    downloadElement.href = file.url;
+    downloadElement.target = "_blank";
+    downloadElement.download = client.filesInfo[file.index].name;
+    downloadElement.innerText = "Download";
+    progressElements[file.index].style.display = "none";
+    
+    const parentElement = progressElements[file.index].parentElement;
+    if (parentElement) {
+      parentElement.appendChild(downloadElement);
+    } else {
+      debug("Progress Element has no parent. How?!");
+    }
+
+    zipFolder.file(client.filesInfo[file.index].name, file.blob);
+  });
+
+  const downloadZipButton = document.querySelector("#download-zip") as HTMLButtonElement;
+  downloadZipButton.onclick = (): void => {
+    zip.generateAsync({type: "blob"}).then( (blob): void => {
+      saveAs(blob, "download.zip");
+    });
+  }
+
+  client.on("downloadComplete", (): void => {
+    let extraInfo = downloadZipButton.nextSibling as HTMLElement | null;
+    if (extraInfo) {
+      extraInfo.innerText = "(All files)";
+    }
   });
 }
 
@@ -165,6 +208,12 @@ const manageCheckboxConnectedPage = (): void => {
 
       const client = new WebTorrentClient(socket);
       client.on("downloading", (): void => {
+        document.querySelectorAll(".download-only").forEach((element): void => {
+          (element as HTMLElement).style.display = "initial";
+        });
+        document.querySelectorAll(".upload-only").forEach((element): void => {
+          (element as HTMLElement).style.display = "none";
+        });
         showProgressUpdates(client);
       });
     } else {
@@ -578,6 +627,12 @@ const manageFileInput = (): void => {
       client.sendFiles(filesToSend);
 
       client.on("downloadStarted", (): void => {
+        document.querySelectorAll(".download-only").forEach((element): void => {
+          (element as HTMLElement).style.display = "none";
+        });
+        document.querySelectorAll(".upload-only").forEach((element): void => {
+          (element as HTMLElement).style.display = "initial";
+        });
         showProgressUpdates(client);
       });
     });
