@@ -182,10 +182,47 @@ const setSocketConnections = (): void => {
     return;
   }
 
+  const getMessageBox = (username: string, messageValue: string, timeStamp: string, senderOrReceiver: string): HTMLDivElement => {
+    const div = document.createElement("div");
+    div.innerHTML = `
+                        <main><strong>${username}: </strong>${messageValue}</main>
+                        <aside><time datetime="${timeStamp}">${timeStamp}</time></aside>
+                      `;
+    div.className = "chat-message " + senderOrReceiver;
+    return div;
+  }
+
+  const addNewMessage = (msg: Msg, senderOrReceiver: string): void => {
+    const chatBox: Element | null = document.getElementById("chatBox");
+    if (chatBox !== null) {
+      if (chatBox !== null) {
+        const button = getMessageBox(msg.username, msg.messageValue, msg.timeStamp, senderOrReceiver);
+        chatBox.append(button);
+      }
+    }
+  }
+
   const connectToUser = (element: HTMLElement): void => {
     // If socket is undefined, do nothing
     if (socket === undefined) {
       return;
+    }
+
+    const setMessageForm = (): void => {
+      const messageSendingForm = document.getElementById("chatBoxForm") as HTMLFormElement;
+      messageSendingForm.onsubmit = (e): void => {
+        e.preventDefault();
+        const chatBoxTextBox = messageSendingForm.querySelector('input[type="text"]') as HTMLInputElement;
+        const messageValue = chatBoxTextBox.value;
+        if (messageValue !== "") {
+          if (socket === undefined) {
+            debug("socket undefined, not sending message");
+            return;
+          }
+          
+          socket.emit("message", messageValue);
+        }
+      }
     }
 
     let dataUserType = element.getAttribute("data-user-type");
@@ -207,6 +244,7 @@ const setSocketConnections = (): void => {
             else if (ans === "y") {
               modalHandler.hide();
               const showContainer = document.querySelector("body > .show-container") as HTMLElement;
+              setMessageForm();
               showChild(showContainer, 2);
               const connectedPageContainer = document.querySelector("#connected-page .show-container") as HTMLElement;
               showChild(connectedPageContainer, 0);
@@ -237,6 +275,7 @@ const setSocketConnections = (): void => {
 
         if (socket) {
           socket.emit("answer", msg);
+          setMessageForm();
           const showContainer = document.querySelector("body > .show-container") as HTMLElement;
           showChild(showContainer, 2);
           const connectedPageContainer = document.querySelector("#connected-page .show-container") as HTMLElement;
@@ -245,6 +284,7 @@ const setSocketConnections = (): void => {
           debug("Socket variable undefined");
         }
       });
+
       modalHandler.once("rejectRequest", (): void => {
         const msg = {
           user1_name: user1Name,
@@ -368,6 +408,22 @@ const setSocketConnections = (): void => {
     const showContainer = document.querySelector("#connected-page .show-container") as HTMLElement;
     showChild(showContainer, 1);
   });
+  socket.on("messageSentSuccess", (msg: Msg): void => {
+    // message is sent successfully to user2 and now will be shown in user1 chatbox
+    const username = msg.username;
+    if (username) {
+      addNewMessage(msg, "sender");
+    }
+  });
+
+  socket.on("messageIncoming", (msg: Msg): void => {
+    // message is received successfully by user2 and now will be shown in user2 chatbox
+    const username = msg.username;
+    if (username) {
+      addNewMessage(msg, "receiver");
+    }
+  });
+  
 };
 
 const loginForm = document.querySelector("#login-page form") as HTMLFormElement;

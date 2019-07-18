@@ -19,8 +19,7 @@ export class Msg {
         this.username = username;
         this.messageValue = messageValue;
         const currentDate = new Date();
-        this.timeStamp = currentDate.getHours() + ":"
-                        + currentDate.getMinutes() + ":"
-                        + currentDate.getSeconds();
+        this.timeStamp = currentDate.getFullYear() + "-" + currentDate.getMonth() + "-" + currentDate.getDate() + " "
+                        + currentDate.getHours() + ":" + currentDate.getMinutes();
     }
 }
