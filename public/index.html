@@ -81,50 +81,6 @@
                                 <th>Size</th>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <label>
-                                            <input type="checkbox" name="" id="">
-                                            File1.extension
-                                        </label>
-                                    </td>
-                                    <td>
-                                        5 KB
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label>
-                                            <input type="checkbox" name="" id="">
-                                            File2.extension
-                                        </label>
-                                    </td>
-                                    <td>
-                                        5 MB
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label>
-                                            <input type="checkbox" name="" id="">
-                                            File3.extension
-                                        </label>
-                                    </td>
-                                    <td>
-                                        50 MB
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label>
-                                            <input type="checkbox" name="" id="">
-                                            File4.extension
-                                        </label>
-                                    </td>
-                                    <td>
-                                        69 KB
-                                    </td>
-                                </tr>
                             </tbody>
                         </table>
                         <button>Start transfer</button>
@@ -155,64 +111,12 @@
                                 <th>Size</th>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <label>
-                                            <!-- <input type="checkbox" name="" id=""> -->
-                                            File1.extension
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <progress value="95" max="100">
-                                    </td>
-                                    <td>
-                                        5 KB
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label>
-                                            <!-- <input type="checkbox" name="" id=""> -->
-                                            File2.extension
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <progress value="35" max="100">
-                                    </td>
-                                    <td>
-                                        5 MB
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label>
-                                            <!-- <input type="checkbox" name="" id=""> -->
-                                            File3.extension
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <progress value="15" max="100">
-                                    </td>
-                                    <td>
-                                        50 MB
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label>
-                                            <!-- <input type="checkbox" name="" id=""> -->
-                                            File4.extension
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <progress value="75" max="100">
-                                    </td>
-                                    <td>
-                                        69 KB
-                                    </td>
-                                </tr>
                             </tbody>
                         </table>
+                        <p>Progress: <progress id="total-progress" max=100 value="0"></progress></p>
+                        <p>Transferred: <span id="transferred"></span></p>
+                        <p>Speed: <span id="transfer-speed"></span></p>
+                        <p>Time Remaining: <span id="time-remaining"></span></p>
                     </div>
                 </main>
             </section>
@@ -323,6 +227,24 @@
             <main class="show-container">
                 <div class="page show">
                     <p>Your connection request was rejected by <span class="user2-name">{{user2}}</span></p>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-file-request-rejected">
+        <div class="content">
+            <header>
+                <h1>File request rejected </h1>
+                <button class="close-btn">&times;</button>
+            </header>
+            <main class="show-container">
+                <div class="page show">
+                    <p><span class="user2-name">{{user2}}</span> rejected your file sending request.</p>
+                    <p>
+                        Perhaps you selected the wrong files or they wanted some other files. You can 
+                        talk to <span class="user2-name"></span> using the chat functionality.
+                    </p>
                 </div>
             </main>
         </div>

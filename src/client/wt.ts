@@ -19,7 +19,7 @@ const debug = debugLib("FileSend-WebTorrent");
 *		- uploaded: string (formatted as '20 MB' for example)
 *		- uploadSpeed: string (formatted as '4 MB/s' for example)
 *	- **downloadProgress** (Emitted at a time interval, for showing
-        download stats) (Note: these have same format as above)
+  download stats) (Note: these have same format as above)
 *		- downloaded: string
 *		- downloadSpeed: string
 *		- progress: number (between 0 and 1)
@@ -35,7 +35,10 @@ const debug = debugLib("FileSend-WebTorrent");
 *   - **clientDestroyed** (WebTorrent client was destroyed, possibly due to some error)
 */
 export default class Client extends EventEmitter {
-  public fileNames: string[] | undefined;
+  public filesInfo: {
+    name: string;
+    size: string;
+  }[] = [];
   private readonly socket: SocketIOClient.Socket;
   private readonly TRACKER_URLS: string[];
   private readonly client: WebTorrent.Instance;
@@ -80,6 +83,7 @@ export default class Client extends EventEmitter {
 
     this.socket = socket;
     this.socket.on("addTorrent", (magnetUri: string): void => {
+      debug("Received torrent. Adding..");
       this.addTorrent(magnetUri);
     });
 
@@ -94,30 +98,34 @@ export default class Client extends EventEmitter {
   public sendFiles = (files: File | File[] | FileList ): void => {
     this.client.seed(files, { announce: this.TRACKER_URLS } , (torrent): void => {
       this.setTorrentErrorHandlers(torrent);
-      this.setFileNames(torrent);
+      this.setFilesInfo(torrent);
       this.emit("seeding");
       this.socket.emit("fileReady", torrent.magnetURI);
+
+      this.socket.on("downloadStarted", (): void => {
+        this.emit("downloadStarted");
+      });
 
       this.socket.on("progressUpdate", (info: {
         progress: number;
         progressFiles: number[];
         timeRemaining: number;
-        uploaded: string;
-        uploadSpeed: string;
+        uploaded?: string;
+        uploadSpeed?: string;
       }): void => {
         info.uploaded = formatBytes(torrent.uploaded);
         info.uploadSpeed = formatBytes(torrent.uploadSpeed) + "/s";
         this.emit("uploadProgress", info);
       });
 
-      torrent.on("upload", (bytes): void => {
+      torrent.on("upload", (): void => {
         this.emit("upload", {
           uploadSpeed: formatBytes(torrent.uploadSpeed) + "/s",
           uploaded: formatBytes(torrent.uploaded),
         });
       });
 
-      this.socket.on("torrentDone", (magnetUri: string): void => {
+      this.socket.on("torrentDone", (): void => {
         torrent.destroy((): void => {
           debug("Torrent destroyed, as server sent torrentDone");
           this.emit("torrentDestroyed");
@@ -155,8 +163,12 @@ export default class Client extends EventEmitter {
     * Use selectFiles method to deselect files.
     */
   public addTorrent = (magnetURI: string): void => {
+    this.socket.emit("downloadClientReady");
+    this.socket.emit("Random emit");
+
     const torrent = this.client.add(magnetURI, { announce: this.TRACKER_URLS }, (): void => {
       this.emit("downloading");
+      this.socket.emit("downloadStarted");
     });
 
     let downloadInfoInterval: number; // Unique ID of progress reporting interval
@@ -188,7 +200,7 @@ export default class Client extends EventEmitter {
       for (let i = 0; i < progressFiles.length; i++) {
         progressFiles[i] = 0;
       }
-      this.setFileNames(torrent);
+      this.setFilesInfo(torrent);
     });
 
     torrent.on("ready", (): void => {
@@ -211,9 +223,8 @@ export default class Client extends EventEmitter {
         });
       });
 
-      const socket = this.socket;
       const sendProgress = (): void => {
-        socket.emit("progressUpdate", {
+        this.socket.emit("progressUpdate", {
           progress: torrent.progress,
           progressFiles,
           timeRemaining: torrent.timeRemaining,
@@ -242,10 +253,13 @@ export default class Client extends EventEmitter {
     return null;
   }
 
-  private setFileNames = (torrent: WebTorrent.Torrent): void => {
-    this.fileNames = new Array(torrent.files.length);
+  private setFilesInfo = (torrent: WebTorrent.Torrent): void => {
+    this.filesInfo = new Array(torrent.files.length);
     for (let i = 0; i < torrent.files.length; i++) {
-      this.fileNames[i] = torrent.files[i].name;
+      this.filesInfo[i] = {
+        name: torrent.files[i].name,
+        size: formatBytes(torrent.files[i].length)
+      };
     }
   }
 

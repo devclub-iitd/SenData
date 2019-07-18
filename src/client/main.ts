@@ -1,14 +1,177 @@
 import * as debugLib from "debug";
+import { domainToASCII } from "url";
 import modalHandler from "./modal";
 import { IExtendedSocket, IUser, Msg } from "../types";
-import Client from "./wt";
-import { formatBytes, showChild } from "./util";
+import WebTorrentClient from "./wt";
+import { formatBytes, showChild, formatTime } from "./util";
+import modal from "./modal";
 
 const debug = debugLib("FileSend:Main");
 
 /* globals io */
 
 let socket: SocketIOClient.Socket | undefined; // The socket this client uses to connect
+
+const showProgressUpdates = (client: WebTorrentClient): void => {
+  const showContainer = document.querySelector("#connected-page .show-container") as HTMLElement;
+  const progressTBody = document.querySelector('#file-progress tbody') as HTMLElement;
+  progressTBody.innerHTML = "";
+
+  showChild(showContainer, 4); // file-progress
+
+  let progressElements = new Array<HTMLProgressElement>();
+  for (let i = 0; i < client.filesInfo.length; i++) {
+    const progressElement = document.createElement("progress");
+    progressElement.max = 100;
+    progressElement.value = 0;
+    progressElements.push(progressElement);
+  }
+
+  client.filesInfo.forEach((file, i): void => {
+    const row = document.createElement("tr");
+    const cell1 = document.createElement("td");
+    cell1.innerText = file.name;
+    const cell2 = document.createElement("td");
+    cell2.appendChild(progressElements[i]);
+    const cell3 = document.createElement("td");
+    cell3.innerText = file.size;
+    row.append(cell1, cell2, cell3);
+    progressTBody.appendChild(row);
+  });
+
+  const totalProgress = document.querySelector("#total-progress") as HTMLProgressElement;
+  const transferred = document.querySelector("#transferred") as HTMLElement;
+  const transferSpeed = document.querySelector("#transfer-speed") as HTMLElement;
+  const timeRemaining = document.querySelector("#time-remaining") as HTMLElement;
+
+  client.on("downloadProgress", (info: {
+    downloadSpeed: string;
+    downloaded: string;
+    progress: number;
+    progressFiles: number[];
+    timeRemaining: number;
+  }): void => {
+    progressElements.forEach((elem, i): void => {
+      elem.value = info.progressFiles[i] * 100;
+    });
+    totalProgress.value = info.progress * 100;
+    transferred.innerText = info.downloaded;
+    transferSpeed.innerText = info.downloadSpeed;
+    timeRemaining.innerText = formatTime(info.timeRemaining);
+  });
+
+  client.on("uploadProgress", (info: {
+    progress: number;
+    progressFiles: number[];
+    timeRemaining: number;
+    uploaded: string;
+    uploadSpeed: string;
+  }): void => {
+    progressElements.forEach((elem, i): void => {
+      elem.value = info.progressFiles[i] * 100;
+    });
+    totalProgress.value = info.progress * 100;
+    transferred.innerText = info.uploaded;
+    transferSpeed.innerText = info.uploadSpeed;
+    timeRemaining.innerText = formatTime(info.timeRemaining);
+  });
+}
+
+const manageCheckboxConnectedPage = (): void => {
+  const selectAllCheckbox = document.querySelector("#connected-page thead input[type=\"checkbox\"]") as HTMLInputElement | null;
+  const fileCheckboxes = document.querySelectorAll("#connected-page tbody input[type=\"checkbox\"]") as NodeListOf<HTMLInputElement>;
+  const transferButton = document.querySelector("#approve-files button") as HTMLButtonElement;
+
+  if (selectAllCheckbox === null) {
+    debug("No Select All checkbox found in User connected page");
+    return; // Nothing to do if there's no selectAll checkbox;
+  }
+
+  let numChecked = 0;
+
+  const setTransferButtonText = (): void => {
+    if (numChecked === 0) {
+      transferButton.innerText = "Reject file request";
+    } else {
+      transferButton.innerText = "Start transfer";
+    }
+  }
+
+  selectAllCheckbox.onchange = (): void => {
+    if (selectAllCheckbox === null) {
+      debug("No Select All checkbox found in User connected page");
+      return; // Nothing to do if there's no selectAll checkbox;
+    }
+
+    let checked = selectAllCheckbox.checked;
+
+    if (checked) numChecked = fileCheckboxes.length;
+    else numChecked = 0;
+
+    setTransferButtonText();
+
+    fileCheckboxes.forEach((checkbox): void => {
+      checkbox.checked = checked;
+    });
+  }
+
+  const setMainCheckbox = (): void => {
+    if (selectAllCheckbox === null) {
+      debug("No Select All checkbox found in User connected page");
+      return; // Nothing to do if there's no selectAll checkbox;
+    }
+
+    if (numChecked === fileCheckboxes.length) {
+      selectAllCheckbox.checked = true;
+      selectAllCheckbox.indeterminate = false;
+    } else if (numChecked === 0) {
+      selectAllCheckbox.checked = false;
+      selectAllCheckbox.indeterminate = false;
+    } else {
+      selectAllCheckbox.indeterminate = true;
+      selectAllCheckbox.checked = false;
+    }
+
+    setTransferButtonText();
+  }
+
+  fileCheckboxes.forEach((checkbox): void => {
+    if (checkbox.checked) numChecked++;
+    setMainCheckbox();
+
+    checkbox.onchange = (): void => {
+      if (checkbox.checked) numChecked++;
+      else numChecked--;
+      setMainCheckbox();
+    }
+  });
+
+  transferButton.onclick = (): void => {
+    const fileAnswers = Array.from(fileCheckboxes).map((checkbox): boolean => {
+      return checkbox.checked;
+    });
+
+    if (socket === undefined) {
+      debug("socket undefined. No transfer of files can happen");
+      return;
+    }
+    socket.emit("fileListRequestAnswer", fileAnswers);
+    const atleastOneFileAccepted = fileAnswers.reduce((acc, curr): boolean => {
+      return acc || curr;
+    });
+    const showContainer = document.querySelector("#connected-page .show-container") as HTMLElement;
+    if (atleastOneFileAccepted) {
+      showChild(showContainer, 3); //processing-files
+
+      const client = new WebTorrentClient(socket);
+      client.on("downloading", (): void => {
+        showProgressUpdates(client);
+      });
+    } else {
+      showChild(showContainer, 0); //select-files-send
+    }
+  }
+}
 
 const setSocketConnections = (): void => {
   // if send offer to a user
@@ -26,9 +189,9 @@ const setSocketConnections = (): void => {
     }
 
     let dataUserType = element.getAttribute("data-user-type");
+    modalHandler.setUser2Name(element.innerText);
+    const user2Name = element.innerText;
     if (dataUserType == "idle") {
-      const user2Name = element.innerText;
-      modalHandler.setUser2Name(user2Name);
       modalHandler.show("initiate-connection");
       // Show send request alert
 
@@ -45,6 +208,8 @@ const setSocketConnections = (): void => {
               modalHandler.hide();
               const showContainer = document.querySelector("body > .show-container") as HTMLElement;
               showChild(showContainer, 2);
+              const connectedPageContainer = document.querySelector("#connected-page .show-container") as HTMLElement;
+              showChild(connectedPageContainer, 0);
             }
           });
         } else {
@@ -62,7 +227,6 @@ const setSocketConnections = (): void => {
     }
     else if (dataUserType == "Wants to connect") {
       const user1Name: string = element.innerText;
-      modalHandler.setUser2Name(user1Name);
       modalHandler.show("approve-request");
       // Show accept request alert
       modalHandler.once("connect", (): void => {
@@ -75,6 +239,8 @@ const setSocketConnections = (): void => {
           socket.emit("answer", msg);
           const showContainer = document.querySelector("body > .show-container") as HTMLElement;
           showChild(showContainer, 2);
+          const connectedPageContainer = document.querySelector("#connected-page .show-container") as HTMLElement;
+          showChild(connectedPageContainer, 0);
         } else {
           debug("Socket variable undefined");
         }
@@ -92,6 +258,8 @@ const setSocketConnections = (): void => {
           debug("Socket variable undefined");
         }
       });
+    } else if (dataUserType === "busy") {
+      modalHandler.show("user-busy");
     }
   }
 
@@ -174,6 +342,32 @@ const setSocketConnections = (): void => {
       }
     }
   });
+
+  socket.on("fileListSendRequest", (files: FileList): void => {
+    debug("Received fileListSendRequest. Processing..");
+    const approveFilesTBody = document.querySelector("#approve-files tbody") as HTMLElement;
+    approveFilesTBody.innerHTML = "";
+    for (let i = 0; i < files.length; i++) {
+      let row = document.createElement("tr");
+      let cell1 = document.createElement("td");
+      let label = document.createElement("label");
+      let input = document.createElement("input");
+      input.type = "checkbox";
+      label.appendChild(input);
+      let fileName = document.createElement("span");
+      fileName.innerText = files[i].name;
+      label.appendChild(fileName);
+      cell1.appendChild(label);
+      row.appendChild(cell1);
+      let cell2 = document.createElement("td");
+      cell2.innerText = formatBytes(files[i].size);
+      row.append(cell2);
+      approveFilesTBody.append(row);
+    }
+    manageCheckboxConnectedPage();
+    const showContainer = document.querySelector("#connected-page .show-container") as HTMLElement;
+    showChild(showContainer, 1);
+  });
 };
 
 const loginForm = document.querySelector("#login-page form") as HTMLFormElement;
@@ -219,62 +413,7 @@ const manageCollapseClickListener = (enable: boolean): void => {
   });
 };
 
-const manageCheckboxConnectedPage = (): void => {
-  let selectAllCheckbox = document.querySelector("#connected-page thead input[type=\"checkbox\"]") as HTMLInputElement | null;
-  let fileCheckboxes = document.querySelectorAll("#connected-page tbody input[type=\"checkbox\"]") as NodeListOf<HTMLInputElement>;
 
-  if (selectAllCheckbox === null) {
-    debug("No Select All checkbox found in User connected page");
-    return; // Nothing to do if there's no selectAll checkbox;
-  }
-
-  let numChecked = 0;
-
-  selectAllCheckbox.addEventListener("change", (): void => {
-    if (selectAllCheckbox === null) {
-      debug("No Select All checkbox found in User connected page");
-      return; // Nothing to do if there's no selectAll checkbox;
-    }
-
-    let checked = selectAllCheckbox.checked;
-
-    if (checked) numChecked = fileCheckboxes.length;
-    else numChecked = 0;
-
-    fileCheckboxes.forEach((checkbox): void => {
-      checkbox.checked = checked;
-    });
-  });
-
-  const setMainCheckbox = (): void => {
-    if (selectAllCheckbox === null) {
-      debug("No Select All checkbox found in User connected page");
-      return; // Nothing to do if there's no selectAll checkbox;
-    }
-
-    if (numChecked === fileCheckboxes.length) {
-      selectAllCheckbox.checked = true;
-      selectAllCheckbox.indeterminate = false;
-    } else if (numChecked === 0) {
-      selectAllCheckbox.checked = false;
-      selectAllCheckbox.indeterminate = false;
-    } else {
-      selectAllCheckbox.indeterminate = true;
-      selectAllCheckbox.checked = false;
-    }
-  }
-
-  fileCheckboxes.forEach((checkbox): void => {
-    if (checkbox.checked) numChecked++;
-    setMainCheckbox();
-
-    checkbox.addEventListener("change", (): void => {
-      if (checkbox.checked) numChecked++;
-      else numChecked--;
-      setMainCheckbox();
-    });
-  });
-}
 
 /*
   Relies on #getFile to be <input type="file"> and to be immediately followed
@@ -285,6 +424,9 @@ const manageFileInput = (): void => {
   const label = inputElem.nextElementSibling as HTMLLabelElement;
   const table = label.nextElementSibling as HTMLTableElement;
   const sendButton = table.nextElementSibling as HTMLButtonElement;
+
+  const mainShowContainer = document.querySelector("body > .show-container") as HTMLElement;
+  const showContainer = document.querySelector("#connected-page .show-container") as HTMLElement;
 
   const showTableFiles = (show: boolean): void => {
     if (show) {
@@ -327,15 +469,54 @@ const manageFileInput = (): void => {
 
   sendButton.addEventListener("click", (): void => {
     if (socket === undefined) {
+      debug("Socket undefined. Not sending file request");
       return;
     }
 
     socket.emit("fileListSendRequest", inputElem.files);
+    showChild(showContainer, 2); //wait-approval page
 
-    const container = document.querySelector("#connected-page show-container") as HTMLElement | null;
-    if (container) {
-      showChild(container, 2); //wait-approval page
-    }
+    socket.on("fileListRequestAnswer", (acceptedFiles: boolean[]): void => {
+      let atleastOneFileAccepted = false;
+      acceptedFiles.forEach((fileAnswer): void => {
+        if (fileAnswer) {
+          atleastOneFileAccepted = true;
+          return;
+        }
+      });
+
+      if (!atleastOneFileAccepted) {
+        modalHandler.show("file-request-rejected");
+        showChild(showContainer, 0); //select-file-send page.
+        return;
+      }
+
+      showChild(showContainer, 3); //processing-files
+
+      if (socket === undefined) {
+        debug("socket undefined, can't initialise webTorrent client");
+        return;
+      }
+      let client = new WebTorrentClient(socket);
+      let filesToSend = new Array<File>();
+
+      if (inputElem.files === null) {
+        debug("files of input elem is null. No transfer would occur");
+        return;
+      }
+
+      for (let i = 0; i < inputElem.files.length; i++) {
+        if (acceptedFiles[i]) {
+          filesToSend.push(inputElem.files[i]);
+        }
+      }
+
+      client.sendFiles(filesToSend);
+
+      client.on("downloadStarted", (): void => {
+        showProgressUpdates(client);
+      });
+    });
   });
 }
 
@@ -346,7 +527,5 @@ window.addEventListener("load", (): void => {
   };
   mediaQueryList.addListener(handleSizeChange);
   handleSizeChange(mediaQueryList);
-  window.showChild = showChild; /* For debugging */
-  manageCheckboxConnectedPage();
   manageFileInput();
 });

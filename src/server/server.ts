@@ -1,6 +1,7 @@
 import debugLib from "debug";
 import * as http from "http";
 import * as SocketIO from "socket.io";
+import { Torrent } from "webtorrent";
 import { IExtendedSocket, IUser, Msg } from "../types";
 import env from "./env";
 import express from "./express";
@@ -338,6 +339,7 @@ io.on("connection", (socket: IExtendedSocket): void => {
 
             if (user2 !== undefined) {
               // Broadcasting the msg to user2 only
+              console.log("broadcasting to user2");
               socket.broadcast.to(user2.socketID).emit("fileListSendRequest", fileList);
             }
 
@@ -388,5 +390,47 @@ io.on("connection", (socket: IExtendedSocket): void => {
         }
       }
     }
+  });
+
+  /* Required by WebTorrent client */
+  const user = users.get(socket.username);
+  if (user === undefined) {
+    console.log("Error: User object undefined for socket");
+    return;
+  }
+
+  socket.on("fileReady", (magnetURI: string): void => {
+    const partner = users.get(user.partner);
+    if (partner === undefined) {
+      console.log("Error: No partner of " + socket.username + " found");
+      return;
+    }
+    const partnerSocket = socket.broadcast.to(partner.socketID);
+    partnerSocket.emit("addTorrent", magnetURI);
+  });
+
+  socket.on("downloadClientReady", (): void => {
+    const partner = users.get(user.partner);
+    if (partner === undefined) {
+      console.log("Error: No partner of " + socket.username + " found");
+      return;
+    }
+
+    socket.on("downloadStarted", (): void => {
+      socket.broadcast.to(partner.socketID).emit("downloadStarted");
+    });
+
+    socket.on("progressUpdate", (prog: {
+      progress: number;
+      progressFiles: number[];
+      timeRemaining: number;
+    }): void => {
+      socket.broadcast.to(partner.socketID).emit("progressUpdate", prog);
+    });
+
+    socket.on("downloadComplete", (): void => {
+      // TODO
+      socket.broadcast.to(partner.socketID).emit("downloadComplete");
+    });
   });
 });
