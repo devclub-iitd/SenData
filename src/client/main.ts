@@ -182,11 +182,21 @@ const setSocketConnections = (): void => {
     return;
   }
 
-  const getMessageBox = (username: string, messageValue: string, timeStamp: string, senderOrReceiver: string): HTMLDivElement => {
+  const getMessageBox = (username: string, messageValue: string, date: Date, senderOrReceiver: string): HTMLDivElement => {
     const div = document.createElement("div");
+
+    const options = {
+      day: 'numeric',
+      month: 'long',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    }
+    const humanReadableDate = Intl.DateTimeFormat('en-IN', options).format(date);
+
     div.innerHTML = `
-                        <main><strong>${username}: </strong>${messageValue}</main>
-                        <aside><time datetime="${timeStamp}">${timeStamp}</time></aside>
+                        <main>${messageValue}</main>
+                        <aside><time datetime="${date.toString()}">${humanReadableDate}</time></aside>
                       `;
     div.className = "chat-message " + senderOrReceiver;
     return div;
@@ -196,8 +206,9 @@ const setSocketConnections = (): void => {
     const chatBox: Element | null = document.getElementById("chatBox");
     if (chatBox !== null) {
       if (chatBox !== null) {
-        const button = getMessageBox(msg.username, msg.messageValue, msg.timeStamp, senderOrReceiver);
+        const button = getMessageBox(msg.username, msg.messageValue, msg.date, senderOrReceiver);
         chatBox.append(button);
+        button.scrollIntoView(false);
       }
     }
   }
@@ -221,6 +232,7 @@ const setSocketConnections = (): void => {
           }
           
           socket.emit("message", messageValue);
+          chatBoxTextBox.value = "";
         }
       }
     }
@@ -410,18 +422,14 @@ const setSocketConnections = (): void => {
   });
   socket.on("messageSentSuccess", (msg: Msg): void => {
     // message is sent successfully to user2 and now will be shown in user1 chatbox
-    const username = msg.username;
-    if (username) {
-      addNewMessage(msg, "sender");
-    }
+    msg.date = new Date(msg.date);
+    addNewMessage(msg, "sender");
   });
 
   socket.on("messageIncoming", (msg: Msg): void => {
     // message is received successfully by user2 and now will be shown in user2 chatbox
-    const username = msg.username;
-    if (username) {
-      addNewMessage(msg, "receiver");
-    }
+    msg.date = new Date(msg.date);
+    addNewMessage(msg, "receiver");
   });
   
 };

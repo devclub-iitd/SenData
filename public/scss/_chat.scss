@@ -61,7 +61,6 @@ main.chat {
     main {
       padding: 5px 10px;
       border-radius: 2rem;
-      background-color: #4f4fdf36;
     }
 
     aside {
@@ -71,11 +70,19 @@ main.chat {
     &.sender {
       margin-left: auto;
       align-items: flex-end;
+
+      main {
+        background-color: #59ffff57;
+      }
     }
 
     &.receiver {
       margin-right: auto;
       align-items: flex-start;
+
+      main {
+        background-color: #fff3a88a;
+      }
     }
   }
 }
