@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node build/server/server.js",
-    "build": "npm-run-all -r -p build-js build-css",
+    "build": "npm-run-all -p build-js build-css",
     "watch": "npm-run-all -r -p watch-*",
     "watch-node": "nodemon build/server/server.js",
     "build-css": "npm-run-all css-compile css-prefix",
@@ -13,7 +13,7 @@
     "css-prefix": "postcss public/css/*.css --replace --use autoprefixer",
     "css-lint": "stylelint \"public/**/*.scss\"",
     "watch-css": "nodemon --watch public/scss/ --ext scss --exec \"npm run build-css\"",
-    "build-js": "npm-run-all -s build-ts build-browserify",
+    "build-js": "npm-run-all build-ts build-browserify",
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
     "build-browserify": "browserify  ./build/client/main.js -t [ envify purge --STUN_URL $STUN_URL --TRACKER_URL $TRACKER_URL ] -o ./public/js/bundle.js",
