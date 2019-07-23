@@ -331,7 +331,7 @@ io.on("connection", (socket: IExtendedSocket): void => {
 
             if (user2 !== undefined) {
               // Broadcasting the msg to user2 only
-              console.log("broadcasting to user2");
+              console.log("broadcasting filelist to user2");
               socket.broadcast.to(user2.socketID).emit("fileListSendRequest", fileList);
             }
 

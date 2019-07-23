@@ -456,7 +456,7 @@ const setSocketConnections = (): void => {
       input.type = "checkbox";
       label.appendChild(input);
       let fileName = document.createElement("span");
-      fileName.innerText = files[i].name;
+      fileName.innerText = " " + files[i].name;
       label.appendChild(fileName);
       cell1.appendChild(label);
       row.appendChild(cell1);
@@ -543,7 +543,7 @@ const manageFileInput = (): void => {
 
   const showTableFiles = (show: boolean): void => {
     if (show) {
-      table.style.display = "initial";
+      table.style.display = "table";
       sendButton.style.display = "initial";
     }
     else {
@@ -566,7 +566,7 @@ const manageFileInput = (): void => {
         let fileNameCell = document.createElement("td");
         let sizeCell = document.createElement("td");
 
-        fileNameCell.innerHTML = file.name;
+        fileNameCell.innerHTML = " " + file.name;
         sizeCell.innerHTML = formatBytes(file.size);
         row.append(fileNameCell, sizeCell);
 

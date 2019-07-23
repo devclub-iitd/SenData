@@ -24,16 +24,24 @@
     }
   }
 
-  #approve-files {
+  #approve-files, #select-files-send, #file-progress{
     overflow: auto;
 
+    label {
+      display: block;
+    }
+
     table {
+      margin-top: 5px;
+      display: table;
       width: 100%;
 
       &,
       th,
       td {
         border-collapse: collapse;
+        border: 1px solid rgba(0,0,0,.125);
+        margin-bottom: -1px;
       }
 
       label {
@@ -62,6 +70,7 @@
         background-color: #1bd9df1a;
       }
     }
+
 
     button {
       margin: auto;
