@@ -1,5 +1,6 @@
 #users-page {
   justify-content: center;
+  flex-direction: column;
 
   .main-section {
     max-width: 800px;
@@ -83,6 +84,11 @@
         }
       }
     }
+  }
+
+  #greeting {
+    font-size: 1.2rem;
+    align-self: center;
   }
 }
 

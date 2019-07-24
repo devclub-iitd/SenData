@@ -384,6 +384,7 @@ const setSocketConnections = (): void => {
       showChild(document.querySelector("body > main"), 1);
       const onlineUsersList: Element | null = document.getElementById("onlineUsersList");
       if (onlineUsersList !== null) {
+        onlineUsersList.innerHTML = "";
         users.forEach((value: IUser, key: string): void => {
           const button = getUserButton(key, value.state);
           onlineUsersList.append(button);
@@ -491,9 +492,19 @@ loginForm.onsubmit = (e): void => {
   console.log(username);
   if (username !== "") {
     socket = io(window.location.origin, { query: `username=${username}` });
+    let socketListenersSet = false;
     socket.on("isSuccessfulLogin", (isSuccess: boolean): void => {
       if (isSuccess) {
-        setSocketConnections();
+        // TEMP FIX. Show own username
+        document.querySelectorAll(".my-username").forEach((elem): void => {
+          (elem as HTMLElement).innerText = username;
+        });
+
+        if (!socketListenersSet) {
+          socketListenersSet = true;
+          setSocketConnections();
+        }
+        
       }
       else {
         window.alert("A user with this username is already live on the server");
