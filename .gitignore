@@ -72,6 +72,6 @@ typings/
 public/js/bundle.js
 
 # Compiled from SCSS
-public/css/newstyle.css*
+public/css/style.css*
 
 build/

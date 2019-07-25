@@ -1,13 +1,21 @@
 #users-page {
   justify-content: center;
   flex-direction: column;
+  align-items: center;
+  overflow: hidden;
 
   .main-section {
+    width: 100%;
     max-width: 800px;
+  }
+
+  > section.main-section {
+    overflow: hidden;
   }
 
   main {
     flex-direction: column;
+    overflow: auto;
 
     button {
       width: 100%;
@@ -88,7 +96,6 @@
 
   #greeting {
     font-size: 1.2rem;
-    align-self: center;
   }
 }
 

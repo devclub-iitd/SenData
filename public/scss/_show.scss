@@ -1,7 +1,6 @@
 .show-container {
   flex-direction: column;
   height: unset;
-  overflow: unset;
 
   > :not(.show) {
     opacity: 0;

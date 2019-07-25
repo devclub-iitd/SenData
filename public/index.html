@@ -102,43 +102,41 @@
                             Larger files take longer to process.
                         </p>
                     </div>
-                    <div data-heading="File Transfer Info">
-                        <div id="file-progress" data-heading="File Transfer Info" class="show" style="overflow: auto;">
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td>Transferred</td>
-                                        <td><span id="transferred"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Time Remaining</td>
-                                        <td><span id="time-remaining"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Speed</td>
-                                        <td><span id="transfer-speed"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Progress</td>
-                                        <td><progress id="total-progress" max="100" value="0"></progress></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <table id="file-progress-table">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Size</th>
-                                        <th> </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                            <p class="download-only"><button id="download-zip"> Download ZIP </button><span
-                                    style="display: block; text-align: center;">(only files that are fully
-                                    downloaded)</span></p>
-                        </div>
+                    <div id="file-progress" data-heading="File Transfer Info" class="show">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>Transferred</td>
+                                    <td><span id="transferred"></span></td>
+                                </tr>
+                                <tr>
+                                    <td>Time Remaining</td>
+                                    <td><span id="time-remaining"></span></td>
+                                </tr>
+                                <tr>
+                                    <td>Speed</td>
+                                    <td><span id="transfer-speed"></span></td>
+                                </tr>
+                                <tr>
+                                    <td>Progress</td>
+                                    <td><progress id="total-progress" max="100" value="0"></progress></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table id="file-progress-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Size</th>
+                                    <th> </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                        <p class="download-only"><button id="download-zip"> Download ZIP </button><span
+                                style="display: block; text-align: center;">(only files that are fully
+                                downloaded)</span></p>
                     </div>
                 </main>
             </section>
