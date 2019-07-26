@@ -1,0 +1,113 @@
+#users-page {
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+
+  .main-section {
+    width: 100%;
+    max-width: 800px;
+  }
+
+  > section.main-section {
+    overflow: hidden;
+  }
+
+  main {
+    flex-direction: column;
+    overflow: auto;
+
+    button {
+      width: 100%;
+      background-color: unset;
+      color: unset;
+      border: unset;
+      cursor: pointer;
+      font-size: inherit;
+
+      &[disabled] {
+        cursor: initial;
+      }
+
+      &:focus,
+      &:hover:not([disabled]) {
+        background-color: #dbd5d5;
+      }
+
+      &:focus::after,
+      &:hover::after {
+        flex-grow: 0.35;
+      }
+    }
+
+    .user {
+      display: flex;
+      border-color: #7d5a5a73;
+      padding: 0.4rem;
+      align-items: center;
+
+      &::after {
+        content: attr(data-user-type);
+        flex: 0.25 0 0;
+        margin: -0.4rem -0.4rem -0.4rem auto;
+        padding: 0.4rem;
+        border-radius: 1.5rem 0 0 1.5rem;
+        transition: all 0.5s ease;
+        padding-left: 1rem;
+        text-align: left;
+      }
+
+      &[data-user-type="idle"],
+      &[data-user-type="busy"],
+      &[data-user-type="Wants to connect"] {
+        outline: none;
+      }
+
+      &[data-user-type="idle"]::after {
+        background-color: green;
+        color: white;
+      }
+
+      &[data-user-type="busy"] {
+        color: #575757;
+
+        &::after {
+          background-color: #df1818;
+          color: white;
+        }
+      }
+
+      &[data-user-type="Wants to connect"] {
+        background-color: #ffc300;
+        font-weight: bold;
+
+        &:hover {
+          background-color: #fde185;
+        }
+
+        &::after {
+          background-color: #ffff0085;
+          transition: flex 1s ease;
+          overflow: hidden;
+        }
+      }
+    }
+  }
+
+  #greeting {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 767px) {
+  #users-page main .user {
+    &::after {
+      flex-grow: 0.5;
+    }
+
+    &:focus::after,
+    &:hover::after {
+      flex-grow: 0.57;
+    }
+  }
+}

@@ -1,6 +1,6 @@
 export interface IUser {
   socketID: string;
-  state: string;
+  state: string; // idle || waiting || connected
   outRequest: string;
   partner: string;
   inRequests: Set<string>;
@@ -14,13 +14,10 @@ export interface IExtendedSocket extends SocketIO.Socket {
 export class Msg {
   public username: string;
   public messageValue: string;
-  public timeStamp: string;
-  constructor(username: string, messageValue: string) {
+  public date: Date;
+  public constructor(username: string, messageValue: string) {
     this.username = username;
     this.messageValue = messageValue;
-    const currentDate = new Date();
-    this.timeStamp = currentDate.getHours() + ":"
-                        + currentDate.getMinutes() + ":"
-                        + currentDate.getSeconds();
+    this.date = new Date();
   }
 }

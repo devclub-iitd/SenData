@@ -66,12 +66,12 @@ typings/
 # Serverless directories
 .serverless
 
-# VSCode
-.vscode/
-
-js/bundle.js
 .idea/*
 
 .gitsecret/keys/random_seed
 public/js/bundle.js
+
+# Compiled from SCSS
+public/css/style.css*
+
 build/

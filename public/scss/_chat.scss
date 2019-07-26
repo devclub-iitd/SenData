@@ -1,0 +1,88 @@
+@media (min-width: 768px) {
+  .main-section:nth-child(2) {
+    flex-grow: 1;
+  }
+}
+
+main.chat {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin: 0;
+
+  form {
+    flex: none;
+    display: flex;
+    margin: 0;
+
+    input {
+      border: 3px solid var(--main-color);
+      font-size: 1.2rem;
+    }
+
+    input[type="text"] {
+      border-width: 3px 0 0 0;
+      flex: 1 1 auto;
+      padding: 5px;
+      background-color: white;
+      min-width: 0;
+      padding-left: 1rem;
+    }
+
+    input[type="submit"] {
+      cursor: pointer;
+      border-width: 3px 0 0 3px;
+    }
+  }
+
+  > div {
+    overflow: hidden auto;
+    flex: 1 1 0;
+    padding: 0;
+  }
+
+  .chat-messages {
+    flex: 1 1 auto;
+    /* margin: 10px 6px; */
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+  }
+
+  .chat-message {
+    display: flex;
+    flex-direction: column;
+    min-width: 30%;
+    max-width: 60%;
+    margin: 5px;
+    align-items: center;
+
+    main {
+      padding: 5px 10px;
+      border-radius: 2rem;
+    }
+
+    aside {
+      font-size: 0.8em;
+    }
+
+    &.sender {
+      margin-left: auto;
+      align-items: flex-end;
+
+      main {
+        background-color: #59ffff57;
+      }
+    }
+
+    &.receiver {
+      margin-right: auto;
+      align-items: flex-start;
+
+      main {
+        background-color: #fff3a88a;
+      }
+    }
+  }
+}

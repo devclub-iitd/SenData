@@ -1,0 +1,21 @@
+.show-container {
+  flex-direction: column;
+  height: unset;
+
+  > :not(.show) {
+    opacity: 0;
+
+    // Have to add this because chrome treats visibility collapse as hidden and leaves white space in between.
+    position: absolute;
+    visibility: collapse;
+  }
+
+  > .show {
+    position: unset;
+    transition: all 0.6s ease-out;
+  }
+
+  &.centered {
+    flex: 0 1 auto;
+  }
+}

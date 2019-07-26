@@ -1,0 +1,161 @@
+$shadow-length: 2rem;
+
+:root {
+  --main-color: #d14f4b;
+}
+
+html {
+  font-family: sans-serif;
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  text-align: left;
+  background-color: #fff;
+  min-height: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  > header,
+  > footer {
+    display: flex;
+    justify-content: center;
+    margin-top: auto;
+  }
+
+  > header {
+    font-size: 2.5rem;
+    padding: 0.5rem;
+  }
+
+  > footer {
+    padding: 0.6rem;
+  }
+
+  > main {
+    margin: 5px auto;
+    flex: 1 1 auto;
+    display: flex;
+    height: 70%;
+    width: 80%;
+    overflow: hidden;
+
+    > div {
+      flex: 1;
+    }
+  }
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+.main-section header {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 2px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  align-items: center;
+}
+
+.main-section header i {
+  margin-left: auto;
+}
+
+body > main > div {
+  padding: $shadow-length / 2;
+}
+
+.main-section {
+  display: flex;
+  flex-direction: column;
+  // border: 3px solid var(--main-color);
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  box-shadow: 0 0 $shadow-length 0 rgba(0, 0, 0, 0.1);
+  margin: 5px;
+  flex: 1 1 0;
+  overflow: hidden;
+  border-radius: 1.4em;
+}
+
+.main-section > main {
+  margin: 10px;
+  flex: 1;
+  overflow: hidden auto;
+}
+
+.main-section i.fas {
+  display: none;
+}
+
+.page {
+  display: flex;
+}
+
+@media (max-width: 767px) {
+  body > main {
+    width: 95%;
+  }
+
+  .page {
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .main-section > header {
+    cursor: pointer;
+    padding-left: 0.25em;
+  }
+
+  .main-section header i.fas {
+    display: inline-block;
+    margin-left: auto;
+    margin-right: 5px;
+  }
+
+  .main-section,
+  .main-section i.fa-angle-down {
+    transition: all 0.5s ease-out;
+  }
+
+  .my-collapse {
+    flex: 0 0 auto;
+  }
+
+  .my-collapse > main {
+    flex: 0 1 0;
+    margin: 0;
+  }
+
+  .my-collapse i.fa-angle-down {
+    transform: rotate(-90deg);
+  }
+}
+
+input {
+  background-color: inherit;
+  color: inherit;
+}
