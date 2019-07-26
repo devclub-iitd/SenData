@@ -2,7 +2,7 @@ import * as debugLib from "debug";
 import * as JSZip from 'jszip';
 import { saveAs } from "file-saver";
 import modalHandler from "./modal";
-import { IExtendedSocket, IUser, Msg } from "../types";
+import { ExtendedSocket, User, Msg } from "../types";
 import WebTorrentClient from "./wt";
 import { formatBytes, showChild, formatTime } from "./util";
 
@@ -12,30 +12,71 @@ const debug = debugLib("FileSend:Main");
 
 let socket: SocketIOClient.Socket | undefined; // The socket this client uses to connect
 
-const showProgressUpdates = (client: WebTorrentClient): void => {
+// isDownloading => .upload-only elems are hidden
+// !isDownloading => .download-only elems are hidden
+const showProgressUpdates = (client: WebTorrentClient, isDownloading: boolean): void => {
   const showContainer = document.querySelector("#connected-page .show-container") as HTMLElement;
   const progressTBody = document.querySelector('#file-progress-table tbody') as HTMLElement;
   progressTBody.innerHTML = "";
 
+  if (isDownloading) {
+    document.querySelectorAll(".download-only").forEach((element): void => {
+      (element as HTMLElement).style.display = "revert";
+    });
+    document.querySelectorAll(".upload-only").forEach((element): void => {
+      (element as HTMLElement).style.display = "none";
+    });
+  } else {
+    document.querySelectorAll(".download-only").forEach((element): void => {
+      (element as HTMLElement).style.display = "none";
+    });
+    document.querySelectorAll(".upload-only").forEach((element): void => {
+      (element as HTMLElement).style.display = "revert";
+    });
+  }
+
   showChild(showContainer, 4); // file-progress
 
-  let progressElements = new Array<HTMLProgressElement>();
-  for (let i = 0; i < client.filesInfo.length; i++) {
-    const progressElement = document.createElement("progress");
-    progressElement.max = 100;
-    progressElement.value = 0;
-    progressElements.push(progressElement);
-  }
+  let transferData = new Array<HTMLSpanElement>();
+  let fileButtons = new Array<HTMLButtonElement>();
+  let fileSelections = new Array<boolean>(client.filesInfo.length);// Indicates if ith file is to be downloaded or not
+  fileSelections.fill(true);
 
   client.filesInfo.forEach((file, i): void => {
     const row = document.createElement("tr");
     const cell1 = document.createElement("td");
     cell1.innerText = file.name;
+
     const cell2 = document.createElement("td");
-    cell2.innerText = file.size;    
+    const transferred = document.createElement("span");
+    const totalSize = document.createElement("span");
+    totalSize.innerText = "% of " + file.size;
+    transferData.push(transferred);
+    cell2.append(transferred, totalSize);
+
+    row.append(cell1, cell2);
+
     const cell3 = document.createElement("td");
-    cell3.appendChild(progressElements[i]);
-    row.append(cell1, cell2, cell3);
+
+    if (isDownloading) {
+      const pauseButton = document.createElement("button");
+      pauseButton.innerText = "Pause";
+      pauseButton.classList.add("pause-btn");
+      pauseButton.onclick = (): void => {
+        if (pauseButton.innerText === "Pause") {
+          fileSelections[i] = false;
+          pauseButton.innerText = "Resume";
+        } else if (pauseButton.innerText === "Resume") {
+          fileSelections[i] = true;
+          pauseButton.innerText = "Pause";
+        }
+        client.selectFiles(fileSelections);
+      };
+
+      fileButtons.push(pauseButton);
+      cell3.appendChild(pauseButton);
+      row.append(cell3);
+    }
     progressTBody.appendChild(row);
   });
 
@@ -51,8 +92,8 @@ const showProgressUpdates = (client: WebTorrentClient): void => {
     progressFiles: number[];
     timeRemaining: number;
   }): void => {
-    progressElements.forEach((elem, i): void => {
-      elem.value = info.progressFiles[i] * 100;
+    transferData.forEach((element, i): void => {
+      element.innerText = Math.round(info.progressFiles[i] * 100).toString();
     });
     totalProgress.value = info.progress * 100;
     transferred.innerText = info.downloaded;
@@ -67,8 +108,8 @@ const showProgressUpdates = (client: WebTorrentClient): void => {
     uploaded: string;
     uploadSpeed: string;
   }): void => {
-    progressElements.forEach((elem, i): void => {
-      elem.value = info.progressFiles[i] * 100;
+    transferData.forEach((element, i): void => {
+      element.innerText = Math.round(info.progressFiles[i] * 100).toString();
     });
     totalProgress.value = info.progress * 100;
     transferred.innerText = info.uploaded;
@@ -83,8 +124,8 @@ const showProgressUpdates = (client: WebTorrentClient): void => {
     index: number;
     url: string;
   }): void => {
-    if (file.index < 0 || file.index >= progressElements.length) {
-      debug(`Index ${file.index} file downloaded whereas there are only ${progressElements.length} files`);
+    if (file.index < 0 || file.index >= transferData.length) {
+      debug(`Index ${file.index} file downloaded whereas there are only ${transferData.length} files`);
       return;
     }
 
@@ -93,9 +134,9 @@ const showProgressUpdates = (client: WebTorrentClient): void => {
     downloadElement.target = "_blank";
     downloadElement.download = client.filesInfo[file.index].name;
     downloadElement.innerText = "Download";
-    progressElements[file.index].style.display = "none";
-    
-    const parentElement = progressElements[file.index].parentElement;
+    fileButtons[file.index].style.display = "none";
+
+    const parentElement = fileButtons[file.index].parentElement;
     if (parentElement) {
       parentElement.appendChild(downloadElement);
     } else {
@@ -110,7 +151,7 @@ const showProgressUpdates = (client: WebTorrentClient): void => {
     zip.generateAsync({type: "blob"}).then( (blob): void => {
       saveAs(blob, "download.zip");
     });
-  }
+  };
 
   client.on("downloadComplete", (): void => {
     let extraInfo = downloadZipButton.nextSibling as HTMLElement | null;
@@ -118,7 +159,7 @@ const showProgressUpdates = (client: WebTorrentClient): void => {
       extraInfo.innerText = "(All files)";
     }
   });
-}
+};
 
 const manageCheckboxConnectedPage = (): void => {
   const selectAllCheckbox = document.querySelector("#connected-page thead input[type=\"checkbox\"]") as HTMLInputElement | null;
@@ -138,7 +179,7 @@ const manageCheckboxConnectedPage = (): void => {
     } else {
       transferButton.innerText = "Start transfer";
     }
-  }
+  };
 
   selectAllCheckbox.onchange = (): void => {
     if (selectAllCheckbox === null) {
@@ -156,7 +197,7 @@ const manageCheckboxConnectedPage = (): void => {
     fileCheckboxes.forEach((checkbox): void => {
       checkbox.checked = checked;
     });
-  }
+  };
 
   const setMainCheckbox = (): void => {
     if (selectAllCheckbox === null) {
@@ -176,7 +217,7 @@ const manageCheckboxConnectedPage = (): void => {
     }
 
     setTransferButtonText();
-  }
+  };
 
   fileCheckboxes.forEach((checkbox): void => {
     if (checkbox.checked) numChecked++;
@@ -186,7 +227,7 @@ const manageCheckboxConnectedPage = (): void => {
       if (checkbox.checked) numChecked++;
       else numChecked--;
       setMainCheckbox();
-    }
+    };
   });
 
   transferButton.onclick = (): void => {
@@ -208,19 +249,13 @@ const manageCheckboxConnectedPage = (): void => {
 
       const client = new WebTorrentClient(socket);
       client.on("downloading", (): void => {
-        document.querySelectorAll(".download-only").forEach((element): void => {
-          (element as HTMLElement).style.display = "initial";
-        });
-        document.querySelectorAll(".upload-only").forEach((element): void => {
-          (element as HTMLElement).style.display = "none";
-        });
-        showProgressUpdates(client);
+        showProgressUpdates(client, true);
       });
     } else {
       showChild(showContainer, 0); //select-files-send
     }
-  }
-}
+  };
+};
 
 const setSocketConnections = (): void => {
   // if send offer to a user
@@ -240,7 +275,8 @@ const setSocketConnections = (): void => {
       hour: 'numeric',
       minute: 'numeric',
       hour12: true,
-    }
+    };
+    
     const humanReadableDate = Intl.DateTimeFormat('en-IN', options).format(date);
 
     div.innerHTML = `
@@ -249,7 +285,7 @@ const setSocketConnections = (): void => {
                       `;
     div.className = "chat-message " + senderOrReceiver;
     return div;
-  }
+  };
 
   const addNewMessage = (msg: Msg, senderOrReceiver: string): void => {
     const chatBox: Element | null = document.getElementById("chatBox");
@@ -260,7 +296,7 @@ const setSocketConnections = (): void => {
         button.scrollIntoView(false);
       }
     }
-  }
+  };
 
   const connectToUser = (element: HTMLElement): void => {
     // If socket is undefined, do nothing
@@ -283,8 +319,8 @@ const setSocketConnections = (): void => {
           socket.emit("message", messageValue);
           chatBoxTextBox.value = "";
         }
-      }
-    }
+      };
+    };
 
     let dataUserType = element.getAttribute("data-user-type");
     modalHandler.setUser2Name(element.innerText);
@@ -362,7 +398,7 @@ const setSocketConnections = (): void => {
     } else if (dataUserType === "busy") {
       modalHandler.show("user-busy");
     }
-  }
+  };
 
   const getUserButton = (username: string, userType: string): HTMLButtonElement => {
     const button = document.createElement("button");
@@ -371,12 +407,12 @@ const setSocketConnections = (): void => {
     button.setAttribute("data-user-type", userType);
     button.addEventListener("click", (): void => {
       connectToUser(button);
-    })
+    });
     return button;
-  }
+  };
 
-  socket.on('login', (usersArray: [string, IUser][]): void => {
-    const users: Map<string, IUser> = new Map(usersArray);
+  socket.on('login', (usersArray: [string, User][]): void => {
+    const users: Map<string, User> = new Map(usersArray);
     console.log("list sent by server");
     console.log(users);
     if (users !== null) {
@@ -385,15 +421,21 @@ const setSocketConnections = (): void => {
       const onlineUsersList: Element | null = document.getElementById("onlineUsersList");
       if (onlineUsersList !== null) {
         onlineUsersList.innerHTML = "";
-        users.forEach((value: IUser, key: string): void => {
-          const button = getUserButton(key, value.state);
+        users.forEach((value: User, key: string): void => {
+          let state = "";
+          if (value.state === "idle") {
+            state = "idle";
+          } else {
+            state = "busy";
+          }
+          const button = getUserButton(key, state);
           onlineUsersList.append(button);
         });
       }
     }
   });
 
-  socket.on("newUserLogin", (user: { username: string; val: IUser }): void => {
+  socket.on("newUserLogin", (user: { username: string; val: User }): void => {
     console.log("newUserLogin:");
     console.log(user.username);
     if (user) {
@@ -493,7 +535,7 @@ loginForm.onsubmit = (e): void => {
   if (username !== "") {
     socket = io(window.location.origin, { query: `username=${username}` });
     let socketListenersSet = false;
-    socket.on("isSuccessfulLogin", (isSuccess: boolean): void => {
+    socket.on("isSuccessfulLogin", (isSuccess: boolean, username: string): void => {
       if (isSuccess) {
         // TEMP FIX. Show own username
         document.querySelectorAll(".my-username").forEach((elem): void => {
@@ -505,9 +547,8 @@ loginForm.onsubmit = (e): void => {
           setSocketConnections();
         }
         
-      }
-      else {
-        window.alert("A user with this username is already live on the server");
+      } else {
+        window.alert("A user with this username is already connected to the server");
         socket = undefined;
       }
     });
@@ -515,7 +556,7 @@ loginForm.onsubmit = (e): void => {
   } else {
     window.alert("Please enter a username"); //TODO: Fix with a warning shown by text box border
   }
-}
+};
 
 const manageCollapseClickListener = (enable: boolean): void => {
   const sections = document.querySelectorAll(".page > section");
@@ -544,7 +585,7 @@ const manageCollapseClickListener = (enable: boolean): void => {
   by label, table and then a button.
 */
 const manageFileInput = (): void => {
-  const inputElem = document.querySelector("#getFile") as HTMLInputElement
+  const inputElem = document.querySelector("#getFile") as HTMLInputElement;
   const label = inputElem.nextElementSibling as HTMLLabelElement;
   const table = label.nextElementSibling as HTMLTableElement;
   const sendButton = table.nextElementSibling as HTMLButtonElement;
@@ -561,10 +602,10 @@ const manageFileInput = (): void => {
       table.style.display = "none";
       sendButton.style.display = "none";
     }
-  }
+  };
 
   const updateTable = (): void => {
-    const files = inputElem.files
+    const files = inputElem.files;
     if (!files || files.length === 0) {
       showTableFiles(false);
     } else {
@@ -584,7 +625,7 @@ const manageFileInput = (): void => {
         tbody.appendChild(row);
       }
     }
-  }
+  };
 
   updateTable();
   inputElem.addEventListener("change", (): void => {
@@ -638,17 +679,11 @@ const manageFileInput = (): void => {
       client.sendFiles(filesToSend);
 
       client.on("downloadStarted", (): void => {
-        document.querySelectorAll(".download-only").forEach((element): void => {
-          (element as HTMLElement).style.display = "none";
-        });
-        document.querySelectorAll(".upload-only").forEach((element): void => {
-          (element as HTMLElement).style.display = "initial";
-        });
-        showProgressUpdates(client);
+        showProgressUpdates(client, false);
       });
     });
   });
-}
+};
 
 window.addEventListener("load", (): void => {
   const mediaQueryList = window.matchMedia("(max-width: 767px)");

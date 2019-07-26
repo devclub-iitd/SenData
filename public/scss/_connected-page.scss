@@ -55,24 +55,26 @@
         background-color: #1bd9df1a;
       }
     }
+  }
 
-    button {
-      margin: auto;
-      display: block;
-      margin-top: 10px;
-      background-color: white;
-      color: black;
-      padding: 0.4rem 1em;
-      border: 3px solid #002afb96;
-      font-size: inherit;
-      border-radius: 1rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
+  #approve-files button,
+  #select-files-send button,
+  #file-progress button#download-zip {
+    margin: auto;
+    display: block;
+    margin-top: 10px;
+    background-color: white;
+    color: black;
+    padding: 0.4rem 1em;
+    border: 3px solid #002afb96;
+    font-size: inherit;
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
 
-      &:hover {
-        background-color: #1d41f0;
-        color: white;
-      }
+    &:hover {
+      background-color: #1d41f0;
+      color: white;
     }
   }
 
@@ -105,6 +107,21 @@
       margin: auto;
       margin-bottom: 20px;
       color: var(--main-color);
+    }
+  }
+
+  #file-progress {
+    button.pause-btn {
+      padding: 0;
+      color: blue;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 1rem;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
 }

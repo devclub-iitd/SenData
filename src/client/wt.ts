@@ -3,7 +3,7 @@ import { EventEmitter } from "events";
 import * as WebTorrent from "webtorrent";
 import { formatBytes } from "./util";
 
-const debug = debugLib("FileSend-WebTorrent");
+const debug = debugLib("FileSend:WebTorrent");
 
 /*
 * A client for sending and receiving files, which internally
@@ -132,7 +132,7 @@ export default class Client extends EventEmitter {
         });
       });
     });
-  }
+  };
 
   /*
     * Expects an array of booleans to select and deselect files to download
@@ -156,7 +156,7 @@ export default class Client extends EventEmitter {
       }
       debug("Implemented file selection choices");
     }
-  }
+  };
 
   /*
     * Assumes all files of the torrent are to be downloaded as of now
@@ -195,6 +195,30 @@ export default class Client extends EventEmitter {
       });
     };
 
+    const fileDownloadComplete = new Array<boolean>(torrent.files.length);
+    fileDownloadComplete.fill(false);
+    const checkFileProgress = (): void => {
+      torrent.files.forEach( (file, i): void => {
+        if (!fileDownloadComplete[i] && file.progress === 1) {
+          fileDownloadComplete[i] = true;
+          file.getBlob( (err, blob): void => {
+            if (err) {
+              debug(`Obtaining file ${file.name}: ${err}`);
+            } else if (blob === undefined) {
+              debug(`Got undefined url for file ${file.name}`);
+            } else {
+              const url = URL.createObjectURL(blob);
+              this.emit("fileDownloadComplete", {
+                blob,
+                index: i,
+                url,
+              });
+            }
+          });
+        }
+      });
+    };
+
     torrent.on("metadata", (): void=> {
       progressFiles = new Array(torrent.files.length);
       for (let i = 0; i < progressFiles.length; i++) {
@@ -203,25 +227,11 @@ export default class Client extends EventEmitter {
       this.setFilesInfo(torrent);
     });
 
+    let fileProgressCheckInterval: number;
+
     torrent.on("ready", (): void => {
       debug("Torrent beginning to download");
-
-      torrent.files.forEach( (file, i): void => {
-        file.getBlob( (err, blob): void => {
-          if (err) {
-            debug(`Obtaining file ${file.name}: ${err}`);
-          } else if (blob === undefined) {
-            debug(`Got undefined url for file ${file.name}`);
-          } else {
-            const url = URL.createObjectURL(blob);
-            this.emit("fileDownloadComplete", {
-              blob,
-              index: i,
-              url,
-            });
-          }
-        });
-      });
+      fileProgressCheckInterval = window.setInterval(checkFileProgress, this.TIME_INTERVAL);
 
       const sendProgress = (): void => {
         this.socket.emit("progressUpdate", {
@@ -237,21 +247,36 @@ export default class Client extends EventEmitter {
       }, this.TIME_INTERVAL);
 
       torrent.on("done", (): void => {
-        debug("Torrent download complete");
-        this.socket.emit("downloadComplete");
-        this.emit("downloadComplete");
-        clearInterval(downloadInfoInterval);
-        onDownload(); // To completely update download info
-        sendProgress();
+        let allFilesDownloaded = true;
+        torrent.files.forEach((file): void => {
+          if (file.progress !== 1) {
+            allFilesDownloaded = false;
+            return;
+          }
+        });
+
+        if (allFilesDownloaded) {
+          debug("Torrent download complete");
+          this.socket.emit("downloadComplete");
+          this.emit("downloadComplete");
+          clearInterval(downloadInfoInterval);
+          clearInterval(fileProgressCheckInterval);
+          onDownload(); // To completely update download info
+          checkFileProgress();
+          sendProgress();
+        } else {
+          debug("All files set to download downloaded. Paused files remain");
+          this.emit("pausedLeftOnly");
+        }
       });
     });
-  }
+  };
 
   // Should be used as client = client.destroy();
   public destroy = (): null => {
     this.client.destroy();
     return null;
-  }
+  };
 
   private setFilesInfo = (torrent: WebTorrent.Torrent): void => {
     this.filesInfo = new Array(torrent.files.length);
@@ -261,7 +286,7 @@ export default class Client extends EventEmitter {
         size: formatBytes(torrent.files[i].length)
       };
     }
-  }
+  };
 
   private setTorrentErrorHandlers = (torrent: WebTorrent.Torrent): void => {
     // NOTE: torrents are destroyed when they encounter an error
@@ -275,5 +300,5 @@ export default class Client extends EventEmitter {
     torrent.on("warning", (err): void => {
       debug(`Torrent warning: ${err}`);
     });
-  }
+  };
 }
