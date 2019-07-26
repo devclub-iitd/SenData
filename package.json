@@ -31,7 +31,7 @@
     "jszip": "^3.2.1",
     "node": "^12.5.0",
     "socket.io": "^2.2.0",
-    "webtorrent": "^0.104.0"
+    "webtorrent": "^0.105.1"
   },
   "devDependencies": {
     "@types/bittorrent-protocol": "^2.2.3",
