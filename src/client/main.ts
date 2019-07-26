@@ -12,30 +12,71 @@ const debug = debugLib("FileSend:Main");
 
 let socket: SocketIOClient.Socket | undefined; // The socket this client uses to connect
 
-const showProgressUpdates = (client: WebTorrentClient): void => {
+// isDownloading => .upload-only elems are hidden
+// !isDownloading => .download-only elems are hidden
+const showProgressUpdates = (client: WebTorrentClient, isDownloading: boolean): void => {
   const showContainer = document.querySelector("#connected-page .show-container") as HTMLElement;
   const progressTBody = document.querySelector('#file-progress-table tbody') as HTMLElement;
   progressTBody.innerHTML = "";
 
+  if (isDownloading) {
+    document.querySelectorAll(".download-only").forEach((element): void => {
+      (element as HTMLElement).style.display = "revert";
+    });
+    document.querySelectorAll(".upload-only").forEach((element): void => {
+      (element as HTMLElement).style.display = "none";
+    });
+  } else {
+    document.querySelectorAll(".download-only").forEach((element): void => {
+      (element as HTMLElement).style.display = "none";
+    });
+    document.querySelectorAll(".upload-only").forEach((element): void => {
+      (element as HTMLElement).style.display = "revert";
+    });
+  }
+
   showChild(showContainer, 4); // file-progress
 
-  let progressElements = new Array<HTMLProgressElement>();
-  for (let i = 0; i < client.filesInfo.length; i++) {
-    const progressElement = document.createElement("progress");
-    progressElement.max = 100;
-    progressElement.value = 0;
-    progressElements.push(progressElement);
-  }
+  let transferData = new Array<HTMLSpanElement>();
+  let fileButtons = new Array<HTMLButtonElement>();
+  let fileSelections = new Array<boolean>(client.filesInfo.length);// Indicates if ith file is to be downloaded or not
+  fileSelections.fill(true);
 
   client.filesInfo.forEach((file, i): void => {
     const row = document.createElement("tr");
     const cell1 = document.createElement("td");
     cell1.innerText = file.name;
+
     const cell2 = document.createElement("td");
-    cell2.innerText = file.size;    
+    const transferred = document.createElement("span");
+    const totalSize = document.createElement("span");
+    totalSize.innerText = "% of " + file.size;
+    transferData.push(transferred);
+    cell2.append(transferred, totalSize);
+
+    row.append(cell1, cell2);
+
     const cell3 = document.createElement("td");
-    cell3.appendChild(progressElements[i]);
-    row.append(cell1, cell2, cell3);
+
+    if (isDownloading) {
+      const pauseButton = document.createElement("button");
+      pauseButton.innerText = "Pause";
+      pauseButton.classList.add("pause-btn");
+      pauseButton.onclick = (): void => {
+        if (pauseButton.innerText === "Pause") {
+          fileSelections[i] = false;
+          pauseButton.innerText = "Resume";
+        } else if (pauseButton.innerText === "Resume") {
+          fileSelections[i] = true;
+          pauseButton.innerText = "Pause";
+        }
+        client.selectFiles(fileSelections);
+      };
+
+      fileButtons.push(pauseButton);
+      cell3.appendChild(pauseButton);
+      row.append(cell3);
+    }
     progressTBody.appendChild(row);
   });
 
@@ -51,8 +92,8 @@ const showProgressUpdates = (client: WebTorrentClient): void => {
     progressFiles: number[];
     timeRemaining: number;
   }): void => {
-    progressElements.forEach((elem, i): void => {
-      elem.value = info.progressFiles[i] * 100;
+    transferData.forEach((element, i): void => {
+      element.innerText = Math.round(info.progressFiles[i] * 100).toString();
     });
     totalProgress.value = info.progress * 100;
     transferred.innerText = info.downloaded;
@@ -67,8 +108,8 @@ const showProgressUpdates = (client: WebTorrentClient): void => {
     uploaded: string;
     uploadSpeed: string;
   }): void => {
-    progressElements.forEach((elem, i): void => {
-      elem.value = info.progressFiles[i] * 100;
+    transferData.forEach((element, i): void => {
+      element.innerText = Math.round(info.progressFiles[i] * 100).toString();
     });
     totalProgress.value = info.progress * 100;
     transferred.innerText = info.uploaded;
@@ -83,8 +124,8 @@ const showProgressUpdates = (client: WebTorrentClient): void => {
     index: number;
     url: string;
   }): void => {
-    if (file.index < 0 || file.index >= progressElements.length) {
-      debug(`Index ${file.index} file downloaded whereas there are only ${progressElements.length} files`);
+    if (file.index < 0 || file.index >= transferData.length) {
+      debug(`Index ${file.index} file downloaded whereas there are only ${transferData.length} files`);
       return;
     }
 
@@ -93,9 +134,9 @@ const showProgressUpdates = (client: WebTorrentClient): void => {
     downloadElement.target = "_blank";
     downloadElement.download = client.filesInfo[file.index].name;
     downloadElement.innerText = "Download";
-    progressElements[file.index].style.display = "none";
-    
-    const parentElement = progressElements[file.index].parentElement;
+    fileButtons[file.index].style.display = "none";
+
+    const parentElement = fileButtons[file.index].parentElement;
     if (parentElement) {
       parentElement.appendChild(downloadElement);
     } else {
@@ -208,13 +249,7 @@ const manageCheckboxConnectedPage = (): void => {
 
       const client = new WebTorrentClient(socket);
       client.on("downloading", (): void => {
-        document.querySelectorAll(".download-only").forEach((element): void => {
-          (element as HTMLElement).style.display = "initial";
-        });
-        document.querySelectorAll(".upload-only").forEach((element): void => {
-          (element as HTMLElement).style.display = "none";
-        });
-        showProgressUpdates(client);
+        showProgressUpdates(client, true);
       });
     } else {
       showChild(showContainer, 0); //select-files-send
@@ -644,13 +679,7 @@ const manageFileInput = (): void => {
       client.sendFiles(filesToSend);
 
       client.on("downloadStarted", (): void => {
-        document.querySelectorAll(".download-only").forEach((element): void => {
-          (element as HTMLElement).style.display = "none";
-        });
-        document.querySelectorAll(".upload-only").forEach((element): void => {
-          (element as HTMLElement).style.display = "initial";
-        });
-        showProgressUpdates(client);
+        showProgressUpdates(client, false);
       });
     });
   });
