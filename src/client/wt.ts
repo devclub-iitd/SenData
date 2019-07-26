@@ -3,7 +3,7 @@ import { EventEmitter } from "events";
 import * as WebTorrent from "webtorrent";
 import { formatBytes } from "./util";
 
-const debug = debugLib("FileSend-WebTorrent");
+const debug = debugLib("FileSend:WebTorrent");
 
 /*
 * A client for sending and receiving files, which internally
@@ -132,7 +132,7 @@ export default class Client extends EventEmitter {
         });
       });
     });
-  }
+  };
 
   /*
     * Expects an array of booleans to select and deselect files to download
@@ -156,7 +156,7 @@ export default class Client extends EventEmitter {
       }
       debug("Implemented file selection choices");
     }
-  }
+  };
 
   /*
     * Assumes all files of the torrent are to be downloaded as of now
@@ -245,13 +245,13 @@ export default class Client extends EventEmitter {
         sendProgress();
       });
     });
-  }
+  };
 
   // Should be used as client = client.destroy();
   public destroy = (): null => {
     this.client.destroy();
     return null;
-  }
+  };
 
   private setFilesInfo = (torrent: WebTorrent.Torrent): void => {
     this.filesInfo = new Array(torrent.files.length);
@@ -261,7 +261,7 @@ export default class Client extends EventEmitter {
         size: formatBytes(torrent.files[i].length)
       };
     }
-  }
+  };
 
   private setTorrentErrorHandlers = (torrent: WebTorrent.Torrent): void => {
     // NOTE: torrents are destroyed when they encounter an error
@@ -275,5 +275,5 @@ export default class Client extends EventEmitter {
     torrent.on("warning", (err): void => {
       debug(`Torrent warning: ${err}`);
     });
-  }
+  };
 }

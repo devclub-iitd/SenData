@@ -1,4 +1,4 @@
-export interface IUser {
+export interface User {
   socketID: string;
   state: string; // idle || waiting || connected
   outRequest: string;
@@ -7,7 +7,7 @@ export interface IUser {
   filesSendingState: string;  // idle || waiting || sending || receiving
 }
 
-export interface IExtendedSocket extends SocketIO.Socket {
+export interface ExtendedSocket extends SocketIO.Socket {
   username: string;
 }
 

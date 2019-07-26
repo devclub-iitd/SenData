@@ -3,6 +3,7 @@
   flex-direction: column;
   align-items: center;
   overflow: hidden;
+  padding-top: 0; // padding is there for stopping shadow to overflow, not req. here
 
   .main-section {
     width: 100%;
@@ -36,7 +37,7 @@
 
       &:focus::after,
       &:hover::after {
-        flex-grow: 0.35;
+        width: 40%;
       }
     }
 
@@ -48,7 +49,7 @@
 
       &::after {
         content: attr(data-user-type);
-        flex: 0.25 0 0;
+        width: 25%;
         margin: -0.4rem -0.4rem -0.4rem auto;
         padding: 0.4rem;
         border-radius: 1.5rem 0 0 1.5rem;
@@ -87,7 +88,7 @@
 
         &::after {
           background-color: #ffff0085;
-          transition: flex 1s ease;
+          transition: all 1s ease;
           overflow: hidden;
         }
       }
@@ -102,12 +103,12 @@
 @media (max-width: 767px) {
   #users-page main .user {
     &::after {
-      flex-grow: 0.5;
+      width: 25%;
     }
 
     &:focus::after,
     &:hover::after {
-      flex-grow: 0.57;
+      width: 40%;
     }
   }
 }
