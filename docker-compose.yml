@@ -9,8 +9,8 @@ services:
       - turnserver
     environment:
       - VIRTUAL_HOST
-      - STUN_IP=${HOST_IP}
-      - TRACKER_IP=${HOST_IP}
+      - STUN_URL=${HOST_IP}
+      - TRACKER_URL
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:7000"]
       interval: 1m30s
@@ -34,17 +34,6 @@ services:
     restart: unless-stopped
     networks:
       - "internal"
-    logging:
-      options:
-        max-size: '12m'
-        max-file: '5'
-  tracker:
-    ports:
-      - 8000:8000
-    image: "${REGISTRY_NAME}henkel/bittorrent-tracker:latest"
-    networks:
-      - "internal"
-    restart: "unless-stopped"
     logging:
       options:
         max-size: '12m'
