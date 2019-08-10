@@ -91,3 +91,28 @@
     }
   }
 }
+
+#modal-initiate-connection {
+  .show-container > div:nth-child(2) {
+    align-items: center;
+
+    .spinner {
+      color: var(--main-color);
+    }
+
+    button {
+      width: 50%;
+      max-width: 200px;
+      border: 2px solid var(--main-color);
+      padding: 3px;
+      border-radius: 0.4rem;
+      background-color: white;
+      transition: all 0.15s ease-in;
+
+      &:hover {
+        background-color: var(--main-color);
+        color: white;
+      }
+    }
+  }
+}

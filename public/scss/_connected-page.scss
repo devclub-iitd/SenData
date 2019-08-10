@@ -1,11 +1,17 @@
 #connected-page {
   overflow: hidden;
 
-  .main-section:first-child > main {
-    margin: 0;
-    display: flex;
-    overflow: hidden;
-    padding: 10px;
+  .main-section:first-child {
+    > main {
+      margin: 0;
+      display: flex;
+      overflow: hidden;
+      padding: 10px;
+    }
+
+    &.my-collapse > main {
+      padding: 0;
+    }
   }
 
   #approve-files,
