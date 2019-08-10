@@ -83,6 +83,11 @@ io.on("connection", (socket: ExtendedSocket): void => {
       checkVal.inRequests.forEach((username: string): void => {
         const user = users.get(username);
         if (user) {
+          user.state = "idle";
+          socket.broadcast.emit("changeDataUserType", {
+            username: username,
+            newDataType: "idle",
+          });
           io.to(user.socketID).emit("offeredUserDisconnected");
         }
       });
