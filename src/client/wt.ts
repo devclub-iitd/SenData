@@ -66,7 +66,7 @@ export default class Client extends EventEmitter {
     debug(`Using ${STUN_URL} as STUN server address`);
 
     if (process.env.TRACKER_URL) {
-      TRACKER_URL = `wss://${process.env.TRACKER_URL}`;
+      TRACKER_URL = `ws://${process.env.TRACKER_URL}`;
     } else {
       TRACKER_URL = `wss://tracker.btorrent.xyz`;
       debug("TRACKER_URL env variable not set");

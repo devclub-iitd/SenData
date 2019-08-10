@@ -19,7 +19,7 @@ class Modal extends EventEmitter {
     document.querySelectorAll(".modal .user2-name").forEach((element): void => {
       element.innerHTML = user2Name;
     });
-  }
+  };
 
   public show = (type: string): void => {
     this.removeAllListeners(); // TODO: Bit weird but it's fine if we ensure that listeners
@@ -33,19 +33,19 @@ class Modal extends EventEmitter {
     } else {
       debug(type + ": Unsupported type of modal. Doing nothing");
     }
-  }
+  };
 
   public hide = (): void => {
     document.querySelectorAll(".modal").forEach((modal): void => {
       modal.classList.remove("show");
     });
-  }
+  };
 
   private setupModals = (): void => {
     document.querySelectorAll(".modal").forEach((modal): void => {
       const hideModal = (): void => {
         modal.classList.remove("show");
-      }
+      };
 
       const showContainer = modal.querySelector(".show-container") as HTMLElement;
       const closeButton = modal.querySelector("button.close-btn") as HTMLButtonElement;
@@ -62,7 +62,7 @@ class Modal extends EventEmitter {
           this.emit("cancelConnection");
           hideModal();
         }
-      }
+      };
 
       if (modal.id === "modal-initiate-connection") {
         closeButton.addEventListener("click", closeMaybeConfirm);
@@ -106,7 +106,7 @@ class Modal extends EventEmitter {
         });
       }
     });
-  }
+  };
 }
 
 export default new Modal();

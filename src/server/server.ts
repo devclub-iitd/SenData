@@ -1,7 +1,6 @@
 import debugLib from "debug";
 import * as http from "http";
 import * as SocketIO from "socket.io";
-import { Torrent } from "webtorrent";
 import { ExtendedSocket, User, Msg } from "../types";
 import env from "./env";
 import express from "./express";
@@ -80,6 +79,14 @@ io.on("connection", (socket: ExtendedSocket): void => {
           socket.broadcast.to(changeVal.socketID).emit(`PartnerDisconnected`);
         }
       }
+
+      checkVal.inRequests.forEach((username: string): void => {
+        const user = users.get(username);
+        if (user) {
+          io.to(user.socketID).emit("offeredUserDisconnected");
+        }
+      });
+
       // message to all connected clients
       io.emit("userDisconnected", disconnectedUser);
       // deleted socket (in any case)
