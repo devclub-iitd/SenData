@@ -1,6 +1,6 @@
 import * as debugLib from "debug";
 import { User } from "../types";
-import modalHandler from "./modal";
+import modalHandler, { InformationModal } from "./modal";
 import { showChild } from "./util";
 import connectedPage from "./connectedPage";
 
@@ -56,8 +56,11 @@ class UsersPage {
           });
 
           this.socket.on("offeredUserDisconnected", (): void => {
-            //TODO: Show a proper modal
-            modalHandler.hide();
+            new InformationModal().setHeading(
+              `${user2Name} disconnected`
+            ).setBody(
+              `The user you wanted to connect to disconnected`
+            ).show();
           });
         } else {
           debug("Socket variable undefined");

@@ -4,6 +4,37 @@ import { showChild } from "./util";
 
 const debug = debugLib("FileSend:Modal");
 
+// Simple Modal for displaying some info to the user
+export class InformationModal {
+  private heading: string = "";
+  private body: string = "";
+
+  public setHeading = (heading: string): InformationModal => {
+    this.heading = heading;
+    return this;
+  };
+
+  public setBody = (body: string): InformationModal => {
+    this.body = body;
+    return this;
+  };
+
+  public show = (): void => {
+    const modal = document.querySelector("#information-modal") as HTMLElement;
+    const headingSpan = modal.querySelector(".heading") as HTMLElement;
+    const bodySpan = modal.querySelector(".body") as HTMLElement;
+
+    headingSpan.innerText = this.heading;
+    bodySpan.innerText = this.body;
+
+    document.querySelectorAll(".modal").forEach((modal): void => {
+      modal.classList.remove("show");
+    });
+
+    modal.classList.add("show");
+  };
+}
+
 class Modal extends EventEmitter {
   private user2Name: string | undefined;
 
