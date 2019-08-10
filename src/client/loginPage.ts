@@ -47,6 +47,14 @@ class LoginPage {
     const loginForm = document.querySelector("#login-page form") as HTMLFormElement;
     loginForm.onsubmit = (e): void => {
       e.preventDefault();
+
+      // Fix for when focus remains on the login page text box even when 
+      // that page is hidden
+      if (this.socket !== null) {
+        debug("Login form submitted but socket already set");
+        return;
+      }
+
       const usernameTextBox = loginForm.querySelector('input[type="text"]') as HTMLInputElement;
       const username = usernameTextBox.value;
       debug(`Chosen username: ${username}`);
