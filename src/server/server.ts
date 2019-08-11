@@ -158,6 +158,8 @@ io.on("connection", (socket: ExtendedSocket): void => {
             username: user1Name,
             newDataType: "idle",
           });
+
+          io.to(user2.socketID).emit("cancelOffer", user1Name);
         }
       }
     }

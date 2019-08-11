@@ -77,6 +77,43 @@ class UsersPage {
     } else if (userType == "Wants to connect") {
       const user1Name: string = button.innerText;
       modalHandler.show("approve-request");
+
+      const onCancelOffer = (username: string): void => {
+        if (username !== user1Name) {
+          return;
+        }
+        new InformationModal().setHeading(
+          `${user1Name} cancelled connection offer`
+        ).setBody(
+          `${user1Name} cancelled their offer to connect with you.`
+        ).show();
+
+        if (!this.socket) {
+          debug("Socket null.");
+          return;
+        }
+        this.socket.removeListener("cancelOffer", onCancelOffer);
+      };
+
+      const onUserDisconnected = (disconnectedUserName: string): void => {
+        if (disconnectedUserName === user1Name) {
+          new InformationModal().setHeading(
+            `${user1Name} disconnected`
+          ).setBody(
+            `They had sent you a request to connect but are now disconnected.`
+          ).show();
+        }
+      };
+
+      this.socket.on("cancelOffer", onCancelOffer);
+      this.socket.on("userDisconnected", onUserDisconnected);
+      modalHandler.on("modalsHidden", (): void => {
+        if (this.socket) {
+          this.socket.removeListener("cancelOffer", onCancelOffer);
+          this.socket.removeListener("userDisconnected", onUserDisconnected);
+        }
+      });
+
       // Show accept request alert
       modalHandler.once("connect", (): void => {
         const msg = {

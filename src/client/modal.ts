@@ -70,12 +70,14 @@ class Modal extends EventEmitter {
     document.querySelectorAll(".modal").forEach((modal): void => {
       modal.classList.remove("show");
     });
+    this.emit("modalsHidden");
   };
 
   private setupModals = (): void => {
     document.querySelectorAll(".modal").forEach((modal): void => {
       const hideModal = (): void => {
         modal.classList.remove("show");
+        this.emit("modalsHidden");
       };
 
       const showContainer = modal.querySelector(".show-container") as HTMLElement;
