@@ -1,10 +1,10 @@
 export interface User {
   socketID: string;
-  state: string; // idle || waiting || connected
+  state: "idle" | "waiting" | "connected";
   outRequest: string;
   partner: string;
   inRequests: Set<string>;
-  filesSendingState: string;  // idle || waiting || sending || receiving
+  filesSendingState: "idle" | "waiting" | "sending" | "receiving";
 }
 
 export interface ExtendedSocket extends SocketIO.Socket {
