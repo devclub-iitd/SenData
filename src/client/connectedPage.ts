@@ -2,6 +2,8 @@ import * as debugLib from "debug";
 import { showChild } from "./util";
 import fileSelectSendPage from "./fileSelectSendPage";
 import chatPage from "./chatPage";
+import partnerDisconnectedHandler from "./partnerDisconnectedHandler";
+import { InformationModal } from "./modal";
 
 const debug = debugLib("FileSend:ConnectedPage");
 
@@ -39,9 +41,17 @@ class ConnectedPage {
     const handleSizeChange = (evt: MediaQueryList | MediaQueryListEvent): void => {
       this.manageCollapseClickListener(evt.matches);
     };
-    mediaQueryList.addListener(handleSizeChange);
+    mediaQueryList.onchange = handleSizeChange;
     handleSizeChange(mediaQueryList);
     chatPage.setSocket(this.socket).setup();
+    partnerDisconnectedHandler.setSocket(this.socket).setup();
+    partnerDisconnectedHandler.callback = (): void => {
+      new InformationModal().setHeading(
+        "Partner disconnected"
+      ).setBody(
+        "The user you were connected to disconnected"
+      ).show();
+    };
   };
 
   public show = (): void => {

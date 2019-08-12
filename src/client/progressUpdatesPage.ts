@@ -3,6 +3,8 @@ import * as JSZip from "jszip";
 import { saveAs } from "file-saver";
 import WebTorrentClient from "./wt";
 import { showChild, formatTime } from "./util";
+import partnerDisconnectedHandler from "./partnerDisconnectedHandler";
+import { InformationModal } from "./modal";
 
 const debug = debugLib("FileSend:ProgressUpdatesPage");
 
@@ -10,10 +12,52 @@ class ProgressUpdatesPage {
   private socket: SocketIOClient.Socket | null = null;
   private client: WebTorrentClient | null = null;
   private showContainer = document.querySelector("#connected-page .show-container") as HTMLElement;
+  private isDownloading = false;
 
   public setSocket = (socket: SocketIOClient.Socket | null): ProgressUpdatesPage => {
     this.socket = socket;
     return this;
+  };
+
+  // Setup that is common to both downloading and uploading
+  public commonSetup = (): void => {
+    const isDisconnected = (): boolean => {
+      if (this.client === null) {
+        debug("Client is null for common setup.");
+        return true;
+      }
+      if (this.client.isConnectedToAnyone()) {
+        const modal = new InformationModal().setHeading(
+          "Your partner disconnected from our server"
+        );
+        if (this.isDownloading) {
+          modal.setBody(
+            "If they're still connected via a peer-to-peer route, \
+          you will see progress on your download. They, however, won't see the\
+          upload progress update"
+          );
+        } else {
+          modal.setBody(
+            "They might still be connected via a peer-to-peer route even\
+            though you won't see the upload progress being updated. \
+            You should contact them through other means to confirm"
+          );
+        }
+        modal.show();
+        return false;
+      }
+      return true;
+    };
+
+    partnerDisconnectedHandler.isDisconnected = isDisconnected;
+    partnerDisconnectedHandler.callback = (): void => {
+      new InformationModal().setHeading(
+        "You have been disconnected with your partner"
+      ).setBody(
+        "Your partner's peer-to-peer connection with you and the connection with\
+        server was broken."
+      ).show();
+    };
   };
 
   public setupUpload = (filesToSend: File[]): void => {
@@ -27,6 +71,7 @@ class ProgressUpdatesPage {
     }
 
     this.client = new WebTorrentClient(this.socket);
+    this.commonSetup();
     this.client.sendFiles(filesToSend);
     this.client.on("downloadStarted", this.onDownloadStarted);
   };
@@ -42,6 +87,7 @@ class ProgressUpdatesPage {
     }
 
     this.client = new WebTorrentClient(this.socket);
+    this.commonSetup();
     this.setFileDownloadCompleteTriggers();
     this.client.on("downloading", (): void => {
       this.showProgressUpdates(true);
@@ -68,6 +114,7 @@ class ProgressUpdatesPage {
   // isDownloading => .upload-only elements are hidden
   // !isDownloading => .download-only elements are hidden
   private showProgressUpdates = (isDownloading: boolean): void => {
+    this.isDownloading = isDownloading;
     this.progressTBody.innerHTML = "";
   
     if (isDownloading) {

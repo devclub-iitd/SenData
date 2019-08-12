@@ -69,14 +69,27 @@ io.on("connection", (socket: ExtendedSocket): void => {
         const changeVal: User|undefined = users.get(checkVal.partner) ;
 
         if (changeVal !== undefined) {
-          // update properties of partner
-          changeVal.state = "idle";
-          changeVal.outRequest = "";
-          changeVal.partner = "";
-          // map updated properties of partner
-          users.set(checkVal.partner, changeVal);
+          const partnerSocket = io.sockets.connected[changeVal.socketID];
+
           // message sent to partner
-          socket.broadcast.to(changeVal.socketID).emit(`PartnerDisconnected`);
+          socket.broadcast.to(changeVal.socketID).emit(`partnerDisconnected`);
+
+          // Even when a user has disconnected from the server, it might still
+          // be transferring to it's partner. So, a confirmation is sought from
+          // the partner after which it is made available to connect to others.
+          partnerSocket.on("readyToConnectToOthers", (): void => {
+            changeVal.state = "idle";
+            changeVal.outRequest = "";
+            changeVal.partner = "";
+            // map updated properties of partner
+            users.set(checkVal.partner, changeVal);
+
+            //Partner is now idle
+            io.emit("changeDataUserType", {
+              username: checkVal.partner,
+              newDataType: "idle",
+            });
+          });
         }
       }
 

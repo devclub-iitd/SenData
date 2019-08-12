@@ -60,6 +60,7 @@ class LoginPage {
       debug(`Chosen username: ${username}`);
       if (username !== "") {
         this.socket = io(window.location.origin, { query: `username=${username}` });
+        window.socket = this.socket;
         this.socket.on("isSuccessfulLogin", this.onIsSuccessfulLogin);
         usersPage.setSocket(this.socket).setup();
       } else {

@@ -164,7 +164,6 @@ export default class Client extends EventEmitter {
     */
   public addTorrent = (magnetURI: string): void => {
     this.socket.emit("downloadClientReady");
-    this.socket.emit("Random emit");
 
     const torrent = this.client.add(magnetURI, { announce: this.TRACKER_URLS }, (): void => {
       this.emit("downloading");
@@ -300,5 +299,14 @@ export default class Client extends EventEmitter {
     torrent.on("warning", (err): void => {
       debug(`Torrent warning: ${err}`);
     });
+  };
+
+  public isConnectedToAnyone = (): boolean => {
+    if (this.client.torrents.length == 0) {
+      return false;
+    }
+
+    // Only checking first torrent since only one torrent is active at one time
+    return this.client.torrents[0].numPeers > 0;
   };
 }
