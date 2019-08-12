@@ -50,118 +50,123 @@
             </section>
         </div>
         <div class="page" id="connected-page">
-            <section class="main-section">
-                <!-- TODO: Change this heading dynamically based on which div has show class -->
-                <header><span>Select files</span><i class="fas fa-angle-down"></i></header>
-                <main class="show-container">
-                    <div id="select-files-send" class="show" data-heading="Select files to send"
-                        style="padding: 5px; width: 100%;">
-                        <input type="file" id="getFile" style="display: none;" multiple>
-                        <label for="getFile">Browse files</label>
-
-                        <!-- list of selected files -->
-                        <table style="margin-top: 1em;">
-                            <thead>
-                                <th>
-                                    Name
-                                </th>
-                                <th>Size</th>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                        <button>Send</button>
-                    </div>
-                    <div id="approve-files" data-heading="Select files to receive">
-                        <table>
-                            <thead>
-                                <th>
-                                    <label>
-                                        <input type="checkbox" name="" id="">
+            <div class="disconnect-button-div">
+                <button>Disconnect from partner</button>
+            </div>
+            <div class="sections-div">
+                <section class="main-section">
+                    <!-- TODO: Change this heading dynamically based on which div has show class -->
+                    <header><span>Select files</span><i class="fas fa-angle-down"></i></header>
+                    <main class="show-container">
+                        <div id="select-files-send" class="show" data-heading="Select files to send"
+                            style="padding: 5px; width: 100%;">
+                            <input type="file" id="getFile" style="display: none;" multiple>
+                            <label for="getFile">Browse files</label>
+    
+                            <!-- list of selected files -->
+                            <table style="margin-top: 1em;">
+                                <thead>
+                                    <th>
                                         Name
-                                    </label>
-                                </th>
-                                <th>Size</th>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                        <button>Start transfer</button>
-                    </div>
-                    <div id="wait-approval" data-heading="Waiting for response">
-                        <p>A request has been sent to <span class="user2-name">user2</span>
-                            so that they select which files they want to receive.</p>
-                        <p>P.S. Taking too long? Ask <span class="user2-name">user2</span>
-                            using the chat functionality</p>
-                    </div>
-                    <div id="processing-files" data-heading="Processing">
-                        <div class="spinner"></div>
-                        <p>
-                            Please wait while we process the files you want to transfer.
-                            Larger files take longer to process.
-                        </p>
-                    </div>
-                    <div id="file-progress" data-heading="File Transfer Info" class="show">
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td>Transferred</td>
-                                    <td><span id="transferred"></span></td>
-                                </tr>
-                                <tr>
-                                    <td>Time Remaining</td>
-                                    <td><span id="time-remaining"></span></td>
-                                </tr>
-                                <tr>
-                                    <td>Speed</td>
-                                    <td><span id="transfer-speed"></span></td>
-                                </tr>
-                                <tr>
-                                    <td>Progress</td>
-                                    <td><progress id="total-progress" max="100" value="0"></progress></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <table id="file-progress-table">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Transferred</th>
-                                    <th class="download-only"> </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                        <p class="download-only"><button id="download-zip"> Download ZIP </button><span
-                                style="display: block; text-align: center;">(only files that are fully
-                                downloaded)</span></p>
-                    </div>
-                </main>
-            </section>
-
-            <section class="main-section">
-                <header>Chat<i class="fas fa-angle-down"></i></header>
-                <main class="chat">
-                    <div>
-                        <section class="chat-messages" id="chatBox">
-                            <!-- sample chat messages
-                            <div class="chat-message sender">
-                                <main>Hello, there</main>
-                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
-                            </div>
-                            <div class="chat-message receiver">
-                                <main>Tu bata</main>
-                                <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
-                            </div>-->
-                        </section>
-                    </div>
-                    <form id="chatBoxForm" autocomplete="off">
-                        <input id="chatBoxTextBox" type="text" placeholder="Type your message here">
-                        <input id="chatBoxSendButton" type="submit" value="Send">
-                    </form>
-                </main>
-            </section>
+                                    </th>
+                                    <th>Size</th>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                            <button>Send</button>
+                        </div>
+                        <div id="approve-files" data-heading="Select files to receive">
+                            <table>
+                                <thead>
+                                    <th>
+                                        <label>
+                                            <input type="checkbox" name="" id="">
+                                            Name
+                                        </label>
+                                    </th>
+                                    <th>Size</th>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                            <button>Start transfer</button>
+                        </div>
+                        <div id="wait-approval" data-heading="Waiting for response">
+                            <p>A request has been sent to <span class="user2-name">user2</span>
+                                so that they select which files they want to receive.</p>
+                            <p>P.S. Taking too long? Ask <span class="user2-name">user2</span>
+                                using the chat functionality</p>
+                        </div>
+                        <div id="processing-files" data-heading="Processing">
+                            <div class="spinner"></div>
+                            <p>
+                                Please wait while we process the files you want to transfer.
+                                Larger files take longer to process.
+                            </p>
+                        </div>
+                        <div id="file-progress" data-heading="File Transfer Info" class="show">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>Transferred</td>
+                                        <td><span id="transferred"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Time Remaining</td>
+                                        <td><span id="time-remaining"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Speed</td>
+                                        <td><span id="transfer-speed"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Progress</td>
+                                        <td><progress id="total-progress" max="100" value="0"></progress></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table id="file-progress-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Transferred</th>
+                                        <th class="download-only"> </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                            <p class="download-only"><button id="download-zip"> Download ZIP </button><span
+                                    style="display: block; text-align: center;">(only files that are fully
+                                    downloaded)</span></p>
+                        </div>
+                    </main>
+                </section>
+    
+                <section class="main-section">
+                    <header>Chat<i class="fas fa-angle-down"></i></header>
+                    <main class="chat">
+                        <div>
+                            <section class="chat-messages" id="chatBox">
+                                <!-- sample chat messages
+                                <div class="chat-message sender">
+                                    <main>Hello, there</main>
+                                    <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
+                                </div>
+                                <div class="chat-message receiver">
+                                    <main>Tu bata</main>
+                                    <aside><time datetime="2019-07-22 14:14">22 July 2:14 PM</time></aside>
+                                </div>-->
+                            </section>
+                        </div>
+                        <form id="chatBoxForm" autocomplete="off">
+                            <input id="chatBoxTextBox" type="text" placeholder="Type your message here">
+                            <input id="chatBoxSendButton" type="submit" value="Send">
+                        </form>
+                    </main>
+                </section>
+            </div>
         </div>
     </main>
 

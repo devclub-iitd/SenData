@@ -83,6 +83,8 @@ io.on("connection", (socket: ExtendedSocket): void => {
             changeVal.partner = "";
             // map updated properties of partner
             users.set(checkVal.partner, changeVal);
+            const usersArray: [string, User][] = Array.from(users);
+            socket.emit("login", usersArray);
 
             //Partner is now idle
             io.emit("changeDataUserType", {
@@ -421,5 +423,35 @@ io.on("connection", (socket: ExtendedSocket): void => {
       // TODO
       socket.broadcast.to(partner.socketID).emit("downloadComplete");
     });
+  });
+
+  socket.on("disconnectFromPartner", (): void => {
+    const user: string = socket.username;
+    const userProperties = users.get(user);
+    if (userProperties) {
+      if (userProperties.partner !== "") {
+        const partnerProperties = users.get(userProperties.partner);
+        if (partnerProperties) {
+          socket.broadcast.to(partnerProperties.socketID).emit("partnerForcedDisconnect");
+
+          //Resetting states
+          userProperties.filesSendingState = "idle";
+          userProperties.partner = "";
+          userProperties.state = "idle";
+          partnerProperties.filesSendingState = "idle";
+          partnerProperties.partner = "";
+          partnerProperties.state = "idle";
+        }
+      }
+      else {
+        debug("No partner of " + user + " found");
+      }
+    }
+
+    let usersArray: [string, User][] = Array.from(users);
+    usersArray = usersArray.filter((val): boolean => {
+      return val[0] !== socket.username;
+    });
+    socket.emit("login", usersArray);
   });
 });

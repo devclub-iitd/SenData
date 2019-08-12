@@ -1,5 +1,5 @@
 import * as debugLib from "debug";
-import { showChild } from "./util";
+import { showChild, showMainPage } from "./util";
 import fileSelectSendPage from "./fileSelectSendPage";
 import chatPage from "./chatPage";
 import partnerDisconnectedHandler from "./partnerDisconnectedHandler";
@@ -16,7 +16,7 @@ class ConnectedPage {
   };
 
   private manageCollapseClickListener = (enable: boolean): void => {
-    const sections = document.querySelectorAll(".page > section");
+    const sections = document.querySelectorAll("#connected-page > .sections-div > section");
     const collapseClass = "my-collapse";
     sections.forEach((section): void => {
       if (section.firstElementChild == null) {
@@ -32,6 +32,37 @@ class ConnectedPage {
       } else {
         section.firstElementChild.removeEventListener("click", onClick);
       }
+    });
+  };
+
+  private setupForceDisconnectHandlers = (): void => {
+    const disconnectButton = document.querySelector("#connected-page > .disconnect-button-div > button") as HTMLButtonElement;
+    disconnectButton.onclick = (): void => {
+      if (this.socket === null) {
+        debug("Socket is null. Disconnect button won't work");
+        return;
+      }
+
+      if (window.confirm("Are you sure you want to disconnect?")) {
+        this.socket.emit("disconnectFromPartner");
+        showMainPage("usersPage");
+      }
+    };
+
+    if (this.socket === null) {
+      debug("Socket is null.");
+      return;
+    }
+
+    this.socket.on("partnerForcedDisconnect", (): void => {
+      new InformationModal().setHeading(
+        "Your partner disconnected the connection with you"
+      ).setBody(
+        "The person you were connected to has manually disconnected. You will stay\
+        on this page in case you want to download files or re-read chats. Click on\
+        disconnect button to connect to other users"
+      ).show();
+      
     });
   };
 
@@ -52,6 +83,7 @@ class ConnectedPage {
         "The user you were connected to disconnected"
       ).show();
     };
+    this.setupForceDisconnectHandlers();
   };
 
   public show = (): void => {
