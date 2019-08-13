@@ -32,5 +32,21 @@ npm start
 ```
 The web app would be visible at `localhost:7000`
 
+## Directory structure
+```
+|- src/
+   |- client/ - Client side code
+   |- server/ - Server side code
+   |- @types - Contains type definitions for some modules used
+   |- types.ts - Types common to server and client
+|- public/
+   |- scss/ - Contains styles written in SCSS
+   |- css/ - Contains styles compiled from scss/ + additional styles
+   |- webfonts/ - Fonts
+   |- js/ - JS files compiled from src/client/ + Other 3rd party JS files
+|- build/ - JS files compiled from corresponding TS files in src/
+   |- client/ - TS files are compiled from src/client/ and then browserified into a single file which is placed in public/js/
+```
+
 ## WebTorrent Details
 WebTorrent relies on WebRTC (Web Real-Time Communication) for establishing peer-to-peer connections. Due to a very presence of Network Address Translators, connecting to another peer using their IP addresss directly is not possible they are in the same subnet. To facilitate the connection, a STUN server is required. In simple terms, both users connect to  the STUN server and through established protocols, the server establishes a connection between them. This connection is not routed through the STUN server and is a shorter route. For a much more involved description, see [State of Peer-to-Peer (P2P) Communication across Network Address Translators (NATs)](https://tools.ietf.org/html/rfc5128)
