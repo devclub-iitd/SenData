@@ -80,7 +80,17 @@ class ChatPage {
       return;
     }
 
+    // Resetting in case of remnant messages
+    const chatBox = document.getElementById("chatBox") as HTMLElement;
+    chatBox.innerHTML = "";
+
     this.setMessageForm();
+
+    // In the process of disconnecting and connecting, these
+    // might've gotten added multiple times.
+    this.socket.removeListener("messageSentSuccess");
+    this.socket.removeListener("messageIncoming");
+
     this.socket.on("messageSentSuccess", this.onMessageSentSuccess);
     this.socket.on("messageIncoming", this.onMessageIncoming);
   };

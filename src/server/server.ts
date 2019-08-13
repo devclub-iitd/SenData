@@ -435,18 +435,23 @@ io.on("connection", (socket: ExtendedSocket): void => {
           socket.broadcast.to(partnerProperties.socketID).emit("partnerForcedDisconnect");
 
           //Resetting states
-          userProperties.filesSendingState = "idle";
-          userProperties.partner = "";
-          userProperties.state = "idle";
           partnerProperties.filesSendingState = "idle";
           partnerProperties.partner = "";
-          partnerProperties.state = "idle";
         }
       }
       else {
         debug("No partner of " + user + " found");
       }
+
+      userProperties.filesSendingState = "idle";
+      userProperties.partner = "";
+      userProperties.state = "idle";
     }
+
+    io.emit("changeDataUserType", {
+      username: user,
+      newDataType: "idle"
+    });
 
     let usersArray: [string, User][] = Array.from(users);
     usersArray = usersArray.filter((val): boolean => {

@@ -28,9 +28,9 @@ class ConnectedPage {
       };
   
       if (enable) {
-        section.firstElementChild.addEventListener("click", onClick);
+        (section.firstElementChild as HTMLElement).onclick  = onClick;
       } else {
-        section.firstElementChild.removeEventListener("click", onClick);
+        (section.firstElementChild as HTMLElement).onclick = (): void => {};
       }
     });
   };
@@ -45,6 +45,7 @@ class ConnectedPage {
 
       if (window.confirm("Are you sure you want to disconnect?")) {
         this.socket.emit("disconnectFromPartner");
+        this.socket.removeListener("partnerForcedDisconnect");
         showMainPage("usersPage");
       }
     };
@@ -62,7 +63,10 @@ class ConnectedPage {
         on this page in case you want to download files or re-read chats. Click on\
         disconnect button to connect to other users"
       ).show();
-      
+
+      if (this.socket) {
+        this.socket.removeListener("partnerForcedDisconnect");
+      }
     });
   };
 
