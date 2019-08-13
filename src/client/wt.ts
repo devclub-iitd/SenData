@@ -58,7 +58,7 @@ export default class Client extends EventEmitter {
     let TRACKER_URL: string;
 
     if (process.env.STUN_URL) {
-      STUN_URL = `stun:${process.env.STUN_URL}:3478`;
+      STUN_URL = process.env.STUN_URL;
     } else {
       STUN_URL = "stun:stun.l.google.com:19302";
       debug(`STUN_URL env variable not set`);
@@ -66,7 +66,7 @@ export default class Client extends EventEmitter {
     debug(`Using ${STUN_URL} as STUN server address`);
 
     if (process.env.TRACKER_URL) {
-      TRACKER_URL = `wss://${process.env.TRACKER_URL}`;
+      TRACKER_URL = process.env.TRACKER_URL;
     } else {
       TRACKER_URL = `wss://tracker.btorrent.xyz`;
       debug("TRACKER_URL env variable not set");
