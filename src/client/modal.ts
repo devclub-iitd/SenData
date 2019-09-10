@@ -4,6 +4,37 @@ import { showChild } from "./util";
 
 const debug = debugLib("FileSend:Modal");
 
+// Simple Modal for displaying some info to the user
+export class InformationModal {
+  private heading: string = "";
+  private body: string = "";
+
+  public setHeading = (heading: string): InformationModal => {
+    this.heading = heading;
+    return this;
+  };
+
+  public setBody = (body: string): InformationModal => {
+    this.body = body;
+    return this;
+  };
+
+  public show = (): void => {
+    const modal = document.querySelector("#information-modal") as HTMLElement;
+    const headingSpan = modal.querySelector(".heading") as HTMLElement;
+    const bodySpan = modal.querySelector(".body") as HTMLElement;
+
+    headingSpan.innerText = this.heading;
+    bodySpan.innerText = this.body;
+
+    document.querySelectorAll(".modal").forEach((modal): void => {
+      modal.classList.remove("show");
+    });
+
+    modal.classList.add("show");
+  };
+}
+
 class Modal extends EventEmitter {
   private user2Name: string | undefined;
 
@@ -19,7 +50,7 @@ class Modal extends EventEmitter {
     document.querySelectorAll(".modal .user2-name").forEach((element): void => {
       element.innerHTML = user2Name;
     });
-  }
+  };
 
   public show = (type: string): void => {
     this.removeAllListeners(); // TODO: Bit weird but it's fine if we ensure that listeners
@@ -33,19 +64,21 @@ class Modal extends EventEmitter {
     } else {
       debug(type + ": Unsupported type of modal. Doing nothing");
     }
-  }
+  };
 
   public hide = (): void => {
     document.querySelectorAll(".modal").forEach((modal): void => {
       modal.classList.remove("show");
     });
-  }
+    this.emit("modalsHidden");
+  };
 
   private setupModals = (): void => {
     document.querySelectorAll(".modal").forEach((modal): void => {
       const hideModal = (): void => {
         modal.classList.remove("show");
-      }
+        this.emit("modalsHidden");
+      };
 
       const showContainer = modal.querySelector(".show-container") as HTMLElement;
       const closeButton = modal.querySelector("button.close-btn") as HTMLButtonElement;
@@ -62,7 +95,7 @@ class Modal extends EventEmitter {
           this.emit("cancelConnection");
           hideModal();
         }
-      }
+      };
 
       if (modal.id === "modal-initiate-connection") {
         closeButton.addEventListener("click", closeMaybeConfirm);
@@ -106,7 +139,7 @@ class Modal extends EventEmitter {
         });
       }
     });
-  }
+  };
 }
 
 export default new Modal();

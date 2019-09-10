@@ -60,3 +60,48 @@ export function showChild(targetNode: HTMLElement | null, i: number): void {
     }
   }
 }
+
+export const showMainPage = (pageName: 
+'loginPage' |
+'usersPage' |
+'connectedPage'
+): void => {
+  const showContainer = document.querySelector("body .show-container") as HTMLElement;
+  switch (pageName) {
+    case 'loginPage':
+      showChild(showContainer, 0);
+      return;
+    case 'usersPage':
+      showChild(showContainer, 1);
+      return;
+    case 'connectedPage':
+      showChild(showContainer, 2);
+  }
+};
+  
+export const showConnectedSubPage = (pageName:
+'select-files-send' |
+'approve-files' |
+'wait-approval' |
+'processing-files' | 
+'file-progress'
+): void => {
+  const showContainer = document.querySelector("#connected-page .show-container") as HTMLElement;
+  switch(pageName) {
+    case 'select-files-send':
+      showChild(showContainer, 0);
+      return;
+    case 'approve-files':
+      showChild(showContainer, 1);
+      return;
+    case 'wait-approval':
+      showChild(showContainer, 2);
+      return;
+    case 'processing-files':
+      showChild(showContainer, 3);
+      return;
+    case 'file-progress':
+      showChild(showContainer, 4);
+      return;
+  }
+};

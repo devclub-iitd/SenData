@@ -58,7 +58,7 @@ export default class Client extends EventEmitter {
     let TRACKER_URL: string;
 
     if (process.env.STUN_URL) {
-      STUN_URL = `stun:${process.env.STUN_URL}:3478`;
+      STUN_URL = process.env.STUN_URL;
     } else {
       STUN_URL = "stun:stun.l.google.com:19302";
       debug(`STUN_URL env variable not set`);
@@ -66,7 +66,7 @@ export default class Client extends EventEmitter {
     debug(`Using ${STUN_URL} as STUN server address`);
 
     if (process.env.TRACKER_URL) {
-      TRACKER_URL = `wss://${process.env.TRACKER_URL}`;
+      TRACKER_URL = process.env.TRACKER_URL;
     } else {
       TRACKER_URL = `wss://tracker.btorrent.xyz`;
       debug("TRACKER_URL env variable not set");
@@ -164,7 +164,6 @@ export default class Client extends EventEmitter {
     */
   public addTorrent = (magnetURI: string): void => {
     this.socket.emit("downloadClientReady");
-    this.socket.emit("Random emit");
 
     const torrent = this.client.add(magnetURI, { announce: this.TRACKER_URLS }, (): void => {
       this.emit("downloading");
@@ -300,5 +299,14 @@ export default class Client extends EventEmitter {
     torrent.on("warning", (err): void => {
       debug(`Torrent warning: ${err}`);
     });
+  };
+
+  public isConnectedToAnyone = (): boolean => {
+    if (this.client.torrents.length == 0) {
+      return false;
+    }
+
+    // Only checking first torrent since only one torrent is active at one time
+    return this.client.torrents[0].numPeers > 0;
   };
 }

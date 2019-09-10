@@ -1,7 +1,6 @@
 import debugLib from "debug";
 import * as http from "http";
 import * as SocketIO from "socket.io";
-import { Torrent } from "webtorrent";
 import { ExtendedSocket, User, Msg } from "../types";
 import env from "./env";
 import express from "./express";
@@ -70,16 +69,44 @@ io.on("connection", (socket: ExtendedSocket): void => {
         const changeVal: User|undefined = users.get(checkVal.partner) ;
 
         if (changeVal !== undefined) {
-          // update properties of partner
-          changeVal.state = "idle";
-          changeVal.outRequest = "";
-          changeVal.partner = "";
-          // map updated properties of partner
-          users.set(checkVal.partner, changeVal);
+          const partnerSocket = io.sockets.connected[changeVal.socketID];
+
           // message sent to partner
-          socket.broadcast.to(changeVal.socketID).emit(`PartnerDisconnected`);
+          socket.broadcast.to(changeVal.socketID).emit(`partnerDisconnected`);
+
+          // Even when a user has disconnected from the server, it might still
+          // be transferring to it's partner. So, a confirmation is sought from
+          // the partner after which it is made available to connect to others.
+          partnerSocket.on("readyToConnectToOthers", (): void => {
+            changeVal.state = "idle";
+            changeVal.outRequest = "";
+            changeVal.partner = "";
+            // map updated properties of partner
+            users.set(checkVal.partner, changeVal);
+            const usersArray: [string, User][] = Array.from(users);
+            socket.emit("login", usersArray);
+
+            //Partner is now idle
+            io.emit("changeDataUserType", {
+              username: checkVal.partner,
+              newDataType: "idle",
+            });
+          });
         }
       }
+
+      checkVal.inRequests.forEach((username: string): void => {
+        const user = users.get(username);
+        if (user) {
+          user.state = "idle";
+          socket.broadcast.emit("changeDataUserType", {
+            username: username,
+            newDataType: "idle",
+          });
+          io.to(user.socketID).emit("offeredUserDisconnected");
+        }
+      });
+
       // message to all connected clients
       io.emit("userDisconnected", disconnectedUser);
       // deleted socket (in any case)
@@ -146,6 +173,8 @@ io.on("connection", (socket: ExtendedSocket): void => {
             username: user1Name,
             newDataType: "idle",
           });
+
+          io.to(user2.socketID).emit("cancelOffer", user1Name);
         }
       }
     }
@@ -394,5 +423,40 @@ io.on("connection", (socket: ExtendedSocket): void => {
       // TODO
       socket.broadcast.to(partner.socketID).emit("downloadComplete");
     });
+  });
+
+  socket.on("disconnectFromPartner", (): void => {
+    const user: string = socket.username;
+    const userProperties = users.get(user);
+    if (userProperties) {
+      if (userProperties.partner !== "") {
+        const partnerProperties = users.get(userProperties.partner);
+        if (partnerProperties) {
+          socket.broadcast.to(partnerProperties.socketID).emit("partnerForcedDisconnect");
+
+          //Resetting states
+          partnerProperties.filesSendingState = "idle";
+          partnerProperties.partner = "";
+        }
+      }
+      else {
+        debug("No partner of " + user + " found");
+      }
+
+      userProperties.filesSendingState = "idle";
+      userProperties.partner = "";
+      userProperties.state = "idle";
+    }
+
+    io.emit("changeDataUserType", {
+      username: user,
+      newDataType: "idle"
+    });
+
+    let usersArray: [string, User][] = Array.from(users);
+    usersArray = usersArray.filter((val): boolean => {
+      return val[0] !== socket.username;
+    });
+    socket.emit("login", usersArray);
   });
 });

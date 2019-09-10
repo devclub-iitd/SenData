@@ -1,11 +1,49 @@
+$shadow-length: 2rem;
+
 #connected-page {
   overflow: hidden;
+  flex-direction: column;
 
-  .main-section:first-child > main {
-    margin: 0;
+  > .disconnect-button-div {
+    height: min-content;
+    text-align: center;
+    flex-grow: 0;
+
+    button {
+      border: none;
+      background: none;
+      color: var(--main-color);
+      text-decoration: underline;
+      font-size: inherit;
+      cursor: pointer;
+    }
+  }
+
+  > .sections-div {
     display: flex;
+    flex: 1 1 0;
     overflow: hidden;
-    padding: 10px;
+    padding: $shadow-length / 2;
+
+    @media (max-width: 767px) {
+      flex-direction: column;
+    }
+  }
+
+  // For shadow adjustment
+  padding: 0;
+
+  .main-section:first-child {
+    > main {
+      margin: 0;
+      display: flex;
+      overflow: hidden;
+      padding: 10px;
+    }
+
+    &.my-collapse > main {
+      padding: 0;
+    }
   }
 
   #approve-files,
