@@ -54,16 +54,16 @@ export default class Client extends EventEmitter {
     */
   public constructor(socket: SocketIOClient.Socket){
     super();
-    let STUN_URL: string;
+    let BASE_ICE_URL: string;
     let TRACKER_URL: string;
 
-    if (process.env.STUN_URL) {
-      STUN_URL = process.env.STUN_URL;
+    if (process.env.BASE_ICE_URL) {
+      BASE_ICE_URL = process.env.BASE_ICE_URL;
     } else {
-      STUN_URL = "stun:stun.l.google.com:19302";
-      debug(`STUN_URL env variable not set`);
+      BASE_ICE_URL = "stun.l.google.com:19302";
+      debug(`BASE_ICE_URL env variable not set`);
     }
-    debug(`Using ${STUN_URL} as STUN server address`);
+    debug(`Using ${BASE_ICE_URL} as base address for STUN and TURN servers`);
 
     if (process.env.TRACKER_URL) {
       TRACKER_URL = process.env.TRACKER_URL;
@@ -75,7 +75,10 @@ export default class Client extends EventEmitter {
 
     this.client = new WebTorrent({
       tracker: {
-        iceServers: [{ urls: STUN_URL }],
+        iceServers: [
+          { urls: ["turn:" + BASE_ICE_URL, "turns:" + BASE_ICE_URL] },
+          { urls: "stun:" + BASE_ICE_URL },
+        ],
       },
     });
 
