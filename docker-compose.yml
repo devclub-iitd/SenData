@@ -9,8 +9,8 @@ services:
       - turnserver
     environment:
       - VIRTUAL_HOST
-      - STUN_URL=stun:${HOST_IP}:3478
       - TRACKER_URL=wss://${TRACKER_URL}
+      - BASE_ICE_URL=${HOST_IP}:3478
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:7000"]
       interval: 1m30s

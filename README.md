@@ -11,7 +11,7 @@ The deployed version can be found at https://filesend.devclub.in (accessible onl
 We use [WebTorrent](webtorrent.io) for transferring files in a peer-to-peer way and [SocketIO](socket.io) for initially connecting the users. A torrent is created when the files to be sent are created and the user is set to seed it. This torrent is then sent to the other user who adds it and so the files are transferred.
 
 ## Deploying
-The working of FileSend requires a STUN server and a Torrent tracker. They can be easily deployed locally by using Docker containers from Docker Hub. The following commands can be used for this:
+The working of FileSend requires a STUN server (and optionally, a TURN server for better reliability) and a Torrent tracker. They can be easily deployed locally by using Docker containers from Docker Hub. The following commands can be used for this:
 ```sh
 docker run -d -p 3478:3478 -p 3478:3478/udp zolochevska/turn-server username password realm
 docker run --rm -d -p 8000:8000 henkel/bittorrent-tracker:latest
@@ -19,7 +19,7 @@ docker run --rm -d -p 8000:8000 henkel/bittorrent-tracker:latest
 These servers are now running on localhost. To indicate their, address you need to set the environment variables as follows:
 ```sh
 export TRACKER_URL="ws://localhost:8000"
-export STUN_URL="stun:localhost:3478"
+export BASE_ICE_URL="localhost:3478"
 ```
 
 Note that you can use 3rd party deployed tracker and STUN servers too and set the environment variables accordingly, only requirement being they should be reachable by the users who want to transfer data.
