@@ -15,5 +15,8 @@ export default function init(): Express.Application {
     // res.sendFile(path.resolve(__dirname + "/../../public/index.html"));
     res.render("login");
   });
+  app.get("/healthz", (req, res): void => {
+    res.send("Ok, healthy!");
+  });
   return app;
 }
