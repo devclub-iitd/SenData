@@ -30,7 +30,7 @@
     "file-saver": "^2.0.2",
     "jszip": "^3.2.1",
     "node": "^12.5.0",
-    "socket.io": "^2.2.0",
+    "socket.io": "^2.4.0",
     "webtorrent": "^0.107.6"
   },
   "devDependencies": {
